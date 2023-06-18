@@ -1,30 +1,22 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { loginToken, loginUser } from "@/redux/Auth/authSlice";
+import React,{useState,useEffect} from 'react';
+import { FaAngleRight, FaApple, FaGoogle, FaMicrosoft } from "react-icons/fa";
+import { Button } from '../../components/ui/Button';
+import {checkUser} from "../../helper/api";
+import {useForm} from "react-hook-form"
+import {yupResolver} from "@hookform/resolvers/yup"
+import * as yup from "yup"
+import { useDispatch , useSelector } from 'react-redux';
+import {loginToken , loginUser} from "../../Feature/Auth/authSlice";
+import { useNavigate } from 'react-router-dom';
 import { Modal } from "react-bootstrap";
-import OtpInput from "react-otp-input";
-import { AppDispatch } from "@/redux/store";
-import logo from "./images/logo.svg";
-import graphic from "../../../assets/images/login-graphic.svg";
-import { EmailComponent } from "../../../components/authForm/EmailComponent";
-import { PasswordComponent } from "../../../components/authForm/PasswordComponent";
-import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
-import { checkUser } from "@/helper/api";
 
-type FormValues = {
-  username: string;
-  password: string;
-  type: string | null;
-  otp: string | undefined;
-};
+
+
 
 const Login = () => {
-  const { userToken, user } = useSelector((state: any) => state.auth);
+
+  
+  const { userToken, user } = useSelector((state) => state.auth);
 
   // email validation
   const asyncEmailValidation = async (email: string) => {
@@ -38,52 +30,48 @@ const Login = () => {
         const { detail } = response;
         if (!detail) {
           if (response.is_pool) {
-            setValue("type", "pool");
+            setValue('type', 'pool')
           } else {
-            setValue("type", "participant");
+            setValue('type', 'participant')
           }
-          setfa2(JSON.stringify(response.fa2 || false));
+          setfa2(JSON.stringify(response.fa2))
+          // setError('email', false)
           return true;
         } else {
-          console.log("async email validation failed");
+          // setError('email', true);
           return false;
         }
       } catch (e) {
-        console.log("Error in asyncEmailValidation ", e);
-        return false;
+        return false
       }
     } else {
-      return true;
+      return true
     }
-  };
+  }
+
 
   // yup handler
-  const schema = yup
-    .object({
-      username: yup
-        .string()
-        .required("Email field required")
-        .email("Valid Email address required")
-        .test("userNotFound", "User does not exist", asyncEmailValidation),
-      type: yup.string().nullable().default(""),
-    })
-    .required();
+  const schema = yup.object({
+    password: yup.string().required("Password is required").min(3, "Minimum 3 character"),
+    username: yup.string().required("Email field required").email("Valid Email address required").test('userNotFound', 'User not exists', asyncEmailValidation),
+    type: yup.string().nullable().default(""),
+    otp: yup.mixed().default(100000)
+  }).required()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid, isSubmitted },
-    setValue,
-    setError,
-    getValues,
-  } = useForm({
-    resolver: yupResolver(schema),
-    mode: "onSubmit",
-  });
 
-  // setting states
+
+  const { register, handleSubmit, formState: { errors, isValid, isSubmitted },
+    setValue, setError, getValues } = useForm({
+      resolver: yupResolver(schema),
+      mode: "onSubmit"
+    });
+
+
+// setting states
   const [fa2, setfa2] = useState("null");
   const [show, setShow] = useState(false);
+  const [showA, setShowA] = useState(false);
+  const [showB, setShowB] = useState(false);
   const [gAuth, setgAuth] = useState(false);
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState<FormDataEntryValue>("");
@@ -105,14 +93,9 @@ const Login = () => {
   useEffect(() => {
     setLoading(true);
 
-    if (path == "/password") {
-      if (!getValues().username) {
-        router.push("/");
-      }
-    }
     if (userToken?.access_token) {
       dispatch(loginUser());
-      setLoading(false);
+    setLoading(false)
     }
     if (user && user?.username) {
       router.push("/dashboard");
@@ -130,38 +113,42 @@ const Login = () => {
       dispatch(loginAction);
       setLoading(false);
     }
-    setLoading(false);
-  }, [userToken, user]);
+    setLoading(false)
+  }, [userToken, user])
 
-  const responseSocialAuth = async (response: any) => {
+  let str = "";
+  const nextDigit = (currVal, e) => {
+    str += e;
+    if (str.length === 6) {
+      setValue("otp", str);
+    }
+    let ele = document.querySelectorAll('input.otp');
+    if(str.length !=6){
+      ele[currVal + 0].focus();
+    }
+  }
+
+  const responseSocialAuth = async (response) => {
     // debugger
     const { user, providerId } = response;
-    const {
-      reloadUserInfo: { passwordHash },
-    } = user;
+    const { reloadUserInfo: { passwordHash } } = user;
     if (user && user.email) {
       setgAuth(true);
-      setValue("username", user.email);
+      setValue('username', user.email);
+      setValue('password', passwordHash)
       const userResponse = await checkUser({ emailid: user.email });
       if (userResponse) {
         if (userResponse.fa2) {
-          setShow(true);
+          setShow(true)
         } else {
           if (!userResponse.detail) {
-            const formData = getValues();
-            dispatch(
-              loginToken({
-                username: formData.username,
-                // password: formData.password,
-                type: "",
-                otp: otp,
-              } as FormValues)
-            );
+
+            dispatch(loginToken(getValues()))
           }
         }
       }
     }
-  };
+  }
 
   // otp handler
   const otpHandler = async (e: any) => {
@@ -236,10 +223,8 @@ const Login = () => {
 
   const handlePasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const parsedData = Object.fromEntries(formData.entries());
-    // setPassword(parsedData.password);
-    onSubmitHandler(parsedData.password);
+    dispatch(loginToken(getValues()));
+    setShow(false);
   };
 
   return (
@@ -287,35 +272,36 @@ const Login = () => {
         </span>
       </div>
 
-      <Modal
-        show={show}
-        onHide={() => setShow(false)}
-        backdrop="static"
-        keyboard={false}
-        className="modal-dialog-login"
-      >
-        <div className="bg-white rounded-3xl p-16 mt-[20vh] w-max self-center">
-          <div>
-            <div className="">
-              <div className="text-3xl text-center mb-4">Enter MFA OTP</div>
-              <p className="text-center mb-10 text-slate-600">
-                Enter Multifactor OTP from your authentication app
-              </p>
-              <OtpInput
-                containerStyle="flex justify-center gap-1"
-                inputStyle="otp-input-width h-12 p-0 text-center rounded-xl"
-                value={otp}
-                onChange={setOtp}
-                numInputs={6}
-                renderSeparator={<span></span>}
-                renderInput={(props) => <input {...props} />}
-              />
             </div>
           </div>
         </div>
-      </Modal>
+      </div>
+      <Modal
+                show={show}
+                onHide={() => setShow(false)}
+                backdrop="static"
+                keyboard={false}
+                className="modal-dialog-login"
+              >
+                <div className="modal_popup">
+                  <div className="login_modal_head text-start pt-3 ps-3 pb-2">2 Factor Authentication</div>
+                  <div className="popup_line"></div>
+                  <div className="login_modal_sub pt-2">Please enter <b>2FA</b> code to login</div>
+                  <form className="mt-3">
+                    <input className="otp me-2" type="text" onChange={(e) => nextDigit(1, e.target.value)} />
+                    <input className="otp me-2" type="text" onChange={(e) => nextDigit(2, e.target.value)} />
+                    <input className="otp me-2" type="text" onChange={(e) => nextDigit(3, e.target.value)} />
+                    <input className="otp me-2" type="text" onChange={(e) => nextDigit(4, e.target.value)} />
+                    <input className="otp me-2" type="text" onChange={(e) => nextDigit(5, e.target.value)} />
+                    <input className="otp" type="text" onChange={(e) => nextDigit(6, e.target.value)} />
+                  </form>
+                  <div className="text-center">
+                    <button type="button" className="ok_btn_login mt-5 ps-4 pe-4 mb-4" onClick={otpHandler}>Ok &#10004;</button>
+                  </div>
+                </div>
+              </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
