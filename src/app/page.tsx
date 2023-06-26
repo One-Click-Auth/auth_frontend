@@ -15,6 +15,7 @@ import Image from "next/image";
 import { EmailComponent } from "@/components/authForm/EmailComponent";
 import { PasswordComponent } from "@/components/authForm/PasswordComponent";
 import LayoutBanner from "@/components/authForm/LayoutBanner";
+import { signIn } from "next-auth/react"
 
 type FormValues = {
   username: string;
@@ -189,12 +190,13 @@ const Login = () => {
         if (faValue === "true") {
           setShow(true);
         } else {
-          const data = {
-            username: getValues().username,
-            password: pwd,
-            otp: otp,
-          };
-          const res = await dispatch(loginToken(data));
+          const data={
+            username:getValues().username,
+            password:pwd,
+            otp:otp
+          }
+          await signIn('credentials', data)
+          // const res = await dispatch(loginToken(data));
           console.log("response from login token ", res);
           if (res["type"] === "auth/loginToken/fulfilled" && !res.payload) {
             setCustomError({
@@ -219,9 +221,8 @@ const Login = () => {
 
   const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     // e.preventDefault();
-    console.log(getValues());
-    setCustomError("");
-    router.push("/password");
+    console.log( getValues())
+    setCustomError("")
   };
 
   const handlePasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -231,7 +232,6 @@ const Login = () => {
     // setPassword(parsedData.password);
     onSubmitHandler(parsedData.password);
   };
- 
 
   return (
     <div className="min-h-screen flex flex-col sm:flex-row justify-center">
