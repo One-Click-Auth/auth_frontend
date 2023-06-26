@@ -29,14 +29,16 @@ function OrgList({ data }: dataType) {
                 </div>
             </div>
 
-            <div className="mt-12" >
-                <p className='font-semibold' >Search Organization</p>
-                <div className="flex flex-col md:flex-row gap-2 md:items-center" >
-                    <Input type="email" placeholder="Email" className="w-full" />
-                    <button className="px-12 py-2 bg-[#4338CA] text-white rounded-sm" >Search</button>
-                    {/* <button className="px-12 py-2 bg-[#fff] text-black border-2 border-gray-300 font-semibold rounded-sm max-w-max w-full" >Search by</button> */}
-                </div>
-            </div>
+      <div className="mt-12">
+        <p className="font-semibold">Search Organization</p>
+        <div className="flex flex-col md:flex-row gap-2 md:items-center">
+          <Input type="email" placeholder="Email" className="w-full" />
+          <button className="px-12 py-2 bg-[#4338CA] text-white rounded-sm">
+            Search
+          </button>
+          {/* <button className="px-12 py-2 bg-[#fff] text-black border-2 border-gray-300 font-semibold rounded-sm max-w-max w-full" >Search by</button> */}
+        </div>
+      </div>
 
             <div className="max-h-[400px] overflow-hidden mt-12" >
             </div>
@@ -44,4 +46,4 @@ function OrgList({ data }: dataType) {
     )
 }
 
-export default OrgList
+export default OrgList;

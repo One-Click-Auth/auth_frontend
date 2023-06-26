@@ -29,9 +29,9 @@ const signupUser = async (data: any) => {
     is_pool: false,
     ref: "",
     link: "",
-    types: ""
+    types: "",
   };
-  if (data && (data.formData && data.formData.type && !data.type)) {
+  if (data && data.formData && data.formData.type && !data.type) {
     data.type = data.formData.type;
   }
   if (data.type === "participant") {
@@ -42,7 +42,7 @@ const signupUser = async (data: any) => {
       is_pool: false,
       ref: data.formData.referal,
       link: true,
-      types: "email"
+      types: "email",
     };
   } else {
     userValue = {
@@ -52,7 +52,7 @@ const signupUser = async (data: any) => {
       is_pool: true,
       ref: data.formData.referal,
       link: true,
-      types: "email"
+      types: "email",
     };
   }
   try {
@@ -78,7 +78,6 @@ const verifyEmail = async (data: any) => {
   }
 };
 
-
 // login user
 const loginToken = async (data: any) => {
   let response;
@@ -91,12 +90,12 @@ const loginToken = async (data: any) => {
       password: data.password,
       scope: "",
       client_id: "",
-      client_secret: data?.otp ? Number(data?.otp) : "100000"
-    }
+      client_secret: data?.otp ? Number(data?.otp) : "100000",
+    };
     response = await axios.post(`${API_DOMAIN}/token`, body, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        "Accept": "application/x-www-form-urlencoded",
+        Accept: "application/x-www-form-urlencoded",
       },
     });
     if (response.data) {

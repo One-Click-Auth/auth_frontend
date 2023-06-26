@@ -19,7 +19,6 @@ const Modal: React.FC<ModalProps> = ({ handleForm, add }) => {
     }
   }, [otp,]);
 
-
   const handleOTPForm = () => {
     // e.preventDefault();
     console.log(otp, add);
@@ -52,8 +51,10 @@ const Modal: React.FC<ModalProps> = ({ handleForm, add }) => {
       <div className="fixed inset-0 bg-black opacity-60 z-10"></div>
       <div className="absolute top-[50vh] left-[50vw] translate-x-[-50%] translate-y-[-50%] bg-white flex flex-col justify-center items-center p-8 w-[90vw] sm:w-3/4 md:w-1/2 lg:1/3 rounded-lg z-20 ">
         <p className="text-sm mx-auto text-center md:text-left">
-          Please check your email for a reset password OTP. You can reset password{" "}
-          <span className="text-blue-400">by entering OTP</span> in the designated column. If you didn't receive an email, click I didn't receive email
+          Please check your email for a reset password OTP. You can reset
+          password <span className="text-blue-400">by entering OTP</span> in the
+          designated column. If you didn't receive an email, click I didn't
+          receive email
         </p>
         <h2 className="text-2xl m-4">Enter e-mail OTP</h2>
 

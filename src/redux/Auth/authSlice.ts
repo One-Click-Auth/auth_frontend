@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authService";
 
 interface UserLoginDatatype {
-  username: string,
-  password: FormDataEntryValue,
-  otp: string | undefined
+  username: string;
+  password: FormDataEntryValue;
+  otp: string | undefined;
 }
 
 export interface IInitialState {
@@ -22,7 +22,7 @@ const initialState: IInitialState = {
   user: null,
   loginString: null,
   verifyString: null,
-  userExistStatus: null
+  userExistStatus: null,
 };
 
 // signup user
@@ -153,7 +153,7 @@ export const authSlice = createSlice({
       state.selectedType = null;
       state.userToken = null;
       state.user = null;
-      state.userExistStatus = null
+      state.userExistStatus = null;
     },
   },
   extraReducers: (builder) => {
@@ -175,7 +175,7 @@ export const authSlice = createSlice({
           state.loginString = "false";
           state.userExistStatus = true;
         } else {
-          state.userExistStatus = false
+          state.userExistStatus = false;
           state.loginString = action.payload.data;
         }
       })
@@ -198,7 +198,7 @@ export const authSlice = createSlice({
         state.selectedType = "accept";
         state.userToken = null;
         state.user = null;
-        state.userExistStatus = null
+        state.userExistStatus = null;
       })
       .addCase(logOutUser.rejected, (state, action) => {
         state.selectedType = null;
@@ -211,7 +211,7 @@ export const authSlice = createSlice({
       })
       .addCase(loginToken.rejected, (state) => {
         state.userToken = null;
-      })
+      });
   },
 });
 

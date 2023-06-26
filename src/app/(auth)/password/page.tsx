@@ -134,7 +134,6 @@ const Password = () => {
   }, [userToken, user]);
 
   const responseSocialAuth = async (response: any) => {
-    // debugger
     const { user, providerId } = response;
     const {
       reloadUserInfo: { passwordHash },
@@ -249,6 +248,7 @@ const Password = () => {
         <div className="self-start mt-7">
           <Image width={34} height={34} src={LOGO} alt="AuthX logo" />
         </div>
+        <button onClick={() => signIn()}>Login</button>
         <div className="flex my-12 items-center justify-center grow sm:mr-12">
           <div className="-mt-32 w-fit max-w-lg">
             <Image
@@ -276,6 +276,7 @@ const Password = () => {
               />
             )}
           </div>
+          n
         </div>
       </div>
       <LayoutBanner

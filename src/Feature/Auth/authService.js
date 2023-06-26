@@ -16,11 +16,11 @@ const signupUser = async (data) => {
     password: "",
     full_name: "",
     is_pool: null,
-    ref:"",
-    link:"",
-    types:""
-  };  
-  if(data && (data.formData && data.formData.type && !data.type)){
+    ref: "",
+    link: "",
+    types: "",
+  };
+  if (data && data.formData && data.formData.type && !data.type) {
     data.type = data.formData.type;
   }
   if (data.type === "participant") {
@@ -30,23 +30,26 @@ const signupUser = async (data) => {
       full_name: data.formData.fullName,
       is_pool: false,
       ref: data.formData.referal,
-      link:true,
-      types: "email"
+      link: true,
+      types: "email",
     };
-  } else {    
+  } else {
     userValue = {
       username: data.formData.username,
       password: data.formData.password,
       full_name: data.formData.fullName,
       is_pool: true,
       ref: data.formData.referal,
-      link:true,
-      types: "email"
-    };    
-  }  
-  try {    
-    response = await axios.post("https://api.trustauthx.com/api/Signup", userValue);
-  } catch (error) {    
+      link: true,
+      types: "email",
+    };
+  }
+  try {
+    response = await axios.post(
+      "https://api.trustauthx.com/api/Signup",
+      userValue
+    );
+  } catch (error) {
     response = error.response;
   }
   return response;
@@ -56,13 +59,16 @@ const signupUser = async (data) => {
 const verifyEmail = async (data) => {
   let response;
   try {
-    response = await axios.post(`https://api.trustauthx.com/api/verify_email/${data.link}`, data);
+    response = await axios.post(
+      `https://api.trustauthx.com/api/verify_email/${data.link}`,
+      data
+    );
   } catch (error) {
     response = error.response;
   }
-  if(response.status === 406){
+  if (response.status === 406) {
     return "Wrong OTP";
-  }else{
+  } else {
     return response.data;
   }
 };
@@ -74,25 +80,29 @@ const loginToken = async (data) => {
     const params = new URLSearchParams();
     params.append("username", data.username || data.email);
     params.append("password", data.password);
-    if(data.otp === ""){
+    if (data.otp === "") {
       params.append("client_secret", 100000);
-    }else{
+    } else {
       params.append("client_secret", Number(data.otp));
     }
-    response = await axios.post("https://api.trustauthx.com/api/token", params, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Accept" : "application/x-www-form-urlencoded",
-      },
-    });
+    response = await axios.post(
+      "https://api.trustauthx.com/api/token",
+      params,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/x-www-form-urlencoded",
+        },
+      }
+    );
     if (response.data) {
       localStorage.setItem("token", response.data.access_token);
     }
   } catch (error) {
     response = error.response;
   }
-  if(response.status === 401) {
-  }else{
+  if (response.status === 401) {
+  } else {
     return response.data;
   }
 };

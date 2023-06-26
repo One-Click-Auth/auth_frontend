@@ -182,7 +182,11 @@ const Login = () => {
       setLoading(true);
       const response = await checkUser({ emailid: getValues().username });
       const faValue = JSON.stringify(response.fa2);
-      if (isValid) {
+      if (!isValid) {
+        console.log("Not valid");
+        setLoading(false);
+        return
+      }
         if (faValue === "true") {
           setShow(true);
         } else {
@@ -205,10 +209,6 @@ const Login = () => {
           }
         }
         setLoading(false);
-      } else {
-        console.log("Not valid");
-        setLoading(false);
-      }
     } catch (err) {
       console.log("Error in onSubmitHandler ", err);
     }

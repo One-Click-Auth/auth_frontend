@@ -7,13 +7,13 @@ const initialState = {
   user: null,
   loginString: null,
   verifyString: null,
-  userExistStatus: null 
+  userExistStatus: null,
 };
 
 // signup user
 export const signupUser = createAsyncThunk(
   "auth/signup",
-  async (data, thunkAPI) => {    
+  async (data, thunkAPI) => {
     try {
       return authService.signupUser(data);
     } catch (error) {
@@ -138,7 +138,7 @@ export const authSlice = createSlice({
       state.selectedType = null;
       state.userToken = null;
       state.user = null;
-      state.userExistStatus = null
+      state.userExistStatus = null;
     },
   },
   extraReducers: (builder) => {
@@ -146,8 +146,8 @@ export const authSlice = createSlice({
       .addCase(verifyEmail.pending, (state) => {
         state.verifyString = null;
       })
-      .addCase(verifyEmail.fulfilled, (state, action) => {        
-        state.verifyString = action.payload;        
+      .addCase(verifyEmail.fulfilled, (state, action) => {
+        state.verifyString = action.payload;
       })
       .addCase(verifyEmail.rejected, (state, action) => {
         state.verifyString = action.payload;
@@ -156,12 +156,12 @@ export const authSlice = createSlice({
         state.loginString = null;
       })
       .addCase(signupUser.fulfilled, (state, action) => {
-        if(action.payload.status === 208){
+        if (action.payload.status === 208) {
           state.loginString = "false";
           state.userExistStatus = true;
-        }else{
-          state.userExistStatus = false
-        state.loginString = action.payload.data;
+        } else {
+          state.userExistStatus = false;
+          state.loginString = action.payload.data;
         }
       })
       .addCase(signupUser.rejected, (state) => {
@@ -183,7 +183,7 @@ export const authSlice = createSlice({
         state.selectedType = "accept";
         state.userToken = null;
         state.user = null;
-        state.userExistStatus = null  
+        state.userExistStatus = null;
       })
       .addCase(logOutUser.rejected, (state, action) => {
         state.selectedType = null;
@@ -196,7 +196,7 @@ export const authSlice = createSlice({
       })
       .addCase(loginToken.rejected, (state) => {
         state.userToken = null;
-      })
+      });
   },
 });
 

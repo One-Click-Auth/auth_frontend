@@ -6,32 +6,37 @@ const headers = {
 };
 
 export const userChronoInfo = (data: any) => {
-  const body = JSON.stringify(data);  
+  const body = JSON.stringify(data);
   return fetch(API_URL.USER_INFO, {
     method: "POST",
     headers,
-    body
-  }).then((res) => res.json())
-}
+    body,
+  }).then((res) => res.json());
+};
 
-export const checkUser = async ({emailid, fa2=false}: {emailid: string, fa2?: boolean}) => {
+export const checkUser = async ({
+  emailid,
+  fa2 = false,
+}: {
+  emailid: string;
+  fa2?: boolean;
+}) => {
   const body = JSON.stringify({
     emailid,
-    fa2  
-  })  
-  const response =  await fetch(API_URL.USER_INFO, {
+    fa2,
+  });
+  const response = await fetch(API_URL.USER_INFO, {
     method: "POST",
     headers,
-    body
+    body,
   }).then((res) => res.json());
-  return response;  
-}
+  return response;
+};
 
 export const getRandomPassword = async () => {
   const response = await fetch(API_URL.RANDOM_PASSWORD, {
     method: "GET",
-    headers
+    headers,
   }).then((res) => res.json());
   return response;
-
-}
+};
