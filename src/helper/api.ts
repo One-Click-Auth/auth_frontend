@@ -25,6 +25,7 @@ export const checkUser = async ({
     emailid,
     fa2,
   });
+  console.log(API_URL.USER_INFO)
   const response = await fetch(API_URL.USER_INFO, {
     method: "POST",
     headers,
