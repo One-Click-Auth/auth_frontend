@@ -11,6 +11,21 @@ import { LuXCircle } from "react-icons/lu";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import LayoutBanner from "@/components/authForm/LayoutBanner";
 
+
+const AlertMessage = ({ message,setAlert }: { message: string,setAlert:React.Dispatch<boolean> }) => {
+  return (
+    <Alert className="absolute top-6 w-60 sm:w-96 left-[50vw] translate-x-[-50%] backdrop-filter backdrop-blur-sm bg-opacity-90 bg-yellow-400">
+      <AlertTitle>Notice!</AlertTitle>
+      <button
+        onClick={() => setAlert(false)}
+        className="absolute right-2 top-2"
+      >
+        <LuXCircle className="w-5 h-5" />
+      </button>
+      <AlertDescription>{message}</AlertDescription>
+    </Alert>
+  );
+};
 const NewPassword: React.FC = () => {
   const searchparams = useSearchParams();
   const param = searchparams && searchparams?.get("param");
@@ -23,20 +38,7 @@ const NewPassword: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   // Alert component
-  const AlertMessage = ({ message }: { message: string }) => {
-    return (
-      <Alert className="absolute top-6 w-60 sm:w-96 left-[50vw] translate-x-[-50%] backdrop-filter backdrop-blur-sm bg-opacity-90 bg-yellow-400">
-        <AlertTitle>Notice!</AlertTitle>
-        <button
-          onClick={() => setAlert(false)}
-          className="absolute right-2 top-2"
-        >
-          <LuXCircle className="w-5 h-5" />
-        </button>
-        <AlertDescription>{message}</AlertDescription>
-      </Alert>
-    );
-  };
+  
 
   useEffect(() => {
     if (param !== null) setEmail(param);
@@ -157,7 +159,7 @@ const NewPassword: React.FC = () => {
         src={LOGIN_GRAPHIC}
       />
 
-      {alert && <AlertMessage message={alertMessage} />}
+      {alert && <AlertMessage message={alertMessage} setAlert={setAlert} />}
       {show && <Modal handleForm={handleForm} add={add} />}
     </div>
   );
