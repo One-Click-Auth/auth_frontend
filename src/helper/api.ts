@@ -16,7 +16,7 @@ export const userChronoInfo = (data: any) => {
 
 export const checkUser = async ({emailid, fa2=false}: {emailid: string, fa2?: boolean}) => {
   const body = JSON.stringify({
-    emailid,
+    emailid:emailid.toLowerCase(),
     fa2  
   })  
   const response =  await fetch(API_URL.USER_INFO, {
