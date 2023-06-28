@@ -17,11 +17,11 @@ export const EmailComponent = ({
 }: EmailSubmitType) => {
   console.log("redered", errors);
   return (
-    <div className="login-wrapper form-wrapper">
+    <div>
       <form
         onSubmit={handleSubmit(handleEmailSubmit)}
       >
-        <div className="form-group relative">
+        <div>
           <label
             htmlFor="email"
             className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 ${

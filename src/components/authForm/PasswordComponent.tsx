@@ -1,7 +1,6 @@
 import React from "react";
-import { FaAngleRight } from "react-icons/fa";
-import { createRipple } from "@/helper/createRipple";
-import Link from "next/link";
+import { FormButton } from "./FormButton";
+import { LinkText } from "./LinkText";
 
 type PasswordSubmitType = {
   handlePasswordSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -15,12 +14,12 @@ export const PasswordComponent = ({
   errors,
 }: PasswordSubmitType) => {
   return (
-    <div className="login-wrapper form-wrapper">
+    <div>
       <form
         onSubmit={handlePasswordSubmit}
       // className="was-validated"
       >
-        <div className="form-group relative">
+        <div>
           <label
             htmlFor="password"
             className="form-label absolute translate-x-6 translate-y-[-12px] bg-white px-1"
@@ -30,7 +29,7 @@ export const PasswordComponent = ({
           <input
             id="password"
             type="password"
-            className="form-control"
+            className="w-full px-8 py-3 border rounded-lg border-slate-500"
             defaultValue={
               password as string
             }
@@ -47,33 +46,14 @@ export const PasswordComponent = ({
 
         <div className="form-group">
           <div className="d-grid start">
-            <button
-              type="submit"
-              onClick={createRipple}
-              className="ripple-button btn btn-spl-primary mt-8 md:mt-11 btn-ca bg-gradient-to-r from-black to-[#6F6F6F] flex items-center justify-center"
-            >
-              <span>Next</span>
-              <span className="forward-arr">
-                {" "}
-                <FaAngleRight className="ca-forward-arr text-2xl mt-[2px]" />
-              </span>
-            </button>
+            <FormButton>Next</FormButton>
           </div>
         </div>
 
         <div className="ats-content mt-8 md:mt-11">
           <p className="mb-0 text-xl flex items-center flex-wrap">
             Forgot Password?
-            <Link
-              className="pl-2 a-t-s a-link text-xl flex items-center"
-              href="/reset-password"
-            >
-              advance to reset Password{" "}
-              <span className="forward-arr arr-black">
-                {" "}
-                <FaAngleRight className="pt-1 text-2xl" />
-              </span>
-            </Link>
+            <LinkText to="/reset-password">advance to reset Password</LinkText>
           </p>
         </div>
       </form>

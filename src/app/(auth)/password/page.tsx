@@ -8,14 +8,13 @@ import { loginToken, loginUser } from "@/redux/Auth/authSlice";
 import Modal from "@/components/Modal";
 import OtpInput from "react-otp-input";
 import { AppDispatch } from "@/redux/store";
-import logo from "../login/images/logo.svg";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { checkUser } from "@/helper/api";
 import { EmailComponent } from "@/components/authForm/EmailComponent";
 import { PasswordComponent } from "@/components/authForm/PasswordComponent";
 import LayoutBanner from "@/components/authForm/LayoutBanner";
-import { LOGIN_GRAPHIC } from "@/constants";
+import { LOGIN_GRAPHIC, LOGO } from "@/constants";
 
 type FormValues = {
   username: string;
@@ -248,11 +247,18 @@ const Password = () => {
     <div className="min-h-screen flex flex-col sm:flex-row items-center justify-center">
       <div className="container sm:basis-3/5 flex flex-col min-h-screen">
         <div className="self-start mt-7">
-          <Image src={logo} alt="AuthX logo" />
+          <Image width={34} height={34} src={LOGO} alt="AuthX logo" />
         </div>
         <div className="flex my-12 items-center justify-center grow sm:mr-12">
-          <div className="mb-32 md:w-96 lg:w-[32rem]">
-            <h1 className="scroll-m-20 text-[2.5rem] text-center pb-9 md:pb-11 font-semibold transition-colors first:mt-0">
+          <div className="-mt-32 w-fit max-w-lg">
+            <Image
+              className="mx-auto mb-8"
+              width={62}
+              height={62}
+              src={LOGO}
+              alt="AuthX logo"
+            />
+            <h1 className="scroll-m-20 text-4xl text-center pb-9 md:pb-11 font-semibold transition-colors first:mt-0">
               Login to your AuthX account
             </h1>
             {path != "/password" ? (
