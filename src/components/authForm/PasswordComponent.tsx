@@ -13,13 +13,13 @@ export const PasswordComponent = ({
   const [password, setPassword] = useState('')
   const [error,setError] = useState('')
   return (
-    <div className="login-wrapper form-wrapper w-full">
+    <div className="login-wrapper form-wrapper">
         <div className="form-group relative">
           <label
             htmlFor="password"
             className="form-label absolute translate-x-6 translate-y-[-12px] bg-white px-1"
           >
-            Password - {password}
+            Password 
           </label>
           <input
             id="password"

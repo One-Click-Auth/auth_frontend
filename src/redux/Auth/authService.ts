@@ -82,7 +82,6 @@ const verifyEmail = async (data: any) => {
 const loginToken = async (data: any) => {
   let response;
   try {
-    // const params = new URLSearchParams();
     const body = {
       otp: "100000",
       grant_type: "",

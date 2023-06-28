@@ -88,7 +88,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ account, user }) {
+    async signIn({ account, credentials }) {
       if (account?.provider === "github") {
         const access_token = account.access_token;
         // const res = await axios.get", {
@@ -97,7 +97,7 @@ export const authOptions: NextAuthOptions = {
         // const userTokens = res.data;
         return Promise.resolve({ access_token });
       }
-      return Promise.resolve(user);
+      return Promise.resolve({});
     },
     async jwt({ token, account, user, trigger }) {
       if (account && user) {

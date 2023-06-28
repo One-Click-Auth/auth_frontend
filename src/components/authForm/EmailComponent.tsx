@@ -1,64 +1,107 @@
-import React from "react";
-import { FormButton } from "./FormButton";
-import { LinkText } from "./LinkText";
+import React, { useState } from "react";
+import { FaAngleRight } from "react-icons/fa";
+import Link from "next/link";
+import { createRipple } from "@/helper/createRipple";
+import {string} from "yup"
+import { useDebounce } from "@/helper/hooks";
 
+const emailSchema = string().email()
 type EmailSubmitType = {
-  handleEmailSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  register: any;
-  errors: any;
-  handleSubmit: any;
+  handleEmailSubmit: (e: string) => void;
+  asyncEmailValidation: (e: string) => Promise<boolean>;
 };
 
 export const EmailComponent = ({
   handleEmailSubmit,
-  register,
-  errors,
-  handleSubmit,
+  asyncEmailValidation
 }: EmailSubmitType) => {
-  console.log("redered", errors);
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState('')
+  const verifyEmail = async () => {
+    if (emailSchema.isValidSync(email)) { 
+      const isValid = await asyncEmailValidation(email)
+      if (!isValid) {
+        setError('User Not Found')
+        return false
+      }
+      else {
+        setError(false)
+        return true
+      }
+    }
+    else {
+      setError('Please Input valid email')
+      return false
+    }
+    return false
+  }
+  useDebounce(() => verifyEmail(),[email],300)
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(handleEmailSubmit)}
-      >
-        <div>
+    <div className="login-wrapper form-wrapper">
+        <div className="form-group relative">
           <label
             htmlFor="email"
-            className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 ${
-              errors.username && "text-red-600"
-            }`}
+            className="form-label absolute translate-x-6 translate-y-[-12px] bg-white px-1"
           >
             Email
           </label>
           <input
-            {...register("username")}
             id="email"
-            type="text"
-            className={`form-control w-full px-8 py-3 border rounded-lg ${
-              errors.username ? "border-red-600" : "border-slate-500"
-            }`}
+            type="email"
+            name="username"
+            className="form-control w-full"
+          required
+          onChange={e => {
+            setEmail(e.target.value)
+            setError('')
+          }}
             placeholder="name@example.com"
           />
-          {errors.username && (
+          {error && (
             <div className="mt-2 color text-red-600">
-              <span>{errors.username?.message}</span>
+              <span>{error}</span>
             </div>
           )}
         </div>
 
         <div className="form-group">
           <div className="d-grid start">
-            <FormButton>Next</FormButton>
+            <button
+              type="submit"
+            onClick={async (e) => {
+              createRipple(e)
+              const validEmail = await verifyEmail()
+              if(validEmail)
+                handleEmailSubmit(email)
+              else setError('Please Input Valid Email')
+            }
+              }
+              className="ripple-button btn btn-spl-primary mt-8 md:mt-11 btn-ca bg-gradient-to-r from-black to-[#6F6F6F] flex items-center justify-center"
+            >
+              <span>Next</span>
+              <span className="forward-arr">
+                {" "}
+                <FaAngleRight className="ca-forward-arr text-2xl mt-[2px]" />
+              </span>
+            </button>
           </div>
         </div>
 
         <div className="ats-content mt-8 md:mt-11">
           <p className="mb-0 text-xl flex items-center flex-wrap">
             I don’t have an AuthX account
-            <LinkText to="/signup">advance to Signup</LinkText>
+            <Link
+              className="pl-2 a-t-s a-link text-xl flex items-center"
+              href="/sign-up"
+            >
+              advance to Signup{" "}
+              <span className="forward-arr arr-black">
+                {" "}
+                <FaAngleRight className="pt-1 text-2xl" />
+              </span>
+            </Link>
           </p>
         </div>
-      </form>
     </div>
   );
 };
