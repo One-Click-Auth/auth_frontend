@@ -111,10 +111,10 @@ const OrganisationDashboard = ({ params }: { params: { slug: string } }) => {
                   height={24}
                 />
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-2">
                 <div className="text-2xl font-bold">45,000</div>
-                <p className="text-xs text-muted-foreground">
-                  Last month's api calls
+                <p className="text-xs text-disabled">
+                  Last month's API calls
                 </p>
               </CardContent>
             </Card>
@@ -130,9 +130,9 @@ const OrganisationDashboard = ({ params }: { params: { slug: string } }) => {
                   height={24}
                 />
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-2">
                 <div className="text-2xl font-bold">55,650</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-disabled">
                   Total associated users
                 </p>
               </CardContent>
@@ -149,9 +149,9 @@ const OrganisationDashboard = ({ params }: { params: { slug: string } }) => {
                   height={24}
                 />
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-2">
                 <div className="text-2xl font-bold">$4,500.54</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-disabled">
                   Total Recurring Cost
                 </p>
               </CardContent>
