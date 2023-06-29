@@ -41,9 +41,9 @@ export function Sidebar() {
   }, []);
 
   return (
-    <div className="sticky min-h-screen top-0">
+    <div className="sticky top-0">
       <ProSidebar
-        className="w-full !border-r-0 flex-[15%] bg-black "
+        className="w-full min-h-screen !border-r-0 flex-[15%] bg-black "
         collapsed={collapse}
       >
         <Menu

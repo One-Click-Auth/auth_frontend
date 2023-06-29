@@ -15,13 +15,13 @@ const OrganisationDashboard = ({ params }: { params: { slug: string } }) => {
         <TabsList className="bg-gray-100">
           <TabsTrigger
             value="overview"
-            className="text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+            className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
           >
             Overview
           </TabsTrigger>
           <TabsTrigger
             value="analytics"
-            className="text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+            className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
           >
             Analytics
           </TabsTrigger>
