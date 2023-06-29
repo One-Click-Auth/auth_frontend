@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
 import React from "react";
-import { Input } from "./ui/Input";
-import { Button } from "./ui/Button";
-import { CopyPasteSvg } from "../assets/Svg/Account/Account";
-import { CheckSquareValid } from "../assets/Svg/Account/Account";
+import { Input } from "../ui/Input";
+import { Button } from "../ui/Button";
+import { CopyPasteSvg } from "../../assets/Svg/Account/Account";
+import { CheckSquareValid } from "../../assets/Svg/Account/Account";
 
 function InputWithButtons() {
   return (
@@ -54,7 +54,9 @@ export default function KeysCard() {
         type="button"
       >
         <CheckSquareValid />
-        <span className="ml-3">I’ve Stored The Keys In Safe and Want To Proceed</span>
+        <span className="ml-3">
+          I’ve Stored The Keys In Safe and Want To Proceed
+        </span>
       </Button>
     </div>
   );

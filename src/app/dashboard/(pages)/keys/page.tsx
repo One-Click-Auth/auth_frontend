@@ -1,4 +1,4 @@
-import KeysCard from "@/components/KeysCard";
+import KeysCard from "@/components/dashboard/KeysCard";
 function Keys() {
   return <KeysCard />;
 }

@@ -18,6 +18,7 @@ module.exports = {
     extend: {
       colors: {
         accent: "#9EFF00",
+        disabled: "#B2B2B7"
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
