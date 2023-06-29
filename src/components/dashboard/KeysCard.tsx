@@ -29,7 +29,7 @@ function InputWithButtons() {
 
 export default function KeysCard() {
   return (
-    <div className="flex flex-col gap-11 max-w-3xl p-14 border border-slate-300 rounded-lg mx-auto">
+    <div className="flex flex-col gap-11 max-w-3xl mt-14 p-14 border border-slate-300 rounded-lg mx-auto">
       <div>
         <h2 className="text-4xl font-semibold tracking-wide mb-9">
           Your API Key & Secret Key
