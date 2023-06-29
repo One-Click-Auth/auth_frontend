@@ -64,7 +64,7 @@ export function Sidebar() {
           }}
         >
           <div
-            className="text-brand-primary text-end w-4 ml-auto mr-3 pt-2 cursor-pointer"
+            className="text-brand-primary text-accent text-end w-4 ml-auto mr-3 pt-2 cursor-pointer"
             onClick={() => setCollapse(!collapse)}
           >
             {collapse ? <ChevronRight /> : <ChevronLeft />}

@@ -13,7 +13,7 @@ function AccountLayout({ children }: AccountLayoutType) {
             </div>
             <div className="w-full px-2 sm:px-4 py-3 max-w-full overflow-x-auto" >
                 <AccountNav />
-                <div className="mt-4 " >
+                <div className="mt-16" >
                     {children}
                 </div>
             </div>

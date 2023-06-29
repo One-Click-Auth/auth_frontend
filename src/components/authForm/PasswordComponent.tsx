@@ -12,7 +12,8 @@ export const PasswordComponent = ({
   handlePasswordSubmit,
   password,
   errors,
-}: PasswordSubmitType) => {
+}: PasswordSubmitType
+) => {
   return (
     <div>
       <form

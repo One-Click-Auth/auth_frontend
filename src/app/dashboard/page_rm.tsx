@@ -16,8 +16,10 @@ function Account() {
                 location === "/dashboard/settings" ?
                     <Settings /> : location === "/dashboard" ?
                         <AccountIndex /> : location === "/dashboard/support" ?
-                            <Support /> : location === "/dashboard/add-organization" ?
-                                <AddOrganization /> : "Not Found"
+                            <Support /> : 
+                            location === "/dashboard/add-organization" ?
+                                <AddOrganization /> :
+                                 "Not Found"
             }
         </>
 

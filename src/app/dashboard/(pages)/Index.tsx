@@ -59,7 +59,7 @@ function AccountIndex() {
                         </div>
                         <p className='text-center my-5' >Represent the teams, business customers, and partner companies that access your applications as organizations in Auth0.</p>
                         <div className='hover:text-white' >
-                            <Button onClick={handleNavigation} variant="primary" > <Plus />
+                            <Button onClick={handleNavigation} className="bg-accent" variant="primary" > <Plus />
                                 Create New Organization
                             </Button>
                         </div>

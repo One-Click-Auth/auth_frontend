@@ -1,5 +1,5 @@
 import React from "react"
-import { Switch } from "../../../components/ui/Switch"
+import { Switch } from "@/components/ui/Switch"
 import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avatar"
 import { AccountDropdown } from "./Dropdown"
 
