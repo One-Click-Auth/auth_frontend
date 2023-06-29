@@ -7,7 +7,7 @@ import {
   OrgnaizationSvg,
   SettingSvg,
   SupportSvg,
-} from "../../../assets/Svg/Account/Account";
+} from "../../../../assets/Svg/Account/Account";
 import { ChevronLeft, ChevronRight, Instagram } from "lucide-react";
 import Link from "next/link";
 
@@ -41,13 +41,13 @@ export function Sidebar() {
   }, []);
 
   return (
-    <div className="">
+    <div className="sticky min-h-screen top-0">
       <ProSidebar
-        className="w-full flex-[15%] min-h-screen bg-black "
+        className="w-full !border-r-0 flex-[15%] bg-black "
         collapsed={collapse}
       >
         <Menu
-          className="bg-black  w-full"
+          className="bg-black w-full"
           menuItemStyles={{
             button: {
               // the active class will be added automatically by react router

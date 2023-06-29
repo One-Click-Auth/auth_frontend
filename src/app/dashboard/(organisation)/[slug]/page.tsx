@@ -1,22 +1,14 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Activity, CreditCard, DollarSign, Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Overview } from "@/components/dashboard/overview";
 import Image from "next/image";
 
-const OrganisationDashboard = () => {
-  const orgName = "Apple";
+const OrganisationDashboard = ({ params }: { params: { slug: string } }) => {
   return (
     <div className="flex-1 space-y-4 p-10 pt-4">
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">
-          {orgName} Dashboard
+          <span className="capitalize">{params.slug}</span> Dashboard
         </h2>
       </div>
       <Tabs defaultValue="overview" className="space-y-4">
@@ -51,7 +43,7 @@ const OrganisationDashboard = () => {
               <CardContent>
                 <div className="text-2xl font-bold">45,000</div>
                 <p className="text-xs text-muted-foreground">
-                  Last month's api calls
+                  Last month's API calls
                 </p>
               </CardContent>
             </Card>
