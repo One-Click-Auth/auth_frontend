@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { Switch } from "@/components/ui/Switch";
-import { ShieldSpark, MagnifierZoom, AiNetwork } from "@/assets/Svg/Account/Account";
+import {
+  AiCloudSpark,
+} from "@/assets/Svg/Account/Account";
 import { Button } from "@/components/ui/Button";
 
 const OrganisationDashboard = () => {
@@ -47,14 +49,17 @@ const OrganisationDashboard = () => {
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
             <CardTitle className="text-2xl font-medium">
-              DDoS Protection
+              Custom Email Address
             </CardTitle>
           </CardHeader>
           <CardContent className="flex px-10 gap-28">
             <p className="leading-tight text-slate-500 font-normal">
-              Implement robust DDoS (Distributed Denial of Service) protection
-              measures within your Authx-powered platform to safeguard against
-              malicious traffic and ensure uninterrupted service availability.
+              Empower your Authx-powered platform to send emails from custom
+              email addresses, enhancing brand identity and communication
+              consistency. With Authx, you can configure and customize the email
+              sending functionality to utilize your desired custom email
+              addresses, providing a seamless and personalized email experience
+              for your users.
             </p>
             <Switch />
           </CardContent>
@@ -62,15 +67,16 @@ const OrganisationDashboard = () => {
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
             <CardTitle className="text-2xl font-medium">
-              Bot Detection
+              Social Sign-On
             </CardTitle>
           </CardHeader>
           <CardContent className="flex px-10 gap-28">
             <p className="leading-tight text-slate-500 font-normal">
-              Implement robust bot detection mechanisms within your
-              Authx-powered platform to identify and mitigate the activities of
-              malicious bots, ensuring a secure and reliable user experience for
-              legitimate users.
+              Enable social sign-on functionality within your Authx-powered
+              platform, allowing users to authenticate and access your platform
+              using their social media accounts. Social sign-on simplifies the
+              registration and login process, enhancing user convenience and
+              streamlining the onboarding experience.
             </p>
             <Switch />
           </CardContent>
@@ -78,72 +84,33 @@ const OrganisationDashboard = () => {
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
             <CardTitle className="text-2xl font-medium">
-              Brute Force Attack Protection
+              MFA - TOTP Based
             </CardTitle>
           </CardHeader>
           <CardContent className="flex px-10 gap-28">
             <p className="leading-tight text-slate-500 font-normal">
-              Implement robust brute force attack protection measures within
-              your Authx-powered platform to safeguard against unauthorized
-              access attempts and protect user accounts from being compromised.
+              Implement Time-based One-Time Password (TOTP) based Multi-Factor
+              Authentication (MFA) within your Authx-powered platform to enhance
+              the security of user accounts. TOTP MFA adds an additional layer
+              of verification by requiring users to provide a time-sensitive,
+              one-time password in addition to their regular credentials.
             </p>
             <Switch />
           </CardContent>
         </Card>
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
-            <AiNetwork />
+            <AiCloudSpark />
             <CardTitle className="text-2xl !mt-2 font-medium">
-              Breached Password Detection
+              Private Cloud & Global Acceleration
             </CardTitle>
           </CardHeader>
           <CardContent className="flex px-10 gap-8">
             <p className="leading-tight text-slate-500 font-normal">
-              Enhance the security of your Authx-powered platform by
-              implementing breached password detection. Breached password
-              detection helps identify if a user's password has been compromised
-              in previous data breaches, minimizing the risk of account takeover
-              and unauthorized access.
-            </p>
-            <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
-              Upgrade to Enterprise
-            </Button>
-          </CardContent>
-        </Card>
-        <Card className="shadow-none">
-          <CardHeader className="px-10 pb-2">
-            <ShieldSpark />
-            <CardTitle className="text-2xl !mt-2 font-medium">
-              AI based Security System
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex px-10 gap-8">
-            <p className="leading-tight text-slate-500 font-normal">
-              Implement an AI-based security system within your Authx-powered
-              platform to enhance threat detection, response, and overall
-              cybersecurity capabilities. By leveraging artificial intelligence
-              and machine learning algorithms, you can bolster your platform's
-              security defenses and adapt to evolving threats effectively.
-            </p>
-            <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
-              Upgrade to Enterprise
-            </Button>
-          </CardContent>
-        </Card>
-        <Card className="shadow-none">
-          <CardHeader className="px-10 pb-2">
-            <MagnifierZoom />
-            <CardTitle className="text-2xl !mt-2 font-medium">
-              Suspicious IP Throttling
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex px-10 gap-8">
-            <p className="leading-tight text-slate-500 font-normal">
-              Implement suspicious IP throttling within your Authx-powered
-              platform to mitigate the risks posed by suspicious or malicious IP
-              addresses. By detecting and limiting the activities of such IPs,
-              you can protect your platform from various types of attacks and
-              ensure a secure environment for legitimate users.
+              Leverage the benefits of a private cloud infrastructure and global
+              acceleration capabilities within your Authx-powered platform to
+              ensure enhanced performance, scalability, and data security across
+              geographically distributed locations.
             </p>
             <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
               Upgrade to Enterprise
