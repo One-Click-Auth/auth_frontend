@@ -12,7 +12,7 @@ function AccountNav() {
     <div className="flex items-center justify-end min-w-max sticky top-0">
       <div className="flex items-center gap-1 mr-10">
         <Switch 
-          className="data-[state=checked]:bg-accent data-[state=unchecked]:bg-slate-400"
+          className="data-[state=checked]:bg-accent"
           />
         <span className="font-semibold text-xs sm:text-sm min-w-max">
           IAM mode
