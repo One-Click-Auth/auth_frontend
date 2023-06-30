@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { usePathname } from "next/navigation";
-import Settings from "./settings/page";
+// import Settings from "./settings/page";
 import Support from "./support/page";
 import AccountIndex from "./components/Index";
 import AddOrganization from "./add-organization/page";
@@ -11,9 +11,7 @@ function Account() {
 
   return (
     <>
-      {location === "/dashboard/settings" ? (
-        <Settings />
-      ) : location === "/dashboard" ? (
+      { location === "/dashboard" ? (
         <AccountIndex />
       ) : location === "/dashboard/support" ? (
         <Support />
