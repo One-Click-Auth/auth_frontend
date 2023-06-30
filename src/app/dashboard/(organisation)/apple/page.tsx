@@ -3,7 +3,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Overview } from "@/components/dashboard/overview";
 import Image from "next/image";
 
-const OrganisationDashboard = ({ params }: { params: { slug: string } }) => {
+interface DataType {
+  name: string
+}
+
+interface ParamsProp {
+  params: {
+    slug: string
+  }
+}
+
+const OrganisationDashboard = async ({ params }: ParamsProp) => {
+  // const res = await fetch("http://localhost:3000/api/testOrg", {
+  //   method: "GET"
+  // });
+  // const data: DataType = await res.json();
+  // console.log(data!);
+
   return (
     <div className="flex-1 space-y-4 p-10 pt-4">
       <div className="flex items-center justify-between space-y-2">
