@@ -1,35 +1,33 @@
-"use client"
-
 import React from "react";
-import { Input } from "./ui/Input";
-import { Button } from "./ui/Button";
-import { CopyPasteSvg } from "../assets/Svg/Account/Account";
-import { CheckSquareValid } from "../assets/Svg/Account/Account";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import { CopyPasteSvg } from "@/assets/Svg/Account/Account";
+import { CheckSquareValid } from "@/assets/Svg/Account/Account";
 
 function InputWithButtons() {
   return (
     <div className="flex w-full items-center space-x-2 tracking-wide">
       <Input className="border mr-0" type="text" />
       <Button
-        className="bg-[#9EFF00] hover:bg-lime-400 text-black tracking-wide py-2 px-4"
+        className="bg-accent hover:bg-accent/80 text-black tracking-wide py-2 px-4"
         type="button"
       >
         Reveal
       </Button>
       <Button
-        className="bg-[#9EFF00] hover:bg-lime-400 text-black tracking-wide py-2 px-4"
+        className="bg-accent hover:bg-accent/80 text-black tracking-wide py-2 px-4"
         type="button"
       >
         <CopyPasteSvg />
-        <span className="ml-3">Copy</span>
+        <span className="ml-2">Copy</span>
       </Button>
     </div>
   );
 }
 
-export default function KeyCard() {
+export default function KeysCard() {
   return (
-    <div className="flex flex-col gap-11 max-w-3xl p-14 border border-slate-300 mx-auto">
+    <div className="flex flex-col gap-11 max-w-3xl mt-14 p-14 border border-slate-300 rounded-lg mx-auto">
       <div>
         <h2 className="text-4xl font-semibold tracking-wide mb-9">
           Your API Key & Secret Key
@@ -50,11 +48,13 @@ export default function KeyCard() {
         <InputWithButtons />
       </div>
       <Button
-        className="self-center bg-[#9EFF00] hover:bg-lime-400 text-black tracking-wide py-2 px-4"
+        className="self-center bg-accent hover:bg-accent/80 text-black tracking-wide py-2 px-4"
         type="button"
       >
         <CheckSquareValid />
-        <span className="ml-3">I’ve Stored The Keys In Safe and Want To Proceed</span>
+        <span className="ml-3">
+          I’ve Stored The Keys In Safe and Want To Proceed
+        </span>
       </Button>
     </div>
   );

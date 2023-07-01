@@ -22,11 +22,10 @@ export const checkUser = async ({
   fa2?: boolean;
 }) => {
   const body = JSON.stringify({
-    emailid,
-    fa2,
-  });
-  console.log(API_URL.USER_INFO)
-  const response = await fetch(API_URL.USER_INFO, {
+    emailid:emailid.toLowerCase(),
+    fa2  
+  })  
+  const response =  await fetch(API_URL.USER_INFO, {
     method: "POST",
     headers,
     body,
@@ -40,4 +39,5 @@ export const getRandomPassword = async () => {
     headers,
   }).then((res) => res.json());
   return response;
-};
+
+}

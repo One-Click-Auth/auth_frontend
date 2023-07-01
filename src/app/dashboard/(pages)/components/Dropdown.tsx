@@ -1,6 +1,5 @@
-"use client"
-import * as React from "react"
-import { DropdownMenuCheckboxItemProps, DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
+"use client";
+import * as React from "react";
 import {
   DropdownMenuCheckboxItemProps,
   DropdownMenuItem,
@@ -11,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../../components/ui/dropdown-menu";
+} from "../../../../components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 import {
   AddItemSvg,
@@ -23,7 +22,7 @@ import {
   ProfileItemSvg,
   SettingsSvg,
   TeamSvg,
-} from "../../../assets/Svg/Account/DropDown";
+} from "../../../../assets/Svg/Account/DropDown";
 
 export function AccountDropdown() {
   return (
@@ -34,7 +33,7 @@ export function AccountDropdown() {
           <ChevronDown className="mt-1" />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-56 bg-white cursor-pointer">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <MenuItem icon={<ProfileItemSvg />} title="Profile" />

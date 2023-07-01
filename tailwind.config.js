@@ -5,10 +5,10 @@ module.exports = {
 	plugins: [require("tailwindcss-animate")],
 	darkMode: ["class"],
 	content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
 	],
 	theme: {
 		container: {
@@ -19,7 +19,7 @@ module.exports = {
 			},
 		},
 		extend: {
-			colors: {
+    	colors: {
 				border: "hsl(var(--border))",
 				input: "hsl(var(--input))",
 				ring: "hsl(var(--ring))",
@@ -53,7 +53,16 @@ module.exports = {
 					DEFAULT: "hsl(var(--card))",
 					foreground: "hsl(var(--card-foreground))",
 				},
-			},
+        accent: "#9EFF00",
+        disabled: "#B2B2B7",
+        primary: "#9EFF00",
+        input: "#E2E8F0",
+      },
+      fontFamily: {
+        inter: ['Inter', 'sans-serif',...fontFamily.sans],
+      },
+		
+		},
 			borderRadius: {
 				lg: `var(--radius)`,
 				md: `calc(var(--radius) - 2px)`,
@@ -73,9 +82,5 @@ module.exports = {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 			},
-      fontFamily: {
-        inter: ['Inter', 'sans-serif',...fontFamily.sans],
-      },
-    },
   },
 }
