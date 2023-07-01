@@ -9,6 +9,7 @@
     "lint": "next lint --fix",
     "format:staged": "prettier --write $(git diff --staged --name-only --diff-filter d | xargs)",
     "format": "prettier ./src --write",
+    "lint-staged": "lint-staged",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -59,9 +60,19 @@
     "eslint": "^8.44.0",
     "eslint-config-next": "^13.4.7",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react-refresh": "^0.4.1",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.3",
     "prettier": "^2.8.8"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint . --quiet --fix"
+    ],
+    "*.{json,ts,jsx,tsx,html}": [
+      "prettier --write"
+    ]
   }
 }
