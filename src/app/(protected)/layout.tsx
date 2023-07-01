@@ -8,20 +8,20 @@ const ServerProtectedPage = async ({
 }: {
   children: React.ReactNode;
 }) => {
-  // const session = await getServerSession(authOptions);
-  // if (!session) {
-  //   redirect("/login");
-  // }
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect("/login");
+  }
 
   return (
-    // <AuthContext {...session}>
+    <AuthContext session={session}>
       <div className="flex flex-row">
         <div className="w-2/12">
           <Navbar />
         </div>
         {children}
       </div>
-    // </AuthContext>
+   </AuthContext>
   );
 };
 

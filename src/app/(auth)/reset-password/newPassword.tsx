@@ -12,7 +12,7 @@ import Image from "next/image";
 const NewPassword: React.FC = () => {
 
   const searchparams = useSearchParams();
-  const email = searchparams.get("email");
+  const email = searchparams?.get("email");
   const [pass, setPass] = useState("");
   const [add, setAdd] = useState("");
   const [show, setShow] = useState(false);

@@ -1,22 +1,16 @@
 "use client"
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import OtpInput from "react-otp-input";
 import { LOGIN_GRAPHIC, LOGO } from "@/constants";
-import { checkUser } from "@/helper/api";
-import { loginToken, loginUser } from "@/redux/Auth/authSlice";
-import { useRouter, usePathname } from "next/navigation";
-import { AppDispatch } from "@/redux/store";
 import Image from "next/image";
 import LayoutBanner from "@/components/authForm/LayoutBanner";
 import { signIn } from "next-auth/react"
 import { PasswordComponent } from "@/components/authForm/PasswordComponent";
 import { EmailComponent } from "@/components/authForm/EmailComponent";
 import { Button } from "@/components/ui/Button";
+import { checkUser } from "@/helper/api";
+import { useSearchParams } from "next/navigation";
 
 type FormValues = {
   username?: string;
@@ -29,27 +23,26 @@ const Login = () => {
   const [values, setValues] = useState<FormValues>({})
   const [userRes,setUserRes] = useState({})
   const [value, setValue] = useState('')
-  
-  const [fa2, setfa2] = useState("null");
+  const searchParams = useSearchParams()
   const [show, setShow] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch<AppDispatch>();
-  const [otp, setOtp] = useState("");
-  const [customError, setCustomError] = useState<any>("");
-  const router = useRouter();
+  const [customError, setCustomError] = useState<any>(() => {
+    const error = searchParams?.get('error')
+    if(error === 'CredentialSignin')
+      return "Invalid Email or Password"
+    return null
+  });
   // email validation
   const asyncEmailValidation = async (email: string) => {
       try {
-        const response = await checkUser({ emailid: email });
+        const response = await checkUser({ emailid: email, });
         const { detail } = response;
-        setUserRes(() => ({...detail}))
+        setUserRes(() => ({...response}))
         if (!detail) {
           if (response.is_pool) {
             setValue( "pool");
           } else {
             setValue( "participant");
           }
-          setfa2(JSON.stringify(response.fa2 || false));
           return true;
         } else {
           console.log("async email validation failed");
@@ -61,26 +54,15 @@ const Login = () => {
       }
   };
 
+  const initiateLogin = async (data:Partial<FormValues>) => {
+    await signIn('credentials', {
+      ...values,...data,
+    callbackUrl:'/dashboard'})
+  }
   // on submit handler
-  const onSubmitHandler = async() => {
+  const onSubmitHandler = async(pwd:string) => {
     try {
-      setLoading(true);
-          // const res = await dispatch(loginToken(data));
-          await signIn('credentials',values)
-
-      const faValue = JSON.stringify(userRes.fa2);
-        if (faValue === "true") {
-          setShow(true);
-        } else {
-          console.log("response from login token ", res);
-            setCustomError({
-              password: {
-                type: "custom",
-                message: "Invalid Password",
-              },
-            });
-        }
-        setLoading(false);
+        return initiateLogin({password:pwd})
     } catch (err) {
       console.log("Error in onSubmitHandler ", err);
     }
@@ -89,8 +71,11 @@ const Login = () => {
 
   const handlePasswordSubmit = (pwd:string) => {
     // setPassword(parsedData.password);
+    console.log({pwd})
     setValues(prev => ({ ...prev, password: pwd }))
-    onSubmitHandler();
+    setTimeout(() => {
+      onSubmitHandler(pwd)
+    }, 100)
   };
 
   return (
@@ -111,11 +96,17 @@ const Login = () => {
             <h1 className="scroll-m-20 text-4xl text-center pb-9 md:pb-11 font-semibold transition-colors first:mt-0">
               Login to your AuthX account
             </h1>
-            <Button onClick={() => signIn('github',{})}>Login with Github</Button>
-           
-            {!values.username? (
+            <h1 className="scroll-m-20 text-xl text-center  font-semibold transition-colors text-red-500 first:mt-0">
+              {customError}
+            </h1>
+            <Button className="w-full rounded-full font-semibold bg-gray-600 text-white mb-10" onClick={() => signIn('github',{  callbackUrl:'/dashboard'})}>Login with Github</Button>
+
+            {!values.username ? (
               <EmailComponent
-                handleEmailSubmit={(e) => setValues(prev => ({ ...prev, username: e }))}
+                handleEmailSubmit={(e) =>  {
+                  setValues(prev => ({ ...prev, username: e }))
+                  setCustomError('')
+                }}
                 asyncEmailValidation={asyncEmailValidation}
               />
             ) : (
@@ -146,8 +137,8 @@ const Login = () => {
               <OtpInput
                 containerStyle="flex justify-center gap-1"
                 inputStyle="otp-input-width h-12 p-0 text-center rounded-xl"
-                value={otp}
-                onChange={setOtp}
+                value={values.otp}
+                onChange={(otp) => setValues(prev => ({...prev,otp}))}
                 numInputs={6}
                 renderSeparator={<span></span>}
                 renderInput={(props) => <input {...props} />}

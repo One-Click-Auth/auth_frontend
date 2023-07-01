@@ -13,7 +13,7 @@ export const PasswordComponent = ({
   const [password, setPassword] = useState('')
   const [error,setError] = useState('')
   return (
-    <div className="login-wrapper form-wrapper">
+    <div >
         <div className="form-group relative">
           <label
             htmlFor="password"
@@ -24,9 +24,9 @@ export const PasswordComponent = ({
           <input
             id="password"
             type="password"
-            className="form-control"
             defaultValue={password}
-            required
+          required
+          className="w-full rounded-xl"
             name="password"
             onChange={(e) => {
               setPassword(e.target.value)

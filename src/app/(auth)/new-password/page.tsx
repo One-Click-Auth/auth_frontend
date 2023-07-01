@@ -42,7 +42,6 @@ const NewPassword: React.FC = () => {
 
   useEffect(() => {
     if (param !== null) setEmail(param);
-    console.log(email);
   }, [param, email]);
 
   const handleModal = () => {

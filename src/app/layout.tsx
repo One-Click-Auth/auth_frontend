@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import { Providers } from "@/redux/provider";
 const inter = Inter({ subsets: ["latin"] });
 import "./globals.css";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
 
 export const metadata = {
   title: "Create Next App",
@@ -13,7 +16,7 @@ export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
-}) {
+  }) {
   return (
     <html lang="en">
       {/*
@@ -22,7 +25,7 @@ export default async function RootLayout({
       */}
       <head />
       <body>
-        <Providers>{children}</Providers>
+        <Providers >{children}</Providers>
       </body>
     </html>
   );

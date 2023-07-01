@@ -16,7 +16,7 @@ export const EmailComponent = ({
   asyncEmailValidation
 }: EmailSubmitType) => {
   const [email, setEmail] = useState('')
-  const [error, setError] = useState('')
+  const [error, setError] = useState<null|string>('')
   const verifyEmail = async () => {
     if (emailSchema.isValidSync(email)) { 
       const isValid = await asyncEmailValidation(email)
@@ -25,7 +25,7 @@ export const EmailComponent = ({
         return false
       }
       else {
-        setError(false)
+        setError(null)
         return true
       }
     }
@@ -33,7 +33,6 @@ export const EmailComponent = ({
       setError('Please Input valid email')
       return false
     }
-    return false
   }
   useDebounce(() => verifyEmail(),[email],300)
   return (
@@ -71,8 +70,9 @@ export const EmailComponent = ({
             onClick={async (e) => {
               createRipple(e)
               const validEmail = await verifyEmail()
-              if(validEmail)
+              if(validEmail){
                 handleEmailSubmit(email)
+              }
               else setError('Please Input Valid Email')
             }
               }

@@ -2,11 +2,12 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
+  const { user } = useAuth()
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
@@ -18,6 +19,7 @@ const Navbar = () => {
     <nav className={`sidebar ${isSidebarOpen ? "" : "collapsed"}`}>
       <div className="nav-wrap">
         <ul>
+          <div>{user.email}</div>
           {/* navbar element 1  */}
           <li>
             <Link className="linknav" href="/dashboard/page4">

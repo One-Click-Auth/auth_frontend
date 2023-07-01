@@ -1,11 +1,17 @@
 "use client";
-import { createContext, useContext } from "react";
+import { Session } from "next-auth";
+import { createContext, useContext, useMemo } from "react";
 
 const authContext = createContext({});
 
-export function AuthContext({ token, user, children }) {
+export function AuthContext({ session, children }: { session: Session, children: React.ReactNode }) {
+  // const user = useMemo(() => session.token)
+  const values = useMemo(() => ({
+    user: session?.token?.user ?? {},
+    token:session?.token?.access_token
+  }), [session])
   return (
-    <authContext.Provider value={{ token, user }}>
+    <authContext.Provider value={{ ...values}}>
       {children}
     </authContext.Provider>
   );
