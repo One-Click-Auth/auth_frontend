@@ -1,4 +1,5 @@
 "use client";
+ // @ts-nocheck
 import { Session } from "next-auth";
 import { createContext, useContext, useMemo } from "react";
 

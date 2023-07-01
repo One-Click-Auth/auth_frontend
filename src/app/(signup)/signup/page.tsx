@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import { yupResolver } from "@hookform/resolvers/yup";
 
 // TS types
 type RequestObjectType = {
@@ -52,7 +53,7 @@ const registerSchema = yup
   .required();
 
   // Alert component
-  const AlertMessage = ({ message }: { message: string }) => {
+  const AlertMessage = ({ message ,setAlert}: { message: string,setAlert:React.Dispatch<boolean> }) => {
     return (
       <Alert className="fixed top-6 w-[22rem] left-[calc(50vw_-_11rem)] bg-yellow-400 z-[1100]">
         <ExclamationTriangleIcon className="w-4 h-4" />
@@ -327,13 +328,14 @@ export default function Signup() {
           </div>
         </form>
       </div>
-      {alert && <AlertMessage message={alertMessage} />}
+      {alert && <AlertMessage message={alertMessage} setAlert={setAlert} />}
 
       <Modal
         show={show}
         onHide={() => setShow(false)}
-        backdrop="static"
-        keyboard={false}
+        // TODO Reckson
+        // backdrop="static"
+        // keyboard={false}
         className="modal-dialog-popup"
       >
         <div className="bg-white rounded-3xl p-16">
