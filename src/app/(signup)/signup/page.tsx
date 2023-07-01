@@ -51,17 +51,6 @@ const registerSchema = yup
   })
   .required();
 
-export default function Signup() {
-  const router = useRouter();
-
-  const [show, setShow] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [messageToken, setMessageToken] = useState("");
-  const [alert, setAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [requestObject, setRequestObject] = useState<RequestObjectType>();
-
   // Alert component
   const AlertMessage = ({ message }: { message: string }) => {
     return (
@@ -79,6 +68,26 @@ export default function Signup() {
     );
   };
 
+export default function Signup() {
+  const router = useRouter();
+
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [messageToken, setMessageToken] = useState("");
+  const [alert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [requestObject, setRequestObject] = useState<RequestObjectType>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterUser>({
+    resolver: yupResolver(registerSchema),
+    mode: "onSubmit",
+  });
+
+  
   // OTP action
   useEffect(() => {
     if (otp.length === 8) {
@@ -129,7 +138,7 @@ export default function Signup() {
       .then((data) => {
         setLoading(false);
         if (data.status === 200 && data.is_ok === true) {
-          navigate("/");
+          router.push("/");
         }
         if (data.detail) {
           setAlertMessage(data.detail);
@@ -200,7 +209,7 @@ export default function Signup() {
     <>
       <div className="login-wrapper form-wrapper">
         <form
-          onSubmit={handleSubmit(handleFormSubmit)}
+          onSubmit={handleFormSubmit}
           // className="was-validated"
         >
           <div className="form-group relative">

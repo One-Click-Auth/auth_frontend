@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export",
+    "build": "next build ",
     "start": "next start",
     "lint": "next lint --fix",
     "format:staged": "prettier --write $(git diff --staged --name-only --diff-filter d | xargs)",
