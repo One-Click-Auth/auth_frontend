@@ -1,17 +1,14 @@
-"use client";
-import * as React from "react";
-import {
-  DropdownMenuCheckboxItemProps,
-  DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
+'use client';
+import * as React from 'react';
+import { DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../../../../components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+  DropdownMenuTrigger
+} from '../../../../components/ui/dropdown-menu';
+import { ChevronDown } from 'lucide-react';
 import {
   AddItemSvg,
   BillingSvg,
@@ -21,15 +18,17 @@ import {
   LogOutSvg,
   ProfileItemSvg,
   SettingsSvg,
-  TeamSvg,
-} from "../../../../assets/Svg/Account/DropDown";
+  TeamSvg
+} from '../../../../assets/Svg/Account/DropDown';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function AccountDropdown() {
+  const { user } = useAuth();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="active:border-0 active:outline-none">
         <div className="text-xs sm:text-sm flex items-center font-semibold  min-w-max">
-          <span className="hidden sm:block">Admirra John</span>
+          <span className="hidden sm:block">{user?.full_name}</span>
           <ChevronDown className="mt-1" />
         </div>
       </DropdownMenuTrigger>

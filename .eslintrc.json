@@ -1,7 +1,16 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals", "eslint:recommended","prettier","eslint:recommended",
+  "plugin:@typescript-eslint/recommended",
+  "plugin:react-hooks/recommended"],
+  "plugins": ["unused-imports","react-refresh"],
   "rules": {
+    "unused-imports/no-unused-imports": "warn",
     "react/no-unescaped-entities": "off",
-    "react-hooks/exhaustive-deps":  "off"
+    "react/display-name": "off",
+    "react-hooks/exhaustive-deps":  "off",
+    "no-duplicate-case": "off", // this will turn off a rule
+    "no-unused-vars": "warn", // this will notify violation but not output error
+    "no-func-assign" : "error", // this will notify violation and outputs error
+    "react-refresh/only-export-components": "warn"
   }
 }

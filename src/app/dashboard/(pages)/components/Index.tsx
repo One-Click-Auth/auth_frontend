@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { DatabaseSvg } from "../../../../assets/Svg/Account/Account";
 import { Button } from "../../../../components/ui/Button";
 import { useRouter } from "next/navigation";
-import OrgList from "./OrgList";
 
 function AccountIndex() {
   const [hasOrg, setHasOrg] = useState(false);

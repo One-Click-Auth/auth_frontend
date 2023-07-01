@@ -1,4 +1,6 @@
-export function createRipple(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+export function createRipple(
+  event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+) {
   const button = event.currentTarget;
 
   const circle = document.createElement("span");

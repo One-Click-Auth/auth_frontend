@@ -9,9 +9,11 @@ function AddOrganization() {
     const router = useRouter()
     const [orgName, setOrgName] = useState("")
 
-    const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => {
-        setOrgName(e.target.value)
-    }
+  const handleChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setOrgName(e.target.value);
+  };
 
 
     const handleSubmit = (e: { preventDefault: () => void }) => {
@@ -66,4 +68,4 @@ function AddOrganization() {
         </div >)
 }
 
-export default AddOrganization
+export default AddOrganization;
