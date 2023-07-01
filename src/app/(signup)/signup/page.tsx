@@ -6,7 +6,6 @@ import { LinkText } from "@/components/authForm/LinkText";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { LuXCircle } from "react-icons/lu";
 import OtpInput from "react-otp-input";
 import Modal from "@/components/Modal";
