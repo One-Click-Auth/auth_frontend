@@ -6,6 +6,7 @@ import { LinkText } from "@/components/authForm/LinkText";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { LuXCircle } from "react-icons/lu";
 import OtpInput from "react-otp-input";
 import Modal from "@/components/Modal";
@@ -62,6 +63,15 @@ export default function Signup() {
   const [alertMessage, setAlertMessage] = useState("");
   const [requestObject, setRequestObject] = useState<RequestObjectType>();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterUser>({
+    resolver: yupResolver(registerSchema),
+    mode: "onSubmit",
+  });
+
   // Alert component
   const AlertMessage = ({ message }: { message: string }) => {
     return (
@@ -82,7 +92,7 @@ export default function Signup() {
   // OTP action
   useEffect(() => {
     if (otp.length === 8) {
-      console.log("verifying OTP");
+      console.log("verifying OTP", otp);
       setLoading(true);
       handleOTPValidation();
     }
@@ -106,6 +116,7 @@ export default function Signup() {
       }
     }
 
+    console.log(requestObject);
     if (requestObject) {
       fetchdata();
     }
@@ -127,9 +138,15 @@ export default function Signup() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setLoading(false);
         if (data.status === 200 && data.is_ok === true) {
-          navigate("/");
+          setShow(false);
+          router.push("/");
+        }
+        if (data.is_ok === false) {
+          setAlertMessage(data.msg);
+          setAlert(true);
         }
         if (data.detail) {
           setAlertMessage(data.detail);
@@ -171,13 +188,10 @@ export default function Signup() {
   };
 
   // form submit handler
-  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const parsedData = Object.fromEntries(formData.entries());
+  const handleFormSubmit = async (data: RegisterUser) => {
     const reqObject = {
-      username: parsedData.username,
-      password: parsedData.password,
+      username: data.username,
+      password: data.password,
       full_name: "Test User",
       is_pool: true,
       link: true,
@@ -186,12 +200,6 @@ export default function Signup() {
     };
 
     setAlert(false);
-    if (!parsedData.agreeTerms) {
-      setAlertMessage("Please accept our Terms of Service and Privacy Policy!");
-      setAlert(true);
-      return;
-    }
-
     setRequestObject(reqObject);
     setLoading(true);
   };
@@ -320,30 +328,31 @@ export default function Signup() {
       </div>
       {alert && <AlertMessage message={alertMessage} />}
 
-      <Modal
-        show={show}
-        onHide={() => setShow(false)}
-        backdrop="static"
-        keyboard={false}
-        className="modal-dialog-popup"
-      >
-        <div className="bg-white rounded-3xl p-16">
-          <p className="font-light">
+      <Modal show={show}>
+        <div className="bg-white max-w-3xl mt-4 mb-12 mx-8 rounded-3xl p-12 md:p-16">
+          <p className="font-light text-center">
             Please check your email for a registration link or OTP. You can
             register any way by clicking on the{" "}
-            <span className="text_design">link in E-mail </span>or{" "}
-            <span className="text_design">by entering OTP </span>in the
-            designated column. If you didn't receive an email, you can click I
-            didn't receive any email.
+            <span className="bg-gradient-to-r text-transparent bg-clip-text from-[#2932FF] to-[#589BFF] ">
+              link in E-mail{" "}
+            </span>
+            or{" "}
+            <span className="bg-gradient-to-r text-transparent bg-clip-text from-[#589BFF] to-[#2932FF]">
+              by entering OTP{" "}
+            </span>
+            in the designated column. If you didn't receive an email, you can
+            click "Resend Email".
           </p>
           <div className="row">
             <div className="col-lg-2"></div>
             <div className="">
               <div className="number_input">
-                <div className="text-3xl my-11">Enter e-mail OTP</div>
+                <div className="text-3xl text-center my-11">
+                  Enter e-mail OTP
+                </div>
                 <OtpInput
                   containerStyle="flex justify-center gap-1"
-                  inputStyle="otp-input-width h-12 p-0 text-center rounded-xl"
+                  inputStyle="otp-input-width !w-8 md:!w-12 h-12 p-0 text-center border border-slate-500 rounded-xl"
                   value={otp}
                   onChange={setOtp}
                   numInputs={8}
@@ -354,11 +363,13 @@ export default function Signup() {
               <div className="row">
                 <div className="col-lg-10 text-start">
                   <button
-                    className="mt-16 p-0 bg-transparent font-['Lexend'] font-normal down-button"
+                    className="group mt-16 p-0 bg-transparent font-mono font-normal"
                     onClick={resendEmail}
                   >
-                    I didn't receive Email
-                    <span className="modal-arr pl-2">›</span>
+                    Resend Email
+                    <span className="inline-block group-hover:translate-x-2 ease-in duration-300 pl-2">
+                      ›
+                    </span>
                   </button>
                 </div>
                 <div className="col-lg-2"></div>

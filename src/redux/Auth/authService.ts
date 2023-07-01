@@ -103,10 +103,10 @@ const loginToken = async (data: any) => {
   } catch (error: any) {
     response = error?.response;
   }
-  if (response.status === 401) {
-  } else {
+  if (response.status !== 401) {
     return response.data;
   }
+  return null
 };
 
 const signinUser = async (data: any) => {
