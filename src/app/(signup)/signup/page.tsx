@@ -208,7 +208,7 @@ export default function Signup() {
     <>
       <div className="login-wrapper form-wrapper">
         <form
-          onSubmit={handleFormSubmit}
+          onSubmit={handleSubmit(handleFormSubmit)}
           // className="was-validated"
         >
           <div className="form-group relative">

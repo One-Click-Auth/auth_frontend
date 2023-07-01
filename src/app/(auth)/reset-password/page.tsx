@@ -1,12 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { FaAngleRight } from "react-icons/fa";
-import logo from "./logo.svg";
-import image from "./group.svg";
-import Link from "next/link";
 import Image from "next/image";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { LOGIN_GRAPHIC, LOGO } from "@/constants";
 import { FormButton } from "@/components/authForm/FormButton";
 import { LinkText } from "@/components/authForm/LinkText";

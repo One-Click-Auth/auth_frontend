@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { LOGO, SIGNUP_GRAPHIC } from "@/constants";
 import LayoutBanner from "@/components/authForm/LayoutBanner";
-import Modal from "@/components/Modal";
-import OtpInput from "react-otp-input";
 
 export default function RootLayout({
   children,

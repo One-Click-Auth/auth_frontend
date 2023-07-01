@@ -1,16 +1,18 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { API_DOMAIN } from "@/constants";
 import axios from "axios";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 
-async function refreshAccessToken(token) {
+async function refreshAccessToken(token:string) {
   try {
     const url = API_DOMAIN + "/token"
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        token: token.refresh_token
+        token: token
       },
       method: "GET",
     })
@@ -22,16 +24,15 @@ async function refreshAccessToken(token) {
     }
 
     return {
-      ...token,
       accessToken: refreshedTokens.access_token,
       accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
-      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+      refreshToken: refreshedTokens.refresh_token 
     }
   } catch (error) {
     console.log(JSON.stringify(error))
 
     return {
-      ...token,
+      token,
       error: "RefreshAccessTokenError",
     }
   }
@@ -113,6 +114,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    // @ts-ignore
     async signIn(data) {
       const { account } = data
       console.log({ data })
@@ -123,17 +125,22 @@ export const authOptions: NextAuthOptions = {
         // });
         // const userTokens = res.data;
       }
+    // @ts-ignore
       const { access_token, ...user } = data.user
       return Promise.resolve({ user, access_token, })
     },
+    // @ts-ignore
     async jwt(jwtData) {
       const { token } = jwtData
       console.log("JWT", JSON.stringify(jwtData))
+    // @ts-ignore
       if (jwtData.user?.user) {
         return jwtData.user
       }
       return token
     },
+
+    // @ts-ignore
     async session(session, token) {
       console.log("SESSION", JSON.stringify(session))
       console.log("SESSION", JSON.stringify(token))

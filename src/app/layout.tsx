@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import { Providers } from "@/redux/provider";
 const inter = Inter({ subsets: ["latin"] });
 import "./globals.css";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 
 
 export const metadata = {
