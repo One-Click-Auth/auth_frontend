@@ -6,7 +6,6 @@ import { LinkText } from "@/components/authForm/LinkText";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { LuXCircle } from "react-icons/lu";
 import OtpInput from "react-otp-input";
 import Modal from "@/components/Modal";
@@ -18,6 +17,7 @@ import {
 } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import { yupResolver } from "@hookform/resolvers/yup";
 
 // TS types
 type RequestObjectType = {
@@ -52,28 +52,8 @@ const registerSchema = yup
   })
   .required();
 
-export default function Signup() {
-  const router = useRouter();
-
-  const [show, setShow] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [messageToken, setMessageToken] = useState("");
-  const [alert, setAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [requestObject, setRequestObject] = useState<RequestObjectType>();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterUser>({
-    resolver: yupResolver(registerSchema),
-    mode: "onSubmit",
-  });
-
   // Alert component
-  const AlertMessage = ({ message }: { message: string }) => {
+  const AlertMessage = ({ message ,setAlert}: { message: string,setAlert:React.Dispatch<boolean> }) => {
     return (
       <Alert className="fixed top-6 w-[22rem] left-[calc(50vw_-_11rem)] bg-yellow-400 z-[1100]">
         <ExclamationTriangleIcon className="w-4 h-4" />
@@ -89,6 +69,26 @@ export default function Signup() {
     );
   };
 
+export default function Signup() {
+  const router = useRouter();
+
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [messageToken, setMessageToken] = useState("");
+  const [alert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [requestObject, setRequestObject] = useState<RequestObjectType>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterUser>({
+    resolver: yupResolver(registerSchema),
+    mode: "onSubmit",
+  });
+
+  
   // OTP action
   useEffect(() => {
     if (otp.length === 8) {
@@ -208,7 +208,7 @@ export default function Signup() {
     <>
       <div className="login-wrapper form-wrapper">
         <form
-          onSubmit={handleSubmit(handleFormSubmit)}
+          onSubmit={handleFormSubmit}
           // className="was-validated"
         >
           <div className="form-group relative">
@@ -326,11 +326,18 @@ export default function Signup() {
           </div>
         </form>
       </div>
-      {alert && <AlertMessage message={alertMessage} />}
+      {alert && <AlertMessage message={alertMessage} setAlert={setAlert} />}
 
-      <Modal show={show}>
-        <div className="bg-white max-w-3xl mt-4 mb-12 mx-8 rounded-3xl p-12 md:p-16">
-          <p className="font-light text-center">
+      <Modal
+        show={show}
+        onHide={() => setShow(false)}
+        // TODO Reckson
+        // backdrop="static"
+        // keyboard={false}
+        className="modal-dialog-popup"
+      >
+        <div className="bg-white rounded-3xl p-16">
+          <p className="font-light">
             Please check your email for a registration link or OTP. You can
             register any way by clicking on the{" "}
             <span className="bg-gradient-to-r text-transparent bg-clip-text from-[#2932FF] to-[#589BFF] ">
