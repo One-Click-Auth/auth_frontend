@@ -28,7 +28,7 @@ export function AccountDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger className="active:border-0 active:outline-none">
         <div className="text-xs sm:text-sm flex items-center font-semibold  min-w-max">
-          <span className="hidden sm:block">{user.full_name}</span>
+          <span className="hidden sm:block">{user?.full_name}</span>
           <ChevronDown className="mt-1" />
         </div>
       </DropdownMenuTrigger>
