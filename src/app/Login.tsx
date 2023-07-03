@@ -10,7 +10,6 @@ import { PasswordComponent } from '@/components/authForm/PasswordComponent';
 import { EmailComponent } from '@/components/authForm/EmailComponent';
 import { Button } from '@/components/ui/Button';
 import { useSearchParams } from 'next/navigation';
-import { Icons } from "@/components/icons"
 
 type FormValues = {
   username?: string;
@@ -77,14 +76,6 @@ const Login = () => {
             <h1 className="scroll-m-20 text-4xl text-center pb-9 md:pb-11 font-semibold transition-colors first:mt-0">
               Login to your AuthX account
             </h1>
-            {/* <Button
-              className="w-full rounded-full font-semibold bg-gray-600 text-white mb-10"
-              onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
-            >
-              Login with Github
-            </Button> */}
-            
-            
 
             {!values.username ? (
               <EmailComponent handleEmailSubmit={handleEmailSubmit} />

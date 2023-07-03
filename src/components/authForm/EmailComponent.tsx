@@ -12,38 +12,13 @@ import { Icons } from '../icons';
 
 type EmailSubmitType = {
   handleEmailSubmit: (data: { username: string }) => void;
-  // asyncEmailValidation: (e: string) => Promise<boolean>;
 };
 
 export const EmailComponent = ({
   handleEmailSubmit
-}: // asyncEmailValidation
+}: 
 EmailSubmitType) => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState<null | string>('');
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const verifyEmail = async (verify = false) => {
-  //   console.log({ email });
-  //   console.log(emailSchema.isValidSync(email));
-  //   if (emailSchema.isValidSync(email)) {
-  //     const isValid = await asyncEmailValidation(email);
-  //     if (!isValid) {
-  //       setError('User Not Found');
-  //       if (verify) {
-  //         setEmail('');
-  //         router.push('/signup');
-  //       }
-  //       return false;
-  //     } else {
-  //       setError(null);
-  //       return true;
-  //     }
-  //   } else {
-  //     setError('Please Input valid email');
-  //     return false;
-  //   }
-  // };
 
   // email validation
   const asyncEmailValidation = async (email: string) => {
@@ -128,10 +103,6 @@ EmailSubmitType) => {
             className={`form-control w-full px-8 py-3 border rounded-lg ${
               errors.username ? 'border-red-600' : 'border-slate-500'
             }`}
-            // onChange={e => {
-            //   setEmail(e.target.value);
-            //   setError('');
-            // }}
             placeholder="name@example.com"
           />
           {errors.username && (
