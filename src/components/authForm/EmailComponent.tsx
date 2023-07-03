@@ -66,7 +66,7 @@ EmailSubmitType) => {
   });
   return (
     <div>
-      <Button className='w-full mb-6 hover:bg-black hover:text-white' variant="outline" type="button" disabled={isLoading}>
+      <Button className='w-full h-12 mb-6 text-md hover:bg-black hover:text-white' variant="outline" type="button" disabled={isLoading}>
         {isLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
