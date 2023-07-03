@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import { fontFamily } from 'tailwindcss/defaultTheme';
+
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -47,8 +49,13 @@ module.exports = {
         },
       },
       fontFamily: {
-        inter: ["Inter", "sans-serif"],
-        lexend: ["Lexend", "mono"],
+        inter: ["Inter", "sans-serif", ...fontFamily.sans],
+        lexend: ["Lexend", "mono", ...fontFamily.mono],
+      },
+      borderRadius: {
+        lg: `var(--radius)`,
+        md: `calc(var(--radius) - 2px)`,
+        sm: 'calc(var(--radius) - 4px)'
       },
       keyframes: {
         "accordion-down": {
