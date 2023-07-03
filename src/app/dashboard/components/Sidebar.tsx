@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { Sidebar as ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
+import React, { useEffect, useState } from 'react';
+import { Sidebar as ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
 // import { NavLink as Link } from 'react-router-dom';
 import {
   OrgnaizationSvg,
   SettingSvg,
-  SupportSvg,
-} from "../../../../assets/Svg/Account/Account";
-import { ChevronLeft, ChevronRight, Instagram } from "lucide-react";
-import Link from "next/link";
+  SupportSvg
+} from '../../../assets/Svg/Account/Account';
+import { ChevronLeft, ChevronRight, Instagram } from 'lucide-react';
+import Link from 'next/link';
 
 export function Sidebar() {
   const routes = [
-    { icon: <Instagram />, title: "Instagram", to: "https://instagram.com" },
+    { icon: <Instagram />, title: 'Instagram', to: 'https://instagram.com' }
   ];
   const [collapse, setCollapse] = useState(false);
 
@@ -32,11 +32,11 @@ export function Sidebar() {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     handleResize();
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -52,15 +52,15 @@ export function Sidebar() {
             button: {
               // the active class will be added automatically by react router
               // so we can use it to style the active menu item
-              borderRadius: "3px",
-              padding: !collapse ? "16px" : "",
+              borderRadius: '3px',
+              padding: !collapse ? '16px' : '',
               [`&.active`]: {
-                backgroundColor: "rgba(255,255,255,0.2)",
+                backgroundColor: 'rgba(255,255,255,0.2)'
               },
               [`&:hover`]: {
-                backgroundColor: "rgba(255,255,255,0.11)",
-              },
-            },
+                backgroundColor: 'rgba(255,255,255,0.11)'
+              }
+            }
           }}
         >
           <div
@@ -69,9 +69,9 @@ export function Sidebar() {
           >
             {collapse ? <ChevronRight /> : <ChevronLeft />}
           </div>
-          <div className={collapse ? "" : "px-4"}>
+          <div className={collapse ? '' : 'px-4'}>
             <div className="text-white text-center font-bold text-3xl mb-8">
-              <h1 className={collapse ? "hidden" : ""}>Organization</h1>
+              <h1 className={collapse ? 'hidden' : ''}>Organization</h1>
             </div>
             <p className="mb-1 ml-4 text-xs text-gray-500 "> MAIN MENU</p>
             <SidebarMenu
