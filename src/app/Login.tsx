@@ -9,8 +9,8 @@ import { signIn } from 'next-auth/react';
 import { PasswordComponent } from '@/components/authForm/PasswordComponent';
 import { EmailComponent } from '@/components/authForm/EmailComponent';
 import { Button } from '@/components/ui/Button';
-import { checkUser } from '@/helper/api';
 import { useSearchParams } from 'next/navigation';
+import { Icons } from "@/components/icons"
 
 type FormValues = {
   username?: string;
@@ -21,38 +21,15 @@ type FormValues = {
 
 const Login = () => {
   const [values, setValues] = useState<FormValues>({});
-  const [userRes, setUserRes] = useState({});
-  const [value, setValue] = useState('');
-  const searchParams = useSearchParams();
+  // const [userRes, setUserRes] = useState({});
+  // const [value, setValue] = useState('');
+  // const searchParams = useSearchParams();
   const [show, setShow] = useState(false);
-  const [customError, setCustomError] = useState<any>(() => {
-    const error = searchParams?.get('error');
-    if (error === 'CredentialSignin') return 'Invalid Email or Password';
-    return null;
-  });
-
-  // email validation
-  const asyncEmailValidation = async (email: string) => {
-    try {
-      const response = await checkUser({ emailid: email });
-      const { detail } = response;
-      setUserRes(() => ({ ...response }));
-      if (!detail) {
-        if (response.is_pool) {
-          setValue('pool');
-        } else {
-          setValue('participant');
-        }
-        return true;
-      } else {
-        console.log('async email validation failed');
-        return false;
-      }
-    } catch (e) {
-      console.log('Error in asyncEmailValidation ', e);
-      return false;
-    }
-  };
+  // const [customError, setCustomError] = useState<any>(() => {
+  //   const error = searchParams?.get('error');
+  //   if (error === 'CredentialSignin') return 'Invalid Email or Password';
+  //   return null;
+  // });
 
   const initiateLogin = async (data: Partial<FormValues>) => {
     await signIn('credentials', {
@@ -71,18 +48,16 @@ const Login = () => {
     }
   };
 
-  const handlePasswordSubmit = (data: {password: string}) => {
-    // setPassword(parsedData.password);
-
-    setValues(prev => ({ ...prev, password: data.password }))
+  const handlePasswordSubmit = (data: { password: string }) => {
+    setValues(prev => ({ ...prev, password: data.password }));
     setTimeout(() => {
-      onSubmitHandler(data.password)
-    }, 100)
+      onSubmitHandler(data.password);
+    }, 100);
   };
 
-  const handleEmailSubmit = (data: { username: string}) => {
-      setValues(prev => ({ ...prev, username: data.username }));
-  }
+  const handleEmailSubmit = (data: { username: string }) => {
+    setValues(prev => ({ ...prev, username: data.username }));
+  };
 
   return (
     <div className="min-h-screen flex flex-col sm:flex-row justify-center">
@@ -102,25 +77,19 @@ const Login = () => {
             <h1 className="scroll-m-20 text-4xl text-center pb-9 md:pb-11 font-semibold transition-colors first:mt-0">
               Login to your AuthX account
             </h1>
-            <h1 className="scroll-m-20 text-xl text-center  font-semibold transition-colors text-red-500 first:mt-0">
-              {customError}
-            </h1>
-            <Button
+            {/* <Button
               className="w-full rounded-full font-semibold bg-gray-600 text-white mb-10"
               onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
             >
               Login with Github
-            </Button>
+            </Button> */}
+            
+            
 
             {!values.username ? (
-              <EmailComponent
-                handleEmailSubmit={handleEmailSubmit}
-                // asyncEmailValidation={asyncEmailValidation}
-              />
+              <EmailComponent handleEmailSubmit={handleEmailSubmit} />
             ) : (
-              <PasswordComponent
-                handlePasswordSubmit={handlePasswordSubmit}
-              />
+              <PasswordComponent handlePasswordSubmit={handlePasswordSubmit} />
             )}
           </div>
         </div>

@@ -21,6 +21,7 @@ module.exports = {
         disabled: "#B2B2B7",
         primary: "#9EFF00",
         input: "#E2E8F0",
+        background: "white"
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
