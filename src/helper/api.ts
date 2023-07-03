@@ -29,7 +29,8 @@ export const checkUser = async ({
     method: "POST",
     headers,
     body,
-  }).then((res) => res.json());
+  }).then((res) => res.json())
+  .catch(err => console.log(err));
   return response;
 };
 

@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '../../../components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
 import {
   AddItemSvg,
@@ -19,8 +19,9 @@ import {
   ProfileItemSvg,
   SettingsSvg,
   TeamSvg
-} from '../../../assets/Svg/Account/DropDown';
+} from '@/assets/Svg/Account/DropDown';
 import { useAuth } from '@/contexts/AuthContext';
+import { signOut } from 'next-auth/react';
 
 export function AccountDropdown() {
   const { user } = useAuth();
@@ -48,8 +49,19 @@ export function AccountDropdown() {
           <MenuItem icon={<CloudSvg />} title="Api" />
         </div>
         <DropdownMenuSeparator />
-
-        <MenuItem icon={<LogOutSvg />} title="Log Out" />
+        <DropdownMenuItem
+          className="cursor-pointer flex items-center p-1 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm"
+          onClick={() =>
+            signOut({
+              callbackUrl: window.location.origin
+            })
+          }
+        >
+          <span className="w-5 h-5 mt-1">
+            <LogOutSvg />
+          </span>
+          <span className="ml-2"> Sign Out </span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
