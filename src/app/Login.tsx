@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from '@/components/Modal';
 import OtpInput from 'react-otp-input';
 import { LOGIN_GRAPHIC, LOGO } from '@/constants';
@@ -20,15 +20,15 @@ type FormValues = {
 
 const Login = () => {
   const [values, setValues] = useState<FormValues>({});
+  const [fa2, setFa2] = useState<boolean>(false);
   // const [userRes, setUserRes] = useState({});
   // const [value, setValue] = useState('');
   // const searchParams = useSearchParams();
   const [show, setShow] = useState(false);
-  // const [customError, setCustomError] = useState<any>(() => {
-  //   const error = searchParams?.get('error');
-  //   if (error === 'CredentialSignin') return 'Invalid Email or Password';
-  //   return null;
-  // });
+
+  useEffect(() => {
+    console.log(fa2);
+  }, [fa2]);
 
   const initiateLogin = async (data: Partial<FormValues>) => {
     await signIn('credentials', {
@@ -78,7 +78,10 @@ const Login = () => {
             </h1>
 
             {!values.username ? (
-              <EmailComponent handleEmailSubmit={handleEmailSubmit} />
+              <EmailComponent
+                handleEmailSubmit={handleEmailSubmit}
+                setFa2={setFa2}
+              />
             ) : (
               <PasswordComponent handlePasswordSubmit={handlePasswordSubmit} />
             )}

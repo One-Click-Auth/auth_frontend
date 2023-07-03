@@ -9,15 +9,17 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { checkUser } from '@/helper/api';
 import { Button } from '../ui/Button';
 import { Icons } from '../icons';
+import { signIn } from 'next-auth/react';
 
 type EmailSubmitType = {
   handleEmailSubmit: (data: { username: string }) => void;
+  setFa2: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const EmailComponent = ({
-  handleEmailSubmit
-}: 
-EmailSubmitType) => {
+  handleEmailSubmit,
+  setFa2
+}: EmailSubmitType) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // email validation
@@ -31,6 +33,7 @@ EmailSubmitType) => {
         } else {
           setValue('type', 'participant');
         }
+        setFa2(response.fa2 ?? false);
         return true;
       } else {
         console.log('async email validation failed');
@@ -66,7 +69,16 @@ EmailSubmitType) => {
   });
   return (
     <div>
-      <Button className='w-full h-12 mb-6 text-md hover:bg-black hover:text-white' variant="outline" type="button" disabled={isLoading}>
+      <Button
+        onClick={() => {
+          setIsLoading(true);
+          signIn('github');
+        }}
+        className="w-full h-12 mb-6 text-md hover:bg-black hover:text-white"
+        variant="outline"
+        type="button"
+        disabled={isLoading}
+      >
         {isLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
