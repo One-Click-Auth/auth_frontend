@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '../../../../components/ui/dropdown-menu';
+} from '../../../components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
 import {
   AddItemSvg,
@@ -19,7 +19,7 @@ import {
   ProfileItemSvg,
   SettingsSvg,
   TeamSvg
-} from '../../../../assets/Svg/Account/DropDown';
+} from '../../../assets/Svg/Account/DropDown';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function AccountDropdown() {
