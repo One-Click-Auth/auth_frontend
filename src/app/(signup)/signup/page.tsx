@@ -209,7 +209,6 @@ export default function Signup() {
       <div className="login-wrapper form-wrapper">
         <form
           onSubmit={handleSubmit(handleFormSubmit)}
-          // className="was-validated"
         >
           <div className="form-group relative">
             <label
@@ -334,10 +333,9 @@ export default function Signup() {
         // TODO Reckson
         // backdrop="static"
         // keyboard={false}
-        className="modal-dialog-popup"
       >
-        <div className="bg-white rounded-3xl p-16">
-          <p className="font-light">
+        <div className="bg-white max-w-3xl rounded-3xl p-16">
+          <p className="font-light text-center">
             Please check your email for a registration link or OTP. You can
             register any way by clicking on the{" "}
             <span className="bg-gradient-to-r text-transparent bg-clip-text from-[#2932FF] to-[#589BFF] ">
