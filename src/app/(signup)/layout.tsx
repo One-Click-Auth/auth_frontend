@@ -1,19 +1,22 @@
-"use client"
+'use client';
 
-import Image from "next/image";
-import { LOGO, SIGNUP_GRAPHIC } from "@/constants";
-import LayoutBanner from "@/components/authForm/LayoutBanner";
+import Image from 'next/image';
+import { LOGO, SIGNUP_GRAPHIC } from '@/constants';
+import LayoutBanner from '@/components/authForm/LayoutBanner';
+import Link from 'next/link';
 
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
   return (
-      <div className="min-h-screen flex flex-col sm:flex-row justify-center">
+    <div className="min-h-screen flex flex-col sm:flex-row justify-center">
       <div className="container sm:basis-3/5 flex flex-col min-h-screen">
         <div className="self-start mt-7">
-          <Image width={34} height={34} src={LOGO} alt="AuthX logo" />
+          <Link href="/">
+            <Image width={34} height={34} src={LOGO} alt="AuthX logo" />
+          </Link>
         </div>
         <div className="flex my-12 items-center justify-center grow sm:mr-12">
           <div className="-mt-20 w-fit max-w-lg">

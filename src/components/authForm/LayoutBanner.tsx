@@ -21,7 +21,7 @@ export default function LayoutBanner({
           height={400}
         />
       </div>
-      <span className="text-white w-full text-right absolute bottom-0 right-0 mb-4 xl:mb-8 mr-6">
+      <span className="text-white w-full text-center absolute bottom-0 right-0 mb-4 xl:mb-8">
         © 2023 TrustAuthx. All rights reserved.
       </span>
     </div>
