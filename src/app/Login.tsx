@@ -10,6 +10,7 @@ import { PasswordComponent } from '@/components/authForm/PasswordComponent';
 import { EmailComponent } from '@/components/authForm/EmailComponent';
 import { Button } from '@/components/ui/Button';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 type FormValues = {
   username?: string;
@@ -62,7 +63,9 @@ const Login = () => {
     <div className="min-h-screen flex flex-col sm:flex-row justify-center">
       <div className="container sm:basis-3/5 flex flex-col min-h-screen">
         <div className="self-start mt-7">
-          <Image width={34} height={34} src={LOGO} alt="AuthX logo" />
+          <Link href="/">
+            <Image width={34} height={34} src={LOGO} alt="AuthX logo" />
+          </Link>
         </div>
         <div className="flex my-12 items-center justify-center grow sm:mr-12">
           <div className="-mt-32 w-fit max-w-lg">
