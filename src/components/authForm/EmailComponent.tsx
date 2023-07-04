@@ -1,111 +1,140 @@
 import React, { useState } from 'react';
-import { FaAngleRight } from 'react-icons/fa';
-import Link from 'next/link';
-import { createRipple } from '@/helper/createRipple';
-import { string } from 'yup';
+import * as yup from 'yup';
 import { useDebounce } from '@/helper/hooks';
 import { useRouter } from 'next/navigation';
+import { FormButton } from './FormButton';
+import { LinkText } from './LinkText';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { checkUser } from '@/helper/api';
+import { Button } from '../ui/Button';
+import { Icons } from '../icons';
+import { signIn } from 'next-auth/react';
 
-const emailSchema = string().email().required();
 type EmailSubmitType = {
-  handleEmailSubmit: (e: string) => void;
-  asyncEmailValidation: (e: string) => Promise<boolean>;
+  handleEmailSubmit: (data: { username: string }) => void;
+  setFa2: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const EmailComponent = ({
   handleEmailSubmit,
-  asyncEmailValidation
+  setFa2
 }: EmailSubmitType) => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState<null | string>('');
-  const router = useRouter();
-  const verifyEmail = async (verify = false) => {
-    console.log({ email });
-    console.log(emailSchema.isValidSync(email));
-    if (emailSchema.isValidSync(email)) {
-      const isValid = await asyncEmailValidation(email);
-      if (!isValid) {
-        setError('User Not Found');
-        if (verify) {
-          setEmail('');
-          router.push('/signup');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // email validation
+  const asyncEmailValidation = async (email: string) => {
+    try {
+      const response = await checkUser({ emailid: email });
+      const { detail } = response;
+      if (!detail) {
+        if (response.is_pool) {
+          setValue('type', 'pool');
+        } else {
+          setValue('type', 'participant');
         }
-        return false;
-      } else {
-        setError(null);
+        setFa2(response.fa2 ?? false);
         return true;
+      } else {
+        console.log('async email validation failed');
+        return false;
       }
-    } else {
-      setError('Please Input valid email');
+    } catch (e) {
+      console.log('Error in asyncEmailValidation ', e);
       return false;
     }
   };
-  useDebounce(() => verifyEmail(), [email], 300);
-  return (
-    <div className="login-wrapper form-wrapper">
-      <div className="form-group relative">
-        <label
-          htmlFor="email"
-          className="form-label absolute translate-x-6 translate-y-[-12px] bg-white px-1"
-        >
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          name="username"
-          className="form-control w-full"
-          required
-          onChange={e => {
-            setEmail(e.target.value);
-            setError('');
-          }}
-          placeholder="name@example.com"
-        />
-        {error && (
-          <div className="mt-2 color text-red-600">
-            <span>{error}</span>
-          </div>
-        )}
-      </div>
 
-      <div className="form-group">
-        <div className="d-grid start">
-          <button
-            type="submit"
-            onClick={async e => {
-              createRipple(e);
-              const validEmail = await verifyEmail(true);
-              if (validEmail) {
-                handleEmailSubmit(email);
-              } else setError('Please Input Valid Email');
-            }}
-            className="ripple-button btn btn-spl-primary mt-8 md:mt-11 btn-ca bg-gradient-to-r from-black to-[#6F6F6F] flex items-center justify-center"
-          >
-            <span>Next</span>
-            <span className="forward-arr">
-              {' '}
-              <FaAngleRight className="ca-forward-arr text-2xl mt-[2px]" />
-            </span>
-          </button>
+  const emailSchema = yup
+    .object({
+      username: yup
+        .string()
+        .required('Please enter your email address')
+        .email('Please enter a valid email')
+        .test('userNotFound', 'User does not exist', asyncEmailValidation),
+      type: yup.string().nullable().default('')
+    })
+    .required();
+
+  // useDebounce(() => verifyEmail(), [email], 300);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue
+  } = useForm({
+    resolver: yupResolver(emailSchema),
+    mode: 'onSubmit'
+  });
+  return (
+    <div>
+      <Button
+        onClick={() => {
+          setIsLoading(true);
+          signIn('github');
+        }}
+        className="w-full h-12 mb-6 text-md hover:bg-black hover:text-white"
+        variant="outline"
+        type="button"
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <Icons.gitHub className="mr-2 h-4 w-4" />
+        )}{' '}
+        Login with Github
+      </Button>
+      <div className="relative mb-8">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Or continue with
+          </span>
         </div>
       </div>
-
-      <div className="ats-content mt-8 md:mt-11">
-        <p className="mb-0 text-xl flex items-center flex-wrap">
-          I don’t have an AuthX account
-          <Link
-            className="pl-2 a-t-s a-link text-xl flex items-center"
-            href="/sign-up"
+      <form
+        onSubmit={handleSubmit(handleEmailSubmit)}
+        className="login-wrapper form-wrapper"
+      >
+        <div className="form-group relative">
+          <label
+            htmlFor="email"
+            className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 ${
+              errors.username && 'text-red-600'
+            }`}
           >
-            advance to Signup{' '}
-            <span className="forward-arr arr-black">
-              {' '}
-              <FaAngleRight className="pt-1 text-2xl" />
-            </span>
-          </Link>
-        </p>
-      </div>
+            Email
+          </label>
+          <input
+            {...register('username')}
+            id="email"
+            className={`form-control w-full px-8 py-3 border rounded-lg ${
+              errors.username ? 'border-red-600' : 'border-slate-500'
+            }`}
+            placeholder="name@example.com"
+          />
+          {errors.username && (
+            <div className="mt-2 pl-8 color text-red-600">
+              <span>{errors.username.message}</span>
+            </div>
+          )}
+        </div>
+        <div className="form-group">
+          <div className="d-grid start">
+            <FormButton>Next</FormButton>
+          </div>
+        </div>
+        <div className="ats-content mt-8 md:mt-11">
+          <p className="mb-0 text-xl flex items-center flex-wrap">
+            I don’t have an AuthX account
+            <LinkText to="/signup">advance to Signup</LinkText>
+          </p>
+        </div>
+      </form>
     </div>
   );
 };

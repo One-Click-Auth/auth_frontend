@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Plus } from "lucide-react";
-import { DatabaseSvg } from "../../../../assets/Svg/Account/Account";
-import { Button } from "../../../../components/ui/Button";
-import { useRouter } from "next/navigation";
+import React, { useState } from 'react';
+import { Plus } from 'lucide-react';
+import { DatabaseSvg } from '../../../assets/Svg/Account/Account';
+import { Button } from '../../../components/ui/Button';
+import { useRouter } from 'next/navigation';
 
 function AccountIndex() {
   const [hasOrg, setHasOrg] = useState(false);
@@ -34,7 +34,7 @@ function AccountIndex() {
   // }, [])
 
   const handleNavigation = () => {
-    router.push("/dashboard/add-organization");
+    router.push('/dashboard/add-organization');
   };
 
   // useEffect(() => {
@@ -47,7 +47,7 @@ function AccountIndex() {
     <section className="oveflow-x-auto flex-1">
       {!hasOrg && (
         <div
-          style={{ height: "calc(100vh - 100px)" }}
+          style={{ height: 'calc(100vh - 100px)' }}
           className="max-w-xl m-auto text-center flex items-center justify-center flex-col"
         >
           <div>
@@ -67,7 +67,7 @@ function AccountIndex() {
                 className="bg-accent"
                 variant="primary"
               >
-                {" "}
+                {' '}
                 <Plus />
                 Create New Organization
               </Button>
