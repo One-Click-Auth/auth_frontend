@@ -1,18 +1,23 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { LOGIN_GRAPHIC, LOGO } from "@/constants";
-import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
-import Modal from "../reset-password/otpModal";
-import { FormButton } from "@/components/authForm/FormButton";
-import { LinkText } from "@/components/authForm/LinkText";
-import { LuXCircle } from "react-icons/lu";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import LayoutBanner from "@/components/authForm/LayoutBanner";
+import React, { useEffect, useState } from 'react';
+import { LOGIN_GRAPHIC, LOGO } from '@/constants';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import Modal from '../reset-password/otpModal';
+import { FormButton } from '@/components/authForm/FormButton';
+import { LinkText } from '@/components/authForm/LinkText';
+import { LuXCircle } from 'react-icons/lu';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import LayoutBanner from '@/components/authForm/LayoutBanner';
 
-
-const AlertMessage = ({ message,setAlert }: { message: string,setAlert:React.Dispatch<boolean> }) => {
+const AlertMessage = ({
+  message,
+  setAlert
+}: {
+  message: string;
+  setAlert: React.Dispatch<boolean>;
+}) => {
   return (
     <Alert className="absolute top-6 w-60 sm:w-96 left-[50vw] translate-x-[-50%] backdrop-filter backdrop-blur-sm bg-opacity-90 bg-yellow-400">
       <AlertTitle>Notice!</AlertTitle>
@@ -28,17 +33,16 @@ const AlertMessage = ({ message,setAlert }: { message: string,setAlert:React.Dis
 };
 const NewPassword: React.FC = () => {
   const searchparams = useSearchParams();
-  const param = searchparams && searchparams?.get("param");
+  const param = searchparams && searchparams?.get('param');
   const router = useRouter();
-  const [pass, setPass] = useState("");
-  const [add, setAdd] = useState("");
+  const [pass, setPass] = useState('');
+  const [add, setAdd] = useState('');
   const [show, setShow] = useState(false);
   const [alert, setAlert] = useState(false);
-  const [email, setEmail] = useState("");
-  const [alertMessage, setAlertMessage] = useState("");
+  const [email, setEmail] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   // Alert component
-  
 
   useEffect(() => {
     if (param !== null) setEmail(param);
@@ -53,20 +57,19 @@ const NewPassword: React.FC = () => {
   ) => {
     e.preventDefault();
     // console.log(email, pass);
-    fetch("https://api.trustauthx.com/forgot/Signup", {
-      method: "PUT",
+    fetch('https://api.trustauthx.com/forgot/Signup', {
+      method: 'PUT',
       headers: {
-        accept: "application/json",
-        "content-type": "application/json",
+        accept: 'application/json',
+        'content-type': 'application/json'
       },
       body: JSON.stringify({
         username: email,
-        password: pass,
-        is_pool: true,
-      }),
+        password: pass
+      })
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         if (data.is_ok == true && data.status === 200) {
           // console.log(data.msg);
           setAdd(data.msg);
@@ -79,7 +82,7 @@ const NewPassword: React.FC = () => {
           console.log(data);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   };
@@ -109,7 +112,7 @@ const NewPassword: React.FC = () => {
                     htmlFor="password"
                     className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 
                     ${
-                      ""
+                      ''
                       // errors.password && "text-red-600"
                     }
                     `}
@@ -122,11 +125,11 @@ const NewPassword: React.FC = () => {
                     type="password"
                     className={`form-control w-full px-8 py-3 border rounded-lg border-slate-500
                     ${
-                      ""
+                      ''
                       // errors.password ? "border-red-600" : "border-slate-500"
                     }`}
                     placeholder="Enter Password"
-                    onChange={(e) => setPass(e.target.value)}
+                    onChange={e => setPass(e.target.value)}
                   />
                   {/* {errors.password && (
                     <div className="mt-2 color text-red-600">
@@ -140,14 +143,13 @@ const NewPassword: React.FC = () => {
                     <FormButton>Next</FormButton>
                   </div>
                 </div>
-
-                <div className="ats-content mt-8 md:mt-11">
-                  <p className="mb-0 text-xl flex items-center flex-wrap">
-                    I remember my AuthX password
-                    <LinkText to="/">advance to Login</LinkText>
-                  </p>
-                </div>
               </form>
+              <div className="ats-content mt-8 md:mt-11">
+                <p className="mb-0 text-xl flex items-center flex-wrap">
+                  I remember my AuthX password
+                  <LinkText to="/">advance to Login</LinkText>
+                </p>
+              </div>
             </div>
           </div>
         </div>
