@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { LOGIN_GRAPHIC, LOGO } from "@/constants";
-import { FormButton } from "@/components/authForm/FormButton";
-import { LinkText } from "@/components/authForm/LinkText";
-import LayoutBanner from "@/components/authForm/LayoutBanner";
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { LOGIN_GRAPHIC, LOGO } from '@/constants';
+import { FormButton } from '@/components/authForm/FormButton';
+import { LinkText } from '@/components/authForm/LinkText';
+import LayoutBanner from '@/components/authForm/LayoutBanner';
 
 const PasswordReset: React.FC = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
 
   const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,7 +45,7 @@ const PasswordReset: React.FC = () => {
                     htmlFor="email"
                     className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 
                     ${
-                      ""
+                      ''
                       // errors.password && "text-red-600"
                     }
                     `}
@@ -55,14 +55,14 @@ const PasswordReset: React.FC = () => {
                   <input
                     // {...register("password")}
                     id="email"
-                    type="text"
+                    type="email"
                     className={`form-control w-full px-8 py-3 border rounded-lg border-slate-500
                     ${
-                      ""
+                      ''
                       // errors.password ? "border-red-600" : "border-slate-500"
                     }`}
                     placeholder="name@example.com"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={e => setEmail(e.target.value)}
                   />
                   {/* {errors.password && (
                     <div className="mt-2 color text-red-600">
@@ -76,14 +76,13 @@ const PasswordReset: React.FC = () => {
                     <FormButton>Next</FormButton>
                   </div>
                 </div>
-
-                <div className="ats-content mt-8 md:mt-11">
-                  <p className="mb-0 text-xl flex items-center flex-wrap">
-                    I remember my AuthX password
-                    <LinkText to="/">advance to Login</LinkText>
-                  </p>
-                </div>
               </form>
+              <div className="ats-content mt-8 md:mt-11">
+                <p className="mb-0 text-xl flex items-center flex-wrap">
+                  I remember my AuthX password
+                  <LinkText to="/">advance to Login</LinkText>
+                </p>
+              </div>
             </div>
           </div>
         </div>

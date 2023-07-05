@@ -1,49 +1,48 @@
-import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-import OtpInput from "react-otp-input";
-import './modalOTP.css'
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from 'react';
+import OtpInput from 'react-otp-input';
+import { useRouter } from 'next/navigation';
 interface ModalProps {
-
   handleForm: (e: React.MouseEvent<HTMLSpanElement>) => void;
   add: string;
 }
 
 const Modal: React.FC<ModalProps> = ({ handleForm, add }) => {
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState('');
+  const [show, setShow] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setShow(false);
     if (otp.length === 8) {
       handleOTPForm();
     }
-  }, [otp,]);
+  }, [otp]);
 
   const handleOTPForm = () => {
-    // e.preventDefault();
     console.log(otp, add);
-    fetch("https://api.trustauthx.com/forgot/verify_email", {
-      method: "POST",
+    fetch('https://api.trustauthx.com/forgot/verify_email', {
+      method: 'POST',
       headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
+        accept: 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         otp,
         add: add,
-        types: "string",
-      }),
+        types: 'string'
+      })
     })
-      .then((response) => response.json())
-      .then((data) => {
+      .then(response => response.json())
+      .then(data => {
         if (data.status === 200 && data.is_ok === true) {
-          router.push("/");
+          router.push('/');
         }
         if (data.detail) {
-          console.log(data.details);
+          setShow(true);
+          console.log(data.detail);
         }
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   };
 
   return (
@@ -65,14 +64,17 @@ const Modal: React.FC<ModalProps> = ({ handleForm, add }) => {
           onChange={setOtp}
           numInputs={8}
           renderSeparator={<span></span>}
-          renderInput={(props) => <input {...props} />}
+          renderInput={props => <input {...props} />}
         />
 
-
+        {show ? <p className="text-red-500 pt-2">Invalid OTP</p> : ''}
         <div className="flex w-full mt-9">
-
-          <span className="cursor-pointer  text-transparent  bg-clip-text bg-gradient-to-r from-blue-400 to-pink-600 "
-            onClick={handleForm} >I didn't receive Email &gt;</span>
+          <span
+            className="cursor-pointer  text-transparent  bg-clip-text bg-gradient-to-r from-blue-400 to-pink-600 "
+            onClick={handleForm}
+          >
+            I didn't receive Email &gt;
+          </span>
         </div>
       </div>
     </>
