@@ -1,4 +1,8 @@
 const LOGO = '/logo.svg';
+const GOOGLEICON = '/googleicon.svg';
+const APPLEICON = '/appleicon.svg';
+const GITHUBICON = '/githubicon.svg';
+const MICROSOFT = '/microsoftimg.svg';
 export const LOGIN_GRAPHIC = '/login-graphic.svg';
 export const SIGNUP_GRAPHIC = '/signup-graphic.svg';
 export const API_DOMAIN = 'https://api.trustauthx.com';
@@ -21,4 +25,4 @@ export const API_URL = {
   RANDOM_PASSWORD: `${API_DOMAIN}/api/random/str`
 };
 
-export { LOGO };
+export { LOGO, GOOGLEICON, APPLEICON, GITHUBICON, MICROSOFT };
