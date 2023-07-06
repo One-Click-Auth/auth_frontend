@@ -1,98 +1,65 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Overview } from "@/components/dashboard/overview";
-import Image from "next/image";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Overview } from '@/components/dashboard/overview';
+import { Button } from '@/components/ui/Button';
+import {
+  CaretSortIcon,
+  CheckIcon,
+  PlusCircledIcon
+} from '@radix-ui/react-icons';
+import { LanguageSwitcher } from './components/language-switcher';
+import { Input } from '@/components/ui/Input';
 
-interface ParamsProp {
-  params: {
-    slug: string
-  }
-}
-
-const OrganisationDashboard = async ({ params }: ParamsProp) => {
-
+const OrganisationDashboard = async () => {
   return (
-    <div className="flex-1 space-y-4 p-10 pt-4">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">
-          <span className="capitalize">{params.slug}</span> Dashboard
-        </h2>
-      </div>
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="bg-gray-100">
-          <TabsTrigger
-            value="overview"
-            className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
-          >
-            Overview
-          </TabsTrigger>
-          <TabsTrigger
-            value="analytics"
-            className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
-          >
-            Analytics
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total API calls
-                </CardTitle>
-                <Image
-                  src="/dashboard-icons/dollar-coin.svg"
-                  alt="dollar icon"
-                  width={24}
-                  height={24}
-                />
+    <div className="flex-1 space-y-4 p-10 pt-14">
+      <Tabs defaultValue="branding" className="space-y-4">
+        <div className="flex justify-between">
+          <TabsList className="bg-gray-100">
+            <TabsTrigger
+              value="branding"
+              className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+            >
+              Branding
+            </TabsTrigger>
+            <TabsTrigger
+              value="customization"
+              className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+            >
+              Customization
+            </TabsTrigger>
+            <TabsTrigger
+              value="consent"
+              className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+            >
+              Consent
+            </TabsTrigger>
+          </TabsList>
+          <LanguageSwitcher />
+        </div>
+        <TabsContent value="branding" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <Card className="col-span-4 shadow-none">
+              <CardHeader>
+                <CardTitle>Overview</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-2xl font-bold">45,000</div>
-                <p className="text-xs text-disabled">
-                  Last month's API calls
-                </p>
+              <CardContent className="pl-2">
+                <Overview />
               </CardContent>
             </Card>
-            <Card className="shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Users
-                </CardTitle>
-                <Image
-                  src="/dashboard-icons/user-multiple.svg"
-                  alt="multiple users icon"
-                  width={24}
-                  height={24}
-                />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-2xl font-bold">55,650</div>
-                <p className="text-xs text-disabled">
-                  Total associated users
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Cost
-                </CardTitle>
-                <Image
-                  src="/dashboard-icons/credit-card.svg"
-                  alt="multiple users icon"
-                  width={24}
-                  height={24}
-                />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-2xl font-bold">$4,500.54</div>
-                <p className="text-xs text-disabled">
-                  Total Recurring Cost
-                </p>
+            <Card className="col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center">
+              <CardContent className="p-10 bg-primary rounded-lg drop-shadow-lg">
+                <div>Hi!</div>
               </CardContent>
             </Card>
           </div>
+          <div className='flex gap-4'>
+            <span className='basis-3/5 text-slate-400 text-sm border rounded-lg pt-2 px-3'>Save the new widget Settings for this Organization  </span>
+            <Button className='bg-black text-white hover:bg-black/80 basis-1/5'>Reset</Button>
+            <Button className='bg-accent hover:bg-accent/80 basis-1/5'>Save</Button>
+          </div>
+        </TabsContent>
+        <TabsContent value="customization" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-7 shadow-none">
               <CardHeader>
@@ -104,73 +71,13 @@ const OrganisationDashboard = async ({ params }: ParamsProp) => {
             </Card>
           </div>
         </TabsContent>
-        <TabsContent value="analytics" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total API calls
-                </CardTitle>
-                <Image
-                  src="/dashboard-icons/dollar-coin.svg"
-                  alt="dollar icon"
-                  width={24}
-                  height={24}
-                />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-2xl font-bold">45,000</div>
-                <p className="text-xs text-disabled">
-                  Last month's API calls
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Users
-                </CardTitle>
-                <Image
-                  src="/dashboard-icons/user-multiple.svg"
-                  alt="multiple users icon"
-                  width={24}
-                  height={24}
-                />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-2xl font-bold">55,650</div>
-                <p className="text-xs text-disabled">
-                  Total associated users
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Cost
-                </CardTitle>
-                <Image
-                  src="/dashboard-icons/credit-card.svg"
-                  alt="multiple users icon"
-                  width={24}
-                  height={24}
-                />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-2xl font-bold">$4,500.54</div>
-                <p className="text-xs text-disabled">
-                  Total Recurring Cost
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+        <TabsContent value="consent" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-7 shadow-none">
-              <CardHeader>
-                <CardTitle>Overview</CardTitle>
-              </CardHeader>
               <CardContent className="pl-2">
-                <Overview />
+                <div>
+                  Hello
+                </div>
               </CardContent>
             </Card>
           </div>
