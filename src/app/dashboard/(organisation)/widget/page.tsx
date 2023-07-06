@@ -4,6 +4,7 @@ import { Overview } from '@/components/dashboard/overview';
 import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from './components/language-switcher';
 import { WidgetPreview } from './components/widget-preview';
+import { WidgetControl } from './components/widget-control';
 
 const OrganisationDashboard = async () => {
   return (
@@ -35,8 +36,8 @@ const OrganisationDashboard = async () => {
         <TabsContent value="branding" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4 shadow-none">
-              <CardContent className="p-10">
-                <Overview />
+              <CardContent className="p-10 space-y-7">
+                <WidgetControl />
               </CardContent>
             </Card>
             <Card className="col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center">
