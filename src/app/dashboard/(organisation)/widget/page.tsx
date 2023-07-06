@@ -35,10 +35,7 @@ const OrganisationDashboard = async () => {
         <TabsContent value="branding" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4 shadow-none">
-              <CardHeader>
-                <CardTitle>Overview</CardTitle>
-              </CardHeader>
-              <CardContent className="pl-2">
+              <CardContent className="p-10">
                 <Overview />
               </CardContent>
             </Card>

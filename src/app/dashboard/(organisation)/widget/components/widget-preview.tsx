@@ -28,7 +28,8 @@ export function WidgetPreview() {
             name="username"
             id="email"
             type="text"
-            className="w-44 px-4 py-0.5 border rounded-md border-black"
+            className="w-44 px-4 py-0.5 border rounded-md border-black disabled:bg-primary"
+            disabled
           />
         </div>
         <Button className="bg-black w-44 h-8 text-white hover:bg-black/90">
