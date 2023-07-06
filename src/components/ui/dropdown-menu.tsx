@@ -130,9 +130,8 @@ const DropdownMenuRadioItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        {props?.icon === "circle" && <Circle className="h-2 w-2 fill-current" />}
-        {props?.icon === "check" && <Check className="h-4 w-4 stroke-teal-400"/>}
-        {!props?.icon && <Circle className="h-2 w-2 fill-current" />}    
+        {props?.icon === "circle" || !props?.icon && <Circle className="h-2 w-2 fill-current" />}
+        {props?.icon === "check" && <Check className="h-4 w-4 stroke-teal-400"/>} 
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}

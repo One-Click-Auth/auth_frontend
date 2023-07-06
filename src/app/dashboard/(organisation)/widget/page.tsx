@@ -2,13 +2,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Overview } from '@/components/dashboard/overview';
 import { Button } from '@/components/ui/Button';
-import {
-  CaretSortIcon,
-  CheckIcon,
-  PlusCircledIcon
-} from '@radix-ui/react-icons';
 import { LanguageSwitcher } from './components/language-switcher';
-import { Input } from '@/components/ui/Input';
+import { WidgetPreview } from './components/widget-preview';
 
 const OrganisationDashboard = async () => {
   return (
@@ -49,7 +44,7 @@ const OrganisationDashboard = async () => {
             </Card>
             <Card className="col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center">
               <CardContent className="p-10 bg-primary rounded-lg drop-shadow-lg">
-                <div>Hi!</div>
+                <WidgetPreview/>
               </CardContent>
             </Card>
           </div>
