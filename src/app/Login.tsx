@@ -11,6 +11,7 @@ import { EmailComponent } from '@/components/authForm/EmailComponent';
 import { Button } from '@/components/ui/Button';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import LoadingModal from '@/components/authForm/LoadingModal';
 
 type FormValues = {
   username?: string;
@@ -26,6 +27,7 @@ const Login = () => {
   // const [value, setValue] = useState('');
   // const searchParams = useSearchParams();
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     console.log(fa2);
@@ -44,11 +46,13 @@ const Login = () => {
     try {
       return initiateLogin({ password: pwd });
     } catch (err) {
+      setLoading(false);
       console.log('Error in onSubmitHandler ', err);
     }
   };
 
   const handlePasswordSubmit = (data: { password: string }) => {
+    setLoading(true);
     setValues(prev => ({ ...prev, password: data.password }));
     setTimeout(() => {
       onSubmitHandler(data.password);
@@ -96,7 +100,10 @@ const Login = () => {
         src={LOGIN_GRAPHIC}
       />
 
-      <Modal show={show}>
+      <Modal 
+        show={show}
+        onHide={() => setShow(false)}
+      >
         <div className="bg-white rounded-3xl p-16 mt-[20vh] w-max self-center">
           <div>
             <div className="">
@@ -117,6 +124,7 @@ const Login = () => {
           </div>
         </div>
       </Modal>
+      <LoadingModal show={loading}/>
     </div>
   );
 };
