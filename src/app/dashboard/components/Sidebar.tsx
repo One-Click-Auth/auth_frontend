@@ -1,117 +1,115 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Sidebar as ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
-// import { NavLink as Link } from 'react-router-dom';
 import {
   OrgnaizationSvg,
   SettingSvg,
   SupportSvg
 } from '../../../assets/Svg/Account/Account';
-import { ChevronLeft, ChevronRight, Instagram } from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, Menu, X, Instagram } from 'lucide-react';
+// import { } from 'lucide-react';
 import Link from 'next/link';
 
-export function Sidebar() {
-  const routes = [
-    { icon: <Instagram />, title: 'Instagram', to: 'https://instagram.com' }
-  ];
-  const [collapse, setCollapse] = useState(false);
+export const Sidebar = () => {
+  const [open, setOpen] = useState(true);
+  const [isSmall, setIsSmall] = useState(window.innerWidth);
 
-  const [windowWidth, setWindowWidth] = useState(0);
-
-  useEffect(() => {
-    if (windowWidth < 800) {
-      setCollapse(true);
-      console.log(windowWidth);
-    } else {
-      setCollapse(false);
-    }
-  }, [windowWidth]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  window.addEventListener('resize', () => {
+    setIsSmall(window.innerWidth);
+  });
 
   return (
-    <div className="sticky top-0">
-      <ProSidebar
-        className="w-full min-h-screen !border-r-0 flex-[15%] bg-black "
-        collapsed={collapse}
-      >
-        <Menu
-          className="bg-black w-full"
-          menuItemStyles={{
-            button: {
-              // the active class will be added automatically by react router
-              // so we can use it to style the active menu item
-              borderRadius: '3px',
-              padding: !collapse ? '16px' : '',
-              [`&.active`]: {
-                backgroundColor: 'rgba(255,255,255,0.2)'
-              },
-              [`&:hover`]: {
-                backgroundColor: 'rgba(255,255,255,0.11)'
-              }
-            }
-          }}
-        >
-          <div
-            className="text-brand-primary text-accent text-end w-4 ml-auto mr-3 pt-2 cursor-pointer"
-            onClick={() => setCollapse(!collapse)}
-          >
-            {collapse ? <ChevronRight /> : <ChevronLeft />}
-          </div>
-          <div className={collapse ? '' : 'px-4'}>
-            <div className="text-white text-center font-bold text-3xl mb-8">
-              <h1 className={collapse ? 'hidden' : ''}>Organization</h1>
-            </div>
-            <p className="mb-1 ml-4 text-xs text-gray-500 "> MAIN MENU</p>
-            <SidebarMenu
-              to="/dashboard"
-              title="Organizations"
-              icon={<OrgnaizationSvg />}
-            />
-
-            <p className="mb-1 ml-4 text-xs text-gray-500 mt-12">OTHER</p>
-            <SidebarMenu
-              to="/dashboard/support"
-              title="Support"
-              icon={<SupportSvg />}
-            />
-            <SidebarMenu
-              to="/dashboard/settings"
-              title="Setting"
-              icon={<SettingSvg />}
-            />
-          </div>
-        </Menu>
-      </ProSidebar>
-    </div>
-  );
-}
-
-interface SidebarMenuType {
-  icon: React.ReactNode;
-  title: string;
-  to: string;
-}
-
-const SidebarMenu = ({ icon, title, to }: SidebarMenuType) => {
-  return (
-    <MenuItem
-      component={<Link href={to} />}
-      icon={icon}
-      className="text-white "
+    <div
+      className={` flex flex-col flex-shrink-0 items-center transition-all text-white bg-black  ${
+        open
+          ? ' sm:w-[18rem]'
+          : `sm:w-[4rem] w-0 ${isSmall < 640 ? 'h-[50px] overflow-hidden' : ''}`
+      } sm:min-h-[100vh]`}
     >
-      {title}
-    </MenuItem>
+      {isSmall < 640 ? (
+        <div className="flex flex-col  justify-center absolute  top-0, left-0 h-[50px] w-[100vw] pl-2 bg-black">
+          <button
+            className="hover:text-[#9EFF00] max-w-fit "
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <X /> : <Menu />}
+          </button>
+        </div>
+      ) : (
+        <div
+          className={`sm:sticky sm:top-1 flex ${
+            open ? 'justify-end' : 'justify-center'
+          } w-full`}
+        >
+          <button
+            className="px-2 pt-1 hover:text-[#9EFF00]"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <ChevronsLeft /> : <ChevronsRight />}
+          </button>
+        </div>
+      )}
+
+      <div className=" mt-[50px] sm:sticky sm:top-8 sm:mt-1 w-full flex flex-col items-center">
+        <h3 className=" text-2xl text-bold mb-12">
+          {open ? 'Organization' : ''}
+        </h3>
+        <div className={`main-menu flex flex-col w-full`}>
+          <h4 className="text-[0.75rem] opacity-50 ml-8 pl-8">
+            {open ? 'Main menu' : ''}
+          </h4>
+          <div
+            className={`my-6 flex flex-col w-full ${
+              open ? '' : 'items-center'
+            }`}
+          >
+            <Link
+              href={'/dashboard'}
+              className={`hover:bg-white hover:bg-opacity-40 ${
+                open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
+              } mb-4 rounded-md flex items-center space-x-2`}
+            >
+              <span>
+                <OrgnaizationSvg />
+              </span>
+              {open ? <span>Organization</span> : ''}
+            </Link>
+          </div>
+        </div>
+        <div className={`General flex flex-col w-full`}>
+          <h4 className="text-[0.75rem] opacity-50 ml-8 pl-8">
+            {open ? 'General' : ''}
+          </h4>
+          <div
+            className={`my-6 flex flex-col w-full ${
+              open ? '' : 'items-center'
+            }`}
+          >
+            <Link
+              href={'/dashboard/support'}
+              className={`hover:bg-white hover:bg-opacity-40 ${
+                open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
+              } mb-4 rounded-md flex items-center space-x-2`}
+            >
+              <span>
+                <SupportSvg />
+              </span>
+              {open ? <span>Support</span> : ''}
+            </Link>
+            <Link
+              href={'/dashboard/settings'}
+              className={`hover:bg-white hover:bg-opacity-40 ${
+                open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
+              } mb-4 rounded-md flex items-center space-x-2`}
+            >
+              <span>
+                <SettingSvg />
+              </span>
+              {open ? <span>Settings</span> : ''}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
