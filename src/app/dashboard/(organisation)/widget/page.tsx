@@ -14,17 +14,19 @@ const OrganisationDashboard = () => {
   const [greeting, setGreeting] = useState<string>(
     'Continue to Log in to Flitchcoin'
   );
+  const [logo, setLogo] = useState<File>();
+  const [logoImage, setLogoImage] = useState<string>('/ellipse-flitchcoin.svg');
 
   // Set values back to default when input is empty
   useEffect(() => {
-    if (displayName === "") {
-      setDisplayName("Flitchcoin");
+    if (displayName === '') {
+      setDisplayName('Flitchcoin');
     }
 
-    if (greeting === "") {
-      setGreeting("Continue to Log in to Flitchcoin")
+    if (greeting === '') {
+      setGreeting('Continue to Log in to Flitchcoin');
     }
-  }, [displayName, greeting])
+  }, [displayName, greeting]);
 
   return (
     <div className="flex-1 space-y-4 p-10 pt-14">
@@ -44,6 +46,7 @@ const OrganisationDashboard = () => {
               Customization
             </TabsTrigger>
             <TabsTrigger
+              disabled
               value="consent"
               className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
             >
@@ -59,14 +62,16 @@ const OrganisationDashboard = () => {
                 <WidgetControl
                   setDisplayName={setDisplayName}
                   setGreeting={setGreeting}
+                  logoState={{ logo, setLogo, logoImage, setLogoImage }}
                 />
               </CardContent>
             </Card>
             <Card className="col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center">
               <CardContent className="p-10 bg-primary rounded-lg drop-shadow-lg">
-                <WidgetPreview 
+                <WidgetPreview
                   displayName={displayName}
                   greeting={greeting}
+                  logoImage={logoImage}
                 />
               </CardContent>
             </Card>

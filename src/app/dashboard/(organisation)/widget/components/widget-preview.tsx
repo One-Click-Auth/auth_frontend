@@ -4,27 +4,25 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 
 type WidgetProp = {
-  logo?: string;
-  displayName?: string;
-  greeting?: string;
+  logoImage: string;
+  displayName: string;
+  greeting: string;
 };
 
 export function WidgetPreview({
-  logo = '/ellipse-flitchcoin.svg',
-  displayName = "Flitchcoin",
-  greeting = "Continue to Log in to Flitchcoin"
+  logoImage,
+  displayName,
+  greeting
 }: WidgetProp) {
   return (
     <div className="space-y-10">
       <div className="flex flex-col justify-center items-center">
-        <Avatar className="w-12 h-12">
-          <AvatarImage src={logo} alt="Organisation Logo" />
+        <Avatar className="w-12 h-12 rounded-none">
+          <AvatarImage src={logoImage} alt="Organisation Logo" />
           <AvatarFallback>LOGO</AvatarFallback>
         </Avatar>
         <h1 className="text-lg font-medium mt-0.5 mb-1.5">{displayName}</h1>
-        <small className="text-[0.6rem]">
-          {greeting}
-        </small>
+        <small className="text-[0.6rem] w-44 text-center">{greeting}</small>
       </div>
       <div className="flex flex-col gap-8 items-center">
         <div className="relative">

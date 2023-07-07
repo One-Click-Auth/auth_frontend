@@ -3,11 +3,27 @@
 import { UploadComputer } from '@/assets/Svg/Account/Account';
 import { Input } from '@/components/ui/Input';
 import Image from 'next/image';
-import { ChangeEvent, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect
+} from 'react';
 
-export function LogoUpload() {
-  const [logo, setLogo] = useState<File>();
-  const [logoImage, setLogoImage] = useState<string>('/ellipse-flitchcoin.svg');
+type LogoProps = {
+  logoState: {
+    logo: File | undefined;
+    setLogo: Dispatch<SetStateAction<File | undefined>>;
+    logoImage: string;
+    setLogoImage: Dispatch<SetStateAction<string>>;
+  };
+};
+
+export function LogoUpload({
+  logoState: { logo, setLogo, logoImage, setLogoImage }
+}: LogoProps) {
+  // const [logo, setLogo] = useState<File>();
+  // const [logoImage, setLogoImage] = useState<string>('/ellipse-flitchcoin.svg');
 
   const handleLogoInput = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -19,6 +35,10 @@ export function LogoUpload() {
   useEffect(() => {
     if (logo) {
       setLogoImage(URL.createObjectURL(logo));
+    }
+
+    if (!logo) {
+      setLogoImage('/ellipse-flitchcoin.svg');
     }
   }, [logo]);
 

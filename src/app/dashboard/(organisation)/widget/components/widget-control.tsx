@@ -1,5 +1,5 @@
 'use client';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { ColourInput } from './colour-input';
 import { Button } from '@/components/ui/Button';
 import { Plus } from 'lucide-react';
@@ -9,12 +9,19 @@ import { LogoUpload } from './logo-upload';
 type WidgetProp = {
   setDisplayName: Dispatch<SetStateAction<string>>;
   setGreeting: Dispatch<SetStateAction<string>>;
-}
+  logoState: {
+    logo: File | undefined;
+    setLogo: Dispatch<SetStateAction<File | undefined>>;
+    logoImage: string;
+    setLogoImage: Dispatch<SetStateAction<string>>;
+  };
+};
 
-export function WidgetControl({setDisplayName, setGreeting}: WidgetProp) {
-  // const [displayName, setDisplayName] = useState<string>('');
-  // const [greeting, setGreeting] = useState<string>('Continue to Log in to Flitchcoin');
-
+export function WidgetControl({
+  setDisplayName,
+  setGreeting,
+  logoState
+}: WidgetProp) {
   return (
     <>
       <div className="flex flex-col space-y-4">
@@ -37,11 +44,10 @@ export function WidgetControl({setDisplayName, setGreeting}: WidgetProp) {
       </div>
       <div>
         <span className="text-sm pl-2 text-zinc-500">Add Logo</span>
-        <LogoUpload />
+        <LogoUpload logoState={logoState} />
       </div>
       <Input
         onChange={e => setDisplayName(e.target.value)}
-        // value={displayName}
         type="text"
         placeholder="Change Display Name"
       />
@@ -51,8 +57,7 @@ export function WidgetControl({setDisplayName, setGreeting}: WidgetProp) {
         </span>
         <Input
           onChange={e => setGreeting(e.target.value)}
-          // value={greeting}
-          className="text-lg text-zinc-500 text-center py-14"
+          className="text-lg text-center py-14"
           type="text"
           placeholder="Continue to Log in to Flitchcoin"
         />
