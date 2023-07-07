@@ -1,3 +1,5 @@
+'use client';
+
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Overview } from '@/components/dashboard/overview';
@@ -5,8 +7,25 @@ import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from './components/language-switcher';
 import { WidgetPreview } from './components/widget-preview';
 import { WidgetControl } from './components/widget-control';
+import { useEffect, useState } from 'react';
 
-const OrganisationDashboard = async () => {
+const OrganisationDashboard = () => {
+  const [displayName, setDisplayName] = useState<string>('Flitchcoin');
+  const [greeting, setGreeting] = useState<string>(
+    'Continue to Log in to Flitchcoin'
+  );
+
+  // Set values back to default when input is empty
+  useEffect(() => {
+    if (displayName === "") {
+      setDisplayName("Flitchcoin");
+    }
+
+    if (greeting === "") {
+      setGreeting("Continue to Log in to Flitchcoin")
+    }
+  }, [displayName, greeting])
+
   return (
     <div className="flex-1 space-y-4 p-10 pt-14">
       <Tabs defaultValue="branding" className="space-y-4">
@@ -37,19 +56,31 @@ const OrganisationDashboard = async () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4 shadow-none">
               <CardContent className="p-10 space-y-7">
-                <WidgetControl />
+                <WidgetControl
+                  setDisplayName={setDisplayName}
+                  setGreeting={setGreeting}
+                />
               </CardContent>
             </Card>
             <Card className="col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center">
               <CardContent className="p-10 bg-primary rounded-lg drop-shadow-lg">
-                <WidgetPreview/>
+                <WidgetPreview 
+                  displayName={displayName}
+                  greeting={greeting}
+                />
               </CardContent>
             </Card>
           </div>
-          <div className='flex gap-4'>
-            <span className='basis-3/5 text-slate-400 text-sm border rounded-lg pt-2 px-3'>Save the new widget Settings for this Organization  </span>
-            <Button className='bg-black text-white hover:bg-black/80 basis-1/5'>Reset</Button>
-            <Button className='bg-accent hover:bg-accent/80 basis-1/5'>Save</Button>
+          <div className="flex gap-4">
+            <span className="basis-3/5 text-slate-400 text-sm border rounded-lg pt-2 px-3">
+              Save the new widget Settings for this Organization{' '}
+            </span>
+            <Button className="bg-black text-white hover:bg-black/80 basis-1/5">
+              Reset
+            </Button>
+            <Button className="bg-accent hover:bg-accent/80 basis-1/5">
+              Save
+            </Button>
           </div>
         </TabsContent>
         <TabsContent value="customization" className="space-y-4">
@@ -68,9 +99,7 @@ const OrganisationDashboard = async () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-7 shadow-none">
               <CardContent className="pl-2">
-                <div>
-                  Hello
-                </div>
+                <div>Hello</div>
               </CardContent>
             </Card>
           </div>

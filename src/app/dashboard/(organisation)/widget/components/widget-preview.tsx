@@ -3,17 +3,27 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 
-export function WidgetPreview() {
+type WidgetProp = {
+  logo?: string;
+  displayName?: string;
+  greeting?: string;
+};
+
+export function WidgetPreview({
+  logo = '/ellipse-flitchcoin.svg',
+  displayName = "Flitchcoin",
+  greeting = "Continue to Log in to Flitchcoin"
+}: WidgetProp) {
   return (
     <div className="space-y-10">
       <div className="flex flex-col justify-center items-center">
-        <Avatar className='w-12 h-12'>
-          <AvatarImage src="/ellipse-flitchcoin.svg" alt="Organisation Logo" />
+        <Avatar className="w-12 h-12">
+          <AvatarImage src={logo} alt="Organisation Logo" />
           <AvatarFallback>LOGO</AvatarFallback>
         </Avatar>
-        <h1 className="text-lg font-medium mt-0.5 mb-1.5">Flitchcoin</h1>
+        <h1 className="text-lg font-medium mt-0.5 mb-1.5">{displayName}</h1>
         <small className="text-[0.6rem]">
-          Continue to Log in to Flitchcoin
+          {greeting}
         </small>
       </div>
       <div className="flex flex-col gap-8 items-center">
@@ -44,7 +54,12 @@ export function WidgetPreview() {
             <span className="bg-background px-2 text-black">or</span>
           </div>
         </div>
-        <Image width={159} height={22} src="/widget-logos.svg" alt="Google, Apple, Microsoft, WhatsApp logos"/>
+        <Image
+          width={159}
+          height={22}
+          src="/widget-logos.svg"
+          alt="Google, Apple, Microsoft, WhatsApp logos"
+        />
       </div>
     </div>
   );

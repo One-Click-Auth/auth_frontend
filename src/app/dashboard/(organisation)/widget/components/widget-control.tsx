@@ -1,11 +1,19 @@
 'use client';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { ColourInput } from './colour-input';
 import { Button } from '@/components/ui/Button';
 import { Plus } from 'lucide-react';
+import { Input } from '@/components/ui/Input';
+import { LogoUpload } from './logo-upload';
 
-export function WidgetControl() {
-  // const [show, setShow] = useState(false);
+type WidgetProp = {
+  setDisplayName: Dispatch<SetStateAction<string>>;
+  setGreeting: Dispatch<SetStateAction<string>>;
+}
+
+export function WidgetControl({setDisplayName, setGreeting}: WidgetProp) {
+  // const [displayName, setDisplayName] = useState<string>('');
+  // const [greeting, setGreeting] = useState<string>('Continue to Log in to Flitchcoin');
 
   return (
     <>
@@ -27,9 +35,28 @@ export function WidgetControl() {
           Add Linear-gradient
         </Button>
       </div>
-      <div>Add Logo</div>
-      <input type="text" placeholder="Change Display Name" />
-      <div>Change Greetings Text</div>
+      <div>
+        <span className="text-sm pl-2 text-zinc-500">Add Logo</span>
+        <LogoUpload />
+      </div>
+      <Input
+        onChange={e => setDisplayName(e.target.value)}
+        // value={displayName}
+        type="text"
+        placeholder="Change Display Name"
+      />
+      <div>
+        <span className="text-sm pl-2 text-zinc-500">
+          Change Greetings Text
+        </span>
+        <Input
+          onChange={e => setGreeting(e.target.value)}
+          // value={greeting}
+          className="text-lg text-zinc-500 text-center py-14"
+          type="text"
+          placeholder="Continue to Log in to Flitchcoin"
+        />
+      </div>
     </>
   );
 }
