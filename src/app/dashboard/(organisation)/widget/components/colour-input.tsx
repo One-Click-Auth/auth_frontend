@@ -1,14 +1,22 @@
 'use client';
-import { ColorPicker, useColor } from 'react-color-palette';
+import { Color, ColorPicker } from 'react-color-palette';
 import 'react-color-palette/lib/css/styles.css';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
+import { Dispatch, SetStateAction } from 'react';
 
-export function ColourInput() {
-  const [color, setColor] = useColor('hex', '#121212');
+type ColorProps = {
+  colorState: {
+    color: Color;
+    setColor: Dispatch<SetStateAction<Color>>;
+  };
+};
+
+export function ColourInput({colorState: {color, setColor}}: ColorProps) {
+  // const [color, setColor] = useColor('hex', '#121212');
   return (
     <div className="border py-1.5 px-2 gap-3 rounded-lg flex items-center">
       <Popover>

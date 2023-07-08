@@ -1,18 +1,22 @@
+
 import { Button } from '@/components/ui/Button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
+import { Color } from 'react-color-palette';
 
 type WidgetProp = {
   logoImage: string;
   displayName: string;
   greeting: string;
+  color: Color
 };
-
+//TODO: Set a function to return a bg-[string] on color change
 export function WidgetPreview({
   logoImage,
   displayName,
-  greeting
+  greeting,
+  color
 }: WidgetProp) {
   return (
     <div className="space-y-10">
@@ -40,7 +44,10 @@ export function WidgetPreview({
             disabled
           />
         </div>
-        <Button className="bg-black w-44 h-8 text-white hover:bg-black/90">
+        <Button 
+          style={{backgroundColor: color.hex}}
+          className={`w-44 h-8 text-white hover:bg-black/90`}
+        >
           <span className="ml-6">Go !!</span>
           <ChevronRightIcon className="ml-3" />
         </Button>

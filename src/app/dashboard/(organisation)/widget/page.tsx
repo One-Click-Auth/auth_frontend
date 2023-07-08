@@ -8,6 +8,7 @@ import { LanguageSwitcher } from './components/language-switcher';
 import { WidgetPreview } from './components/widget-preview';
 import { WidgetControl } from './components/widget-control';
 import { useEffect, useState } from 'react';
+import { useColor } from 'react-color-palette';
 
 const OrganisationDashboard = () => {
   const [displayName, setDisplayName] = useState<string>('Flitchcoin');
@@ -16,6 +17,9 @@ const OrganisationDashboard = () => {
   );
   const [logo, setLogo] = useState<File>();
   const [logoImage, setLogoImage] = useState<string>('/ellipse-flitchcoin.svg');
+  const [color, setColor] = useColor('hex', '#121212');
+  const [color2, setColor2] = useColor('hex', '#121212');
+  const [color3, setColor3] = useColor('hex', '#121212');
 
   // Set values back to default when input is empty
   useEffect(() => {
@@ -63,6 +67,9 @@ const OrganisationDashboard = () => {
                   setDisplayName={setDisplayName}
                   setGreeting={setGreeting}
                   logoState={{ logo, setLogo, logoImage, setLogoImage }}
+                  colorState={{color, setColor}}
+                  colorState2={{color2, setColor2}}
+                  colorState3={{color3, setColor3}}
                 />
               </CardContent>
             </Card>
@@ -72,6 +79,7 @@ const OrganisationDashboard = () => {
                   displayName={displayName}
                   greeting={greeting}
                   logoImage={logoImage}
+                  color={color}
                 />
               </CardContent>
             </Card>
