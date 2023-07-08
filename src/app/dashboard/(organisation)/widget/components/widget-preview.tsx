@@ -44,12 +44,12 @@ export function WidgetPreview({
       return `linear-gradient(to right, ${color.hex}, ${color2.hex})`;
     }
   };
+
   const [buttonBackground, setButtonBackground] = useState(updateButtonColor());
 
   useEffect(() => {
     setButtonBackground(updateButtonColor());
-    console.log(buttonBackground);
-  }, [color, color2, color3]);
+  }, [color, color2, color3, button2Status, button3Status]);
 
   return (
     <div className="space-y-10">
