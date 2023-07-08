@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import Login from './Login';
-export default function AppPage(
-  props: JSX.IntrinsicAttributes & { searchParams: any }
-) {
+export default function AppPage(props: {
+  searchParams: Record<string, string>;
+}) {
   return <Login {...props} />;
 }
