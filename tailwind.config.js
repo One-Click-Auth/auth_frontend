@@ -21,7 +21,7 @@ module.exports = {
       colors: {
         accent: "#9EFF00",
         disabled: "#B2B2B7",
-        primary: "#9EFF00",
+        primary: "#ffffff",
         input: "#E2E8F0",
         border: 'hsl(var(--border))',
         ring: 'hsl(var(--ring))',

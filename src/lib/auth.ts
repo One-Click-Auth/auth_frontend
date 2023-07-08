@@ -143,7 +143,7 @@ export const authOptions: NextAuthOptions = {
     // @ts-ignore
     async session(session, token) {
       console.log("SESSION", JSON.stringify(session))
-      console.log("SESSION", JSON.stringify(token))
+      console.log("SESSION TOKEN:", JSON.stringify(token))
       session.user = token?.user ?? session.user
       return session
     },

@@ -54,8 +54,7 @@ function AddOrganization() {
                     <div className='hover:text-white' >
                         <Button
                             onSubmit={handleSubmit}
-                            className='bg-accent'
-                            variant="primary"  >
+                            className='bg-accent'  >
                             <Plus />
                             <span className='pl-1' >
                                 Create New Organization

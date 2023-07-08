@@ -17,6 +17,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
+      <link rel="icon" type="image/x-icon" href="/logo.svg"></link>
       {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head

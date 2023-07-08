@@ -24,7 +24,7 @@ function OrgList({ data }: dataType) {
           </p>
         </div>
         <div className="hover:text-white">
-          <Button onClick={handleNavigation} variant="primary">
+          <Button onClick={handleNavigation}>
             <span className="mt-0.5 mr-1">
               <Plus />
             </span>

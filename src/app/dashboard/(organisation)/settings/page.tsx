@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/Switch";
 import { AiGenerate } from "@/assets/Svg/Account/Account";
 import { Button } from "@/components/ui/Button";
 
-const OrganisationDashboard = ({ params }: { params: { slug: string } }) => {
+const OrganisationDashboard = () => {
   return (
     <div className="flex-1 space-y-8 p-10 pt-4 lg:p-16">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
