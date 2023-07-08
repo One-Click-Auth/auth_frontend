@@ -103,6 +103,7 @@ export function WidgetControl({
         onChange={e => setDisplayName(e.target.value)}
         type="text"
         placeholder="Change Display Name"
+        maxLength={36}
       />
       <div>
         <span className="text-sm pl-2 text-zinc-500">
@@ -113,6 +114,7 @@ export function WidgetControl({
           className="text-lg text-center py-14"
           type="text"
           placeholder="Continue to Log in to Flitchcoin"
+          maxLength={100}
         />
       </div>
     </>
