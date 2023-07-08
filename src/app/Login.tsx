@@ -20,7 +20,7 @@ type FormValues = {
   otp?: string;
 };
 
-const Login = ({ searchParams }) => {
+const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
   const [values, setValues] = useState<FormValues>({});
   const [fa2, setFa2] = useState<boolean>(false);
   // const [userRes, setUserRes] = useState({});
