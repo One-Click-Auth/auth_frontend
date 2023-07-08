@@ -20,7 +20,7 @@ type WidgetProp = {
     button3Status: boolean;
   };
 };
-//TODO: Set a function to return a bg-[string] on color change
+
 export function WidgetPreview({
   logoImage,
   displayName,
@@ -30,7 +30,7 @@ export function WidgetPreview({
 }: WidgetProp) {
   const updateButtonColor = () => {
     if (!button2Status && !button3Status) {
-      return color.hex
+      return color.hex;
     }
 
     if (button2Status && button3Status) {

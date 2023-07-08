@@ -43,13 +43,25 @@ export function WidgetControl({
   colorState,
   colorState2: { color2, setColor2 },
   colorState3: { color3, setColor3 },
-  buttonStatus:{
+  buttonStatus: {
     button2Status,
     button3Status,
     setButton2Status,
     setButton3Status
   }
 }: WidgetProp) {
+  const handleShowButton = () => {
+    if (button2Status === false) {
+      setButton2Status(true);
+      return;
+    }
+
+    if (button3Status === false) {
+      setButton3Status(true);
+      return;
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col space-y-4">
@@ -57,15 +69,28 @@ export function WidgetControl({
           <span className="text-sm pl-2 text-zinc-500">Button Colour</span>
           <ColourInput colorState={colorState} />
         </div>
-        <div>
+        <div className={`${!button2Status && 'hidden'}`}>
           <span className="text-sm pl-2 text-zinc-500">Button Colour 2</span>
-          <ColourInput colorState={{ color: color2, setColor: setColor2 }} />
+          <ColourInput
+            colorState={{ color: color2, setColor: setColor2 }}
+            setButtonStatus={setButton2Status}
+            removable
+          />
         </div>
-        <div>
+        <div className={`${!button3Status && 'hidden'}`}>
           <span className="text-sm pl-2 text-zinc-500">Button Colour 3</span>
-          <ColourInput colorState={{ color: color3, setColor: setColor3 }} />
+          <ColourInput
+            colorState={{ color: color3, setColor: setColor3 }}
+            setButtonStatus={setButton3Status}
+            removable
+          />
         </div>
-        <Button className="text-sm self-end bg-accent hover:bg-accent/80">
+        <Button
+          onClick={handleShowButton}
+          className={`${
+            button2Status && button3Status && 'hidden'
+          } text-sm self-end bg-accent hover:bg-accent/80`}
+        >
           <Plus className="w-3.5 h-3.5 mr-2" />
           Add Linear-gradient
         </Button>

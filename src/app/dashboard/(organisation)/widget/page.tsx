@@ -23,6 +23,7 @@ const OrganisationDashboard = () => {
   const [button2Status, setButton2Status] = useState(false);
   const [button3Status, setButton3Status] = useState(false);
 
+  // TODO: Clear preview button color when corresponding button is removed
   // Set values back to default when input is empty
   useEffect(() => {
     if (displayName === '') {

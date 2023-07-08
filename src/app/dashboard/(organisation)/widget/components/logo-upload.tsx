@@ -22,9 +22,6 @@ type LogoProps = {
 export function LogoUpload({
   logoState: { logo, setLogo, logoImage, setLogoImage }
 }: LogoProps) {
-  // const [logo, setLogo] = useState<File>();
-  // const [logoImage, setLogoImage] = useState<string>('/ellipse-flitchcoin.svg');
-
   const handleLogoInput = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.target.files) {
