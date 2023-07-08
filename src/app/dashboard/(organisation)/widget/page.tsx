@@ -35,7 +35,7 @@ const OrganisationDashboard = () => {
   }, [displayName, greeting]);
 
   return (
-    <div className="flex-1 space-y-4 p-10 pt-14">
+    <div className="flex-1 space-y-4 p-10 pt-14 max-w-7xl mx-auto">
       <Tabs defaultValue="branding" className="space-y-4">
         <div className="flex flex-wrap gap-3 justify-between">
           <TabsList className="bg-gray-100">
