@@ -79,7 +79,7 @@ const OrganisationDashboard = () => {
                   displayName={displayName}
                   greeting={greeting}
                   logoImage={logoImage}
-                  color={color}
+                  buttonColor={{color, color2, color3}}
                 />
               </CardContent>
             </Card>

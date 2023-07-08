@@ -1,23 +1,43 @@
-
+"use client"
 import { Button } from '@/components/ui/Button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { Color } from 'react-color-palette';
 
 type WidgetProp = {
   logoImage: string;
   displayName: string;
   greeting: string;
-  color: Color
+  buttonColor: {
+    color: Color,
+    color2: Color,
+    color3: Color
+  }
 };
 //TODO: Set a function to return a bg-[string] on color change
 export function WidgetPreview({
   logoImage,
   displayName,
   greeting,
-  color
+  buttonColor: {
+    color, 
+    color2,
+    color3
+  }
 }: WidgetProp) {
+  const updateButtonColor = () => {
+    return `linear-gradient(to right, ${color.hex}, ${color2.hex}, ${color3.hex})`
+    // return color.hex
+  }
+  const [buttonBackground, setButtonBackground] = useState(updateButtonColor());
+
+  useEffect(() => {
+    setButtonBackground(updateButtonColor());
+    console.log(buttonBackground);
+  }, [color, color2, color3])
+
   return (
     <div className="space-y-10">
       <div className="flex flex-col justify-center items-center">
@@ -45,7 +65,7 @@ export function WidgetPreview({
           />
         </div>
         <Button 
-          style={{backgroundColor: color.hex}}
+          style={{background: buttonBackground}}
           className={`w-44 h-8 text-white hover:bg-black/90`}
         >
           <span className="ml-6">Go !!</span>
