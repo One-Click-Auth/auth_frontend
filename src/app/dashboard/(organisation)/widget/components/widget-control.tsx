@@ -28,6 +28,12 @@ type WidgetProp = {
     color3: Color;
     setColor3: Dispatch<SetStateAction<Color>>;
   };
+  buttonStatus: {
+    button2Status: boolean;
+    button3Status: boolean;
+    setButton2Status: Dispatch<SetStateAction<boolean>>;
+    setButton3Status: Dispatch<SetStateAction<boolean>>;
+  };
 };
 
 export function WidgetControl({
@@ -36,7 +42,13 @@ export function WidgetControl({
   logoState,
   colorState,
   colorState2: { color2, setColor2 },
-  colorState3: { color3, setColor3 }
+  colorState3: { color3, setColor3 },
+  buttonStatus:{
+    button2Status,
+    button3Status,
+    setButton2Status,
+    setButton3Status
+  }
 }: WidgetProp) {
   return (
     <>

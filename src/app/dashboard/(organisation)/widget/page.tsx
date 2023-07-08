@@ -20,6 +20,8 @@ const OrganisationDashboard = () => {
   const [color, setColor] = useColor('hex', '#121212');
   const [color2, setColor2] = useColor('hex', '#121212');
   const [color3, setColor3] = useColor('hex', '#121212');
+  const [button2Status, setButton2Status] = useState(false);
+  const [button3Status, setButton3Status] = useState(false);
 
   // Set values back to default when input is empty
   useEffect(() => {
@@ -67,9 +69,15 @@ const OrganisationDashboard = () => {
                   setDisplayName={setDisplayName}
                   setGreeting={setGreeting}
                   logoState={{ logo, setLogo, logoImage, setLogoImage }}
-                  colorState={{color, setColor}}
-                  colorState2={{color2, setColor2}}
-                  colorState3={{color3, setColor3}}
+                  colorState={{ color, setColor }}
+                  colorState2={{ color2, setColor2 }}
+                  colorState3={{ color3, setColor3 }}
+                  buttonStatus={{
+                    button2Status,
+                    button3Status,
+                    setButton2Status,
+                    setButton3Status
+                  }}
                 />
               </CardContent>
             </Card>
@@ -79,7 +87,8 @@ const OrganisationDashboard = () => {
                   displayName={displayName}
                   greeting={greeting}
                   logoImage={logoImage}
-                  buttonColor={{color, color2, color3}}
+                  buttonColor={{ color, color2, color3 }}
+                  buttonStatus={{ button2Status, button3Status }}
                 />
               </CardContent>
             </Card>

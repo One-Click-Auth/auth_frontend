@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { Button } from '@/components/ui/Button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
@@ -11,32 +11,45 @@ type WidgetProp = {
   displayName: string;
   greeting: string;
   buttonColor: {
-    color: Color,
-    color2: Color,
-    color3: Color
-  }
+    color: Color;
+    color2: Color;
+    color3: Color;
+  };
+  buttonStatus: {
+    button2Status: boolean;
+    button3Status: boolean;
+  };
 };
 //TODO: Set a function to return a bg-[string] on color change
 export function WidgetPreview({
   logoImage,
   displayName,
   greeting,
-  buttonColor: {
-    color, 
-    color2,
-    color3
-  }
+  buttonColor: { color, color2, color3 },
+  buttonStatus: { button2Status, button3Status }
 }: WidgetProp) {
   const updateButtonColor = () => {
-    return `linear-gradient(to right, ${color.hex}, ${color2.hex}, ${color3.hex})`
-    // return color.hex
-  }
+    if (!button2Status && !button3Status) {
+      return color.hex
+    }
+
+    if (button2Status && button3Status) {
+      return `linear-gradient(to right, ${color.hex}, ${color2.hex}, ${color3.hex})`;
+    }
+
+    if (button2Status || button3Status) {
+      if (!button2Status) {
+        return `linear-gradient(to right, ${color.hex}, ${color3.hex})`;
+      }
+      return `linear-gradient(to right, ${color.hex}, ${color2.hex})`;
+    }
+  };
   const [buttonBackground, setButtonBackground] = useState(updateButtonColor());
 
   useEffect(() => {
     setButtonBackground(updateButtonColor());
     console.log(buttonBackground);
-  }, [color, color2, color3])
+  }, [color, color2, color3]);
 
   return (
     <div className="space-y-10">
@@ -64,9 +77,9 @@ export function WidgetPreview({
             disabled
           />
         </div>
-        <Button 
-          style={{background: buttonBackground}}
-          className={`w-44 h-8 text-white hover:bg-black/90`}
+        <Button
+          style={{ background: buttonBackground }}
+          className={`w-44 h-8 text-white`}
         >
           <span className="ml-6">Go !!</span>
           <ChevronRightIcon className="ml-3" />
