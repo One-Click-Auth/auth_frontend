@@ -20,8 +20,6 @@ export const EmailComponent = ({
   handleEmailSubmit,
   setFa2
 }: EmailSubmitType) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   // email validation
   const asyncEmailValidation = async (email: string) => {
     try {
@@ -68,73 +66,44 @@ export const EmailComponent = ({
     mode: 'onSubmit'
   });
   return (
-    <div>
-      <Button
-        onClick={() => {
-          setIsLoading(true);
-          signIn('github');
-        }}
-        className="w-full h-12 mb-6 text-md hover:bg-black hover:text-white"
-        variant="outline"
-        type="button"
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Icons.gitHub className="mr-2 h-4 w-4" />
-        )}{' '}
-        Login with Github
-      </Button>
-      <div className="relative mb-8">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
+    <form
+      onSubmit={handleSubmit(handleEmailSubmit)}
+      className="login-wrapper form-wrapper"
+    >
+      <div className="form-group relative">
+        <label
+          htmlFor="email"
+          className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 ${
+            errors.username && 'text-red-600'
+          }`}
+        >
+          Email
+        </label>
+        <input
+          {...register('username')}
+          id="email"
+          className={`form-control w-full px-8 py-3 border rounded-lg ${
+            errors.username ? 'border-red-600' : 'border-slate-500'
+          }`}
+          placeholder="name@example.com"
+        />
+        {errors.username && (
+          <div className="mt-2 pl-8 color text-red-600">
+            <span>{errors.username.message}</span>
+          </div>
+        )}
+      </div>
+      <div className="form-group">
+        <div className="d-grid start">
+          <FormButton>Next</FormButton>
         </div>
       </div>
-      <form
-        onSubmit={handleSubmit(handleEmailSubmit)}
-        className="login-wrapper form-wrapper"
-      >
-        <div className="form-group relative">
-          <label
-            htmlFor="email"
-            className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 ${
-              errors.username && 'text-red-600'
-            }`}
-          >
-            Email
-          </label>
-          <input
-            {...register('username')}
-            id="email"
-            className={`form-control w-full px-8 py-3 border rounded-lg ${
-              errors.username ? 'border-red-600' : 'border-slate-500'
-            }`}
-            placeholder="name@example.com"
-          />
-          {errors.username && (
-            <div className="mt-2 pl-8 color text-red-600">
-              <span>{errors.username.message}</span>
-            </div>
-          )}
-        </div>
-        <div className="form-group">
-          <div className="d-grid start">
-            <FormButton>Next</FormButton>
-          </div>
-        </div>
-        <div className="ats-content mt-8 md:mt-11">
-          <p className="mb-0 text-xl flex items-center flex-wrap">
-            I don’t have an AuthX account
-            <LinkText to="/signup">advance to Signup</LinkText>
-          </p>
-        </div>
-      </form>
-    </div>
+      <div className="ats-content mt-8 md:mt-11">
+        <p className="mb-0 text-xl flex items-center flex-wrap">
+          I don’t have an AuthX account
+          <LinkText to="/signup">advance to Signup</LinkText>
+        </p>
+      </div>
+    </form>
   );
 };

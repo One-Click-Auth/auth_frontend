@@ -2,16 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import Modal from '@/components/Modal';
 import OtpInput from 'react-otp-input';
-import { LOGIN_GRAPHIC, LOGO } from '@/constants';
+import { API_DOMAIN, LOGIN_GRAPHIC, LOGO } from '@/constants';
 import Image from 'next/image';
 import LayoutBanner from '@/components/authForm/LayoutBanner';
 import { signIn } from 'next-auth/react';
 import { PasswordComponent } from '@/components/authForm/PasswordComponent';
 import { EmailComponent } from '@/components/authForm/EmailComponent';
-import { Button } from '@/components/ui/Button';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import LoadingModal from '@/components/authForm/LoadingModal';
+import { Button } from '@/components/ui/Button';
+import { Icons } from '@/components/icons';
 
 type FormValues = {
   username?: string;
@@ -20,7 +20,7 @@ type FormValues = {
   otp?: string;
 };
 
-const Login = () => {
+const Login = ({ searchParams }) => {
   const [values, setValues] = useState<FormValues>({});
   const [fa2, setFa2] = useState<boolean>(false);
   // const [userRes, setUserRes] = useState({});
@@ -29,6 +29,11 @@ const Login = () => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    const token = searchParams['tnx'];
+    if (token)
+      signIn('credentials', { githubToken: token, callbackUrl: '/dashboard' });
+  }, [searchParams]);
   useEffect(() => {
     console.log(fa2);
   }, [fa2]);
@@ -83,15 +88,38 @@ const Login = () => {
             <h1 className="scroll-m-20 text-4xl text-center pb-9 md:pb-11 font-semibold transition-colors first:mt-0">
               Login to your AuthX account
             </h1>
-
-            {!values.username ? (
-              <EmailComponent
-                handleEmailSubmit={handleEmailSubmit}
-                setFa2={setFa2}
-              />
-            ) : (
-              <PasswordComponent handlePasswordSubmit={handlePasswordSubmit} />
-            )}
+            <div>
+              <form method="get" action={`${API_DOMAIN}/signup/github`}>
+                <Button
+                  type="submit"
+                  className="w-full h-12 mb-6 text-md hover:bg-black hover:text-white"
+                  variant="outline"
+                >
+                  <Icons.gitHub className="mr-2 h-4 w-4" />
+                  Login with Github
+                </Button>
+              </form>
+              <div className="relative mb-8">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+              {!values.username ? (
+                <EmailComponent
+                  handleEmailSubmit={handleEmailSubmit}
+                  setFa2={setFa2}
+                />
+              ) : (
+                <PasswordComponent
+                  handlePasswordSubmit={handlePasswordSubmit}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
