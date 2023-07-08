@@ -7,13 +7,12 @@ interface AccountLayoutType {
 }
 function AccountLayout({ children }: AccountLayoutType) {
   return (
-    <div className="flex">
-      <div className="min-h-screen bg-black">
-        <Sidebar />
-      </div>
+    <div className="flex flex-col sm:flex-row">
+      <Sidebar />
+
       <div className="w-full px-2 sm:px-4 py-3 max-w-full overflow-x-auto">
         <AccountNav />
-        <div className="flex">{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   );
