@@ -81,16 +81,6 @@ export function WidgetCustom({
           />
         </div>
         <div>
-          <span className="text-sm pl-2 text-zinc-500">Widget Box Radius</span>
-          <Input
-            type="number"
-            min={0}
-            max={100}
-            value={widgetBoxRadius}
-            onChange={e => setWidgetBoxRadius(e.target.value)}
-          />
-        </div>
-        <div>
           <span className="text-sm pl-2 text-zinc-500">Widget Border Size</span>
           <Input
             type="number"
@@ -98,6 +88,16 @@ export function WidgetCustom({
             max={100}
             value={widgetBorderWidth}
             onChange={e => setWidgetBorderWidth(e.target.value)}
+          />
+        </div>
+        <div>
+          <span className="text-sm pl-2 text-zinc-500">Widget Box Radius</span>
+          <Input
+            type="number"
+            min={0}
+            max={100}
+            value={widgetBoxRadius}
+            onChange={e => setWidgetBoxRadius(e.target.value)}
           />
         </div>
         <div>

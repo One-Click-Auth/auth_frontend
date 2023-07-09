@@ -28,7 +28,7 @@ const OrganisationDashboard = () => {
   const [widgetBgColor, setWidgetBgColor] = useColor('hex', '#EEF5F1');
   const [inputBoxRadius, setInputBoxRadius] = useState('6');
   const [widgetBoxRadius, setWidgetBoxRadius] = useState('8');
-  const [widgetBorderWidth, setWidgetBorderWidth] = useState('0');
+  const [widgetBorderWidth, setWidgetBorderWidth] = useState('1');
 
   // Widget Component
   const Widget = () => {
@@ -61,6 +61,57 @@ const OrganisationDashboard = () => {
         </CardContent>
       </Card>
     );
+  };
+
+  // Reset Methods
+  const resetBranding = () => {
+    setDisplayName('Flitchcoin');
+    setGreeting('Continue to Log in to Flitchcoin');
+    setLogoImage('/flitchcoin-logo.svg');
+    // Reset Button State
+    setButton2Status(false);
+    setButton3Status(false);
+    setColor({
+      hex: '#121212',
+      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
+      rgb: { r: 18, g: 18, b: 18, a: undefined }
+    });
+    setColor2({
+      hex: '#121212',
+      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
+      rgb: { r: 18, g: 18, b: 18, a: undefined }
+    });
+    setColor3({
+      hex: '#121212',
+      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
+      rgb: { r: 18, g: 18, b: 18, a: undefined }
+    });
+  };
+
+  const resetCustomization = () => {
+    setInputBorderColor({
+      hex: '#121212',
+      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
+      rgb: { r: 18, g: 18, b: 18, a: undefined }
+    });
+    setWidgetBorderColor({
+      hex: '#FFFFFF',
+      hsv: { h: 0, s: 0, v: 100, a: undefined },
+      rgb: { r: 255, g: 255, b: 255, a: undefined }
+    });
+    setWidgetColor({
+      hex: '#FFFFFF',
+      hsv: { h: 0, s: 0, v: 100, a: undefined },
+      rgb: { r: 255, g: 255, b: 255, a: undefined }
+    });
+    setWidgetBgColor({
+      hex: '#EEF5F1',
+      hsv: { h: 145.7142857142856, s: 2.734375, v: 96.09375, a: undefined },
+      rgb: { r: 238, g: 245, b: 241, a: undefined }
+    });
+    setInputBoxRadius('6');
+    setWidgetBoxRadius('8');
+    setWidgetBorderWidth('0');
   };
 
   // Set values back to default when input is empty
@@ -141,7 +192,7 @@ const OrganisationDashboard = () => {
             </Card>
             <Widget />
           </div>
-          <WidgetFooter />
+          <WidgetFooter reset={resetBranding} />
         </TabsContent>
         <TabsContent value="customization" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
@@ -166,7 +217,7 @@ const OrganisationDashboard = () => {
             </Card>
             <Widget />
           </div>
-          <WidgetFooter />
+          <WidgetFooter reset={resetCustomization} />
         </TabsContent>
         <TabsContent value="consent" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">

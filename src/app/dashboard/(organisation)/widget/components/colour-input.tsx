@@ -47,10 +47,6 @@ export function ColourInput({
               height={128}
               color={color}
               onChange={setColor}
-              onChangeComplete={e => {
-                console.log(e);
-                // setShow(false);
-              }}
               hideHSV
               hideRGB
               dark
