@@ -12,7 +12,7 @@ import Link from 'next/link';
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true);
-  const [isSmall, setIsSmall] = useState(800);
+  const [isSmall, setIsSmall] = useState(window.innerWidth);
 
   window.addEventListener('resize', () => {
     setIsSmall(window.innerWidth);

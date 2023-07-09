@@ -62,7 +62,7 @@ function AccountIndex() {
               that access your applications as organizations in AuthX.
             </p>
             <div className="hover:text-white">
-              <Button onClick={handleNavigation} className="bg-accent">
+              <Button onClick={handleNavigation} variant={'authx'}>
                 {' '}
                 <Plus />
                 Create New Organization
