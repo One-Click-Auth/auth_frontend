@@ -19,6 +19,9 @@ type WidgetProp = {
     button2Status: boolean;
     button3Status: boolean;
   };
+  inputBorderColor: Color;
+  widgetColor: Color;
+  inputBoxRadius: string;
 };
 
 export function WidgetPreview({
@@ -26,7 +29,10 @@ export function WidgetPreview({
   displayName,
   greeting,
   buttonColor: { color, color2, color3 },
-  buttonStatus: { button2Status, button3Status }
+  buttonStatus: { button2Status, button3Status },
+  inputBorderColor,
+  widgetColor,
+  inputBoxRadius
 }: WidgetProp) {
   const updateButtonColor = () => {
     if (!button2Status && !button3Status) {
@@ -58,12 +64,19 @@ export function WidgetPreview({
           <AvatarImage src={logoImage} alt="Organisation Logo" />
           <AvatarFallback>LOGO</AvatarFallback>
         </Avatar>
-        <h1 className="text-lg font-medium text-center break-words w-44 mt-0.5 mb-1.5">{displayName}</h1>
-        <small className="text-[0.6rem] w-44 break-words text-center">{greeting}</small>
+        <h1 className="text-lg font-medium text-center break-words w-44 mt-0.5 mb-1.5">
+          {displayName}
+        </h1>
+        <small className="text-[0.6rem] w-44 break-words text-center">
+          {greeting}
+        </small>
       </div>
       <div className="flex flex-col gap-8 items-center">
         <div className="relative">
           <label
+            style={{
+              backgroundColor: widgetColor.hex
+            }}
             htmlFor="email"
             className="form-label text-[0.6rem] absolute translate-x-3 translate-y-[-7px] bg-white px-1"
           >
@@ -73,7 +86,12 @@ export function WidgetPreview({
             name="username"
             id="email"
             type="text"
-            className="w-44 px-4 py-0.5 border rounded-md border-black disabled:bg-primary"
+            style={{
+              borderRadius: Number(inputBoxRadius),
+              borderColor: inputBorderColor.hex,
+              backgroundColor: widgetColor.hex
+            }}
+            className="w-44 px-4 py-0.5 border disabled:bg-primary"
             disabled
           />
         </div>
@@ -89,7 +107,12 @@ export function WidgetPreview({
             <span className="w-full border-black border-t" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="bg-background px-2 text-black">or</span>
+            <span
+              style={{ backgroundColor: widgetColor.hex }}
+              className="bg-background px-2 text-black"
+            >
+              or
+            </span>
           </div>
         </div>
         <Image

@@ -35,7 +35,7 @@ export function ColourInput({
           <PopoverTrigger asChild>
             <button
               style={{ backgroundColor: color.hex }}
-              className={`w-[3.625rem] h-[2.125rem] rounded-md`}
+              className={`w-[3.625rem] h-[2.125rem] border rounded-lg`}
             ></button>
           </PopoverTrigger>
           <PopoverContent
@@ -47,10 +47,6 @@ export function ColourInput({
               height={128}
               color={color}
               onChange={setColor}
-              onChangeComplete={e => {
-                console.log(e);
-                // setShow(false);
-              }}
               hideHSV
               hideRGB
               dark

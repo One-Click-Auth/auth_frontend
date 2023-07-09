@@ -14,7 +14,6 @@ type WidgetProp = {
     logo: File | undefined;
     setLogo: Dispatch<SetStateAction<File | undefined>>;
     logoImage: string;
-    setLogoImage: Dispatch<SetStateAction<string>>;
   };
   colorState: {
     color: Color;
@@ -36,7 +35,7 @@ type WidgetProp = {
   };
 };
 
-export function WidgetControl({
+export function WidgetBranding({
   setDisplayName,
   setGreeting,
   logoState,

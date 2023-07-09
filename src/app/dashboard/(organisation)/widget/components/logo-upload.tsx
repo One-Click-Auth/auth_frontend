@@ -6,8 +6,7 @@ import Image from 'next/image';
 import {
   ChangeEvent,
   Dispatch,
-  SetStateAction,
-  useEffect
+  SetStateAction
 } from 'react';
 
 type LogoProps = {
@@ -15,12 +14,11 @@ type LogoProps = {
     logo: File | undefined;
     setLogo: Dispatch<SetStateAction<File | undefined>>;
     logoImage: string;
-    setLogoImage: Dispatch<SetStateAction<string>>;
   };
 };
 
 export function LogoUpload({
-  logoState: { logo, setLogo, logoImage, setLogoImage }
+  logoState: { logo, setLogo, logoImage }
 }: LogoProps) {
   const handleLogoInput = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -28,16 +26,6 @@ export function LogoUpload({
       setLogo(event.target.files[0]);
     }
   };
-
-  useEffect(() => {
-    if (logo) {
-      setLogoImage(URL.createObjectURL(logo));
-    }
-
-    if (!logo) {
-      setLogoImage('/ellipse-flitchcoin.svg');
-    }
-  }, [logo]);
 
   return (
     <div className="flex border gap-2 rounded-lg py-1.5 px-2">
