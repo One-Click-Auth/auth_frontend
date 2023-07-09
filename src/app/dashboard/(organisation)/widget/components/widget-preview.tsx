@@ -20,11 +20,8 @@ type WidgetProp = {
     button3Status: boolean;
   };
   inputBorderColor: Color;
-  widgetBorderColor: Color;
   widgetColor: Color;
-  widgetBgColor: Color;
   inputBoxRadius: string;
-  widgetBoxRadius: string;
 };
 
 export function WidgetPreview({
@@ -32,7 +29,10 @@ export function WidgetPreview({
   displayName,
   greeting,
   buttonColor: { color, color2, color3 },
-  buttonStatus: { button2Status, button3Status }
+  buttonStatus: { button2Status, button3Status },
+  inputBorderColor,
+  widgetColor,
+  inputBoxRadius
 }: WidgetProp) {
   const updateButtonColor = () => {
     if (!button2Status && !button3Status) {
@@ -74,6 +74,9 @@ export function WidgetPreview({
       <div className="flex flex-col gap-8 items-center">
         <div className="relative">
           <label
+            style={{
+              backgroundColor: widgetColor.hex
+            }}
             htmlFor="email"
             className="form-label text-[0.6rem] absolute translate-x-3 translate-y-[-7px] bg-white px-1"
           >
@@ -83,7 +86,12 @@ export function WidgetPreview({
             name="username"
             id="email"
             type="text"
-            className="w-44 px-4 py-0.5 border rounded-md border-black disabled:bg-primary"
+            style={{
+              borderRadius: Number(inputBoxRadius),
+              borderColor: inputBorderColor.hex,
+              backgroundColor: widgetColor.hex
+            }}
+            className="w-44 px-4 py-0.5 border disabled:bg-primary"
             disabled
           />
         </div>

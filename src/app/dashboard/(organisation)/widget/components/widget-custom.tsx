@@ -30,6 +30,10 @@ type WidgetCustomProps = {
     widgetBoxRadius: string;
     setWidgetBoxRadius: Dispatch<SetStateAction<string>>;
   };
+  widgetBorderWidth: {
+    widgetBorderWidth: string;
+    setWidgetBorderWidth: Dispatch<SetStateAction<string>>;
+  };
 };
 
 export function WidgetCustom({
@@ -38,7 +42,8 @@ export function WidgetCustom({
   widgetColor: { widgetColor, setWidgetColor },
   widgetBgColor: { widgetBgColor, setWidgetBgColor },
   inputBoxRadius: { inputBoxRadius, setInputBoxRadius },
-  widgetBoxRadius: { widgetBoxRadius, setWidgetBoxRadius }
+  widgetBoxRadius: { widgetBoxRadius, setWidgetBoxRadius },
+  widgetBorderWidth: { widgetBorderWidth, setWidgetBorderWidth }
 }: WidgetCustomProps) {
   return (
     <>
@@ -58,6 +63,8 @@ export function WidgetCustom({
           <span className="text-sm pl-2 text-zinc-500">Input Box Radius</span>
           <Input
             type="number"
+            min={0}
+            max={100}
             value={inputBoxRadius}
             onChange={e => setInputBoxRadius(e.target.value)}
           />
@@ -77,8 +84,20 @@ export function WidgetCustom({
           <span className="text-sm pl-2 text-zinc-500">Widget Box Radius</span>
           <Input
             type="number"
+            min={0}
+            max={100}
             value={widgetBoxRadius}
             onChange={e => setWidgetBoxRadius(e.target.value)}
+          />
+        </div>
+        <div>
+          <span className="text-sm pl-2 text-zinc-500">Widget Border Size</span>
+          <Input
+            type="number"
+            min={0}
+            max={100}
+            value={widgetBorderWidth}
+            onChange={e => setWidgetBorderWidth(e.target.value)}
           />
         </div>
         <div>

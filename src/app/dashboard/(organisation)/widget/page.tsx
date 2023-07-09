@@ -28,6 +28,40 @@ const OrganisationDashboard = () => {
   const [widgetBgColor, setWidgetBgColor] = useColor('hex', '#EEF5F1');
   const [inputBoxRadius, setInputBoxRadius] = useState('6');
   const [widgetBoxRadius, setWidgetBoxRadius] = useState('8');
+  const [widgetBorderWidth, setWidgetBorderWidth] = useState('0');
+
+  // Widget Component
+  const Widget = () => {
+    return (
+      <Card
+        style={{
+          backgroundColor: widgetBgColor.hex
+        }}
+        className="col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center"
+      >
+        <CardContent
+          style={{
+            borderRadius: Number(widgetBoxRadius),
+            borderWidth: Number(widgetBorderWidth),
+            borderColor: widgetBorderColor.hex,
+            backgroundColor: widgetColor.hex
+          }}
+          className="p-10 bg-primary m-4 rounded-lg drop-shadow-lg"
+        >
+          <WidgetPreview
+            displayName={displayName}
+            greeting={greeting}
+            logoImage={logoImage}
+            buttonColor={{ color, color2, color3 }}
+            buttonStatus={{ button2Status, button3Status }}
+            inputBorderColor={inputBorderColor}
+            widgetColor={widgetColor}
+            inputBoxRadius={inputBoxRadius}
+          />
+        </CardContent>
+      </Card>
+    );
+  };
 
   // Set values back to default when input is empty
   useEffect(() => {
@@ -105,23 +139,7 @@ const OrganisationDashboard = () => {
                 />
               </CardContent>
             </Card>
-            <Card className="col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center">
-              <CardContent className="p-10 bg-primary rounded-lg drop-shadow-lg">
-                <WidgetPreview
-                  displayName={displayName}
-                  greeting={greeting}
-                  logoImage={logoImage}
-                  buttonColor={{ color, color2, color3 }}
-                  buttonStatus={{ button2Status, button3Status }}
-                  inputBorderColor={inputBorderColor}
-                  widgetBorderColor={widgetBorderColor}
-                  widgetColor={widgetColor}
-                  widgetBgColor={widgetBgColor}
-                  inputBoxRadius={inputBoxRadius}
-                  widgetBoxRadius={widgetBoxRadius}
-                />
-              </CardContent>
-            </Card>
+            <Widget />
           </div>
           <WidgetFooter />
         </TabsContent>
@@ -139,26 +157,14 @@ const OrganisationDashboard = () => {
                   widgetBgColor={{ widgetBgColor, setWidgetBgColor }}
                   inputBoxRadius={{ inputBoxRadius, setInputBoxRadius }}
                   widgetBoxRadius={{ widgetBoxRadius, setWidgetBoxRadius }}
+                  widgetBorderWidth={{
+                    widgetBorderWidth,
+                    setWidgetBorderWidth
+                  }}
                 />
               </CardContent>
             </Card>
-            <Card className="col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center">
-              <CardContent className="p-10 bg-primary rounded-lg drop-shadow-lg">
-                <WidgetPreview
-                  displayName={displayName}
-                  greeting={greeting}
-                  logoImage={logoImage}
-                  buttonColor={{ color, color2, color3 }}
-                  buttonStatus={{ button2Status, button3Status }}
-                  inputBorderColor={inputBorderColor}
-                  widgetBorderColor={widgetBorderColor}
-                  widgetColor={widgetColor}
-                  widgetBgColor={widgetBgColor}
-                  inputBoxRadius={inputBoxRadius}
-                  widgetBoxRadius={widgetBoxRadius}
-                />
-              </CardContent>
-            </Card>
+            <Widget />
           </div>
           <WidgetFooter />
         </TabsContent>
