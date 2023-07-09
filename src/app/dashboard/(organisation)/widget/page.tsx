@@ -111,7 +111,7 @@ const OrganisationDashboard = () => {
     });
     setInputBoxRadius('6');
     setWidgetBoxRadius('8');
-    setWidgetBorderWidth('0');
+    setWidgetBorderWidth('1');
   };
 
   // Set values back to default when input is empty

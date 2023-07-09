@@ -84,7 +84,7 @@ export function WidgetCustom({
           <span className="text-sm pl-2 text-zinc-500">Widget Border Size</span>
           <Input
             type="number"
-            min={0}
+            min={1}
             max={100}
             value={widgetBorderWidth}
             onChange={e => setWidgetBorderWidth(e.target.value)}

@@ -107,7 +107,12 @@ export function WidgetPreview({
             <span className="w-full border-black border-t" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="bg-background px-2 text-black">or</span>
+            <span
+              style={{ backgroundColor: widgetColor.hex }}
+              className="bg-background px-2 text-black"
+            >
+              or
+            </span>
           </div>
         </div>
         <Image
