@@ -37,7 +37,7 @@ const OrganisationDashboard = () => {
         style={{
           backgroundColor: widgetBgColor.hex
         }}
-        className="col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center"
+        className="col-span-4 lg:col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center"
       >
         <CardContent
           style={{
