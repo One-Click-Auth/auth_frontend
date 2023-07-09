@@ -19,6 +19,12 @@ type WidgetProp = {
     button2Status: boolean;
     button3Status: boolean;
   };
+  inputBorderColor: Color;
+  widgetBorderColor: Color;
+  widgetColor: Color;
+  widgetBgColor: Color;
+  inputBoxRadius: string;
+  widgetBoxRadius: string;
 };
 
 export function WidgetPreview({
@@ -58,8 +64,12 @@ export function WidgetPreview({
           <AvatarImage src={logoImage} alt="Organisation Logo" />
           <AvatarFallback>LOGO</AvatarFallback>
         </Avatar>
-        <h1 className="text-lg font-medium text-center break-words w-44 mt-0.5 mb-1.5">{displayName}</h1>
-        <small className="text-[0.6rem] w-44 break-words text-center">{greeting}</small>
+        <h1 className="text-lg font-medium text-center break-words w-44 mt-0.5 mb-1.5">
+          {displayName}
+        </h1>
+        <small className="text-[0.6rem] w-44 break-words text-center">
+          {greeting}
+        </small>
       </div>
       <div className="flex flex-col gap-8 items-center">
         <div className="relative">
