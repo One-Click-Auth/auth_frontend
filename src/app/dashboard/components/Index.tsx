@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { DatabaseSvg } from '../../../assets/Svg/Account/Account';
 import { Button } from '../../../components/ui/Button';
 import { useRouter } from 'next/navigation';
-
+import OrgList from './OrgList';
 function AccountIndex() {
   const [hasOrg, setHasOrg] = useState(false);
   const [data, setData] = useState(null);
   const router = useRouter();
 
-  // useEffect(() => {
-  //     fetch('https://api.trustauthx.com/org/all', {
-  //         method: 'GET',
-  //         headers: {
-  //             'accept': 'application/json',
-  //             'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaHlhbWNoNzI4QGdtYWlsLmNvbSIsImFsdCI6IjY3MGQ0ZTgzZDEwYjQzMzc4ZTRmMmVjZmVjODEwYzhjLTJlYTAyMTkwOTAyNjVlMDZiZjZlOWQ1MmUwYzU0MmNiIiwicG9vbCI6dHJ1ZSwic2NvcGUiOjEsImV4cCI6MTY4Nzg0MTk0MH0.q0S8wAeTx3GyWwyQ8R8wtGjNI6fCDz6rUkGXFPBVaW0'
-  //         }
-  //     })
-  //         .then(response => response.json())
-  //         .then(data => {
-  //             if (data[0].name) {
-  //                 console.log(data);
-  //                 setData(data)
-  //                 setHasOrg(true)
-  //             } else {
-  //                 setHasOrg(false)
-  //             }
-  //         })
-  //         .catch(error => {
-  //             console.error(error);
-  //             setData(null)
-  //         });
-  // }, [])
+  useEffect(() => {
+    fetch('https://api.trustauthx.com/org/all', {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${''}`
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data[0].name) {
+          console.log(data);
+          setData(data);
+          setHasOrg(true);
+        } else {
+          setHasOrg(false);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        setData(null);
+      });
+  }, []);
 
   const handleNavigation = () => {
     router.push('/dashboard/add-organization');

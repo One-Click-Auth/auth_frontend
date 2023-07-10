@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Support from './support/page';
 import AccountIndex from '../components/Index';
 import AddOrganization from './add-organization/page';
+import KeysCard from './keys/page';
 
 function Account() {
   const location = usePathname();
@@ -17,6 +18,8 @@ function Account() {
         <Support />
       ) : location === '/dashboard/add-organization' ? (
         <AddOrganization />
+      ) : location === '/dashboard/keys' ? (
+        <KeysCard />
       ) : (
         'Not Found'
       )}

@@ -1,8 +1,8 @@
-import React from "react";
-import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import React from 'react';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface dataType {
   data: object[];
@@ -10,7 +10,7 @@ interface dataType {
 function OrgList({ data }: dataType) {
   const router = useRouter();
   const handleNavigation = () => {
-    router.push("/account/add-organization");
+    router.push('/dashboard/add-organization');
   };
   return (
     <section className="max-w-[1180px] pt-9 overflow-x-auto">
