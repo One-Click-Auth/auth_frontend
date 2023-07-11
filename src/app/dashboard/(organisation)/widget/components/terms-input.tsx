@@ -18,6 +18,7 @@ export function TermsInput({
     <div>
       <span className="text-sm pl-2 text-gray-600">{heading}</span>
       <Input
+        className='h-11 shadow-none'
         type="url"
         placeholder={placeholder}
         onChange={e => changeHandler(e.target.value)}

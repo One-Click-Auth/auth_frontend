@@ -61,6 +61,7 @@ export function WidgetCustom({
       <div>
         <span className="text-sm pl-2 text-zinc-500">Input Box Radius</span>
         <Input
+          className="h-11 shadow-none"
           type="number"
           min={0}
           max={100}
@@ -80,6 +81,7 @@ export function WidgetCustom({
       <div>
         <span className="text-sm pl-2 text-zinc-500">Widget Border Size</span>
         <Input
+          className="h-11 shadow-none"
           type="number"
           min={1}
           max={100}
@@ -90,6 +92,7 @@ export function WidgetCustom({
       <div>
         <span className="text-sm pl-2 text-zinc-500">Widget Box Radius</span>
         <Input
+          className="h-11 shadow-none"
           type="number"
           min={0}
           max={100}
