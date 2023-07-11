@@ -10,6 +10,7 @@ import { useColor } from 'react-color-palette';
 import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
+import { DevSettings } from './components/dev-settings';
 
 const OrganisationDashboard = () => {
   const [displayName, setDisplayName] = useState<string>('Flitchcoin');
@@ -161,7 +162,6 @@ const OrganisationDashboard = () => {
               Consent
             </TabsTrigger>
             <TabsTrigger
-              disabled
               value="dev-settings"
               className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
             >
@@ -234,7 +234,7 @@ const OrganisationDashboard = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 min-h-[36rem]">
             <Card className="col-span-4 shadow-none">
               <CardContent className="p-10">
-                <Consent />
+                <DevSettings />
               </CardContent>
             </Card>
             <Widget />
