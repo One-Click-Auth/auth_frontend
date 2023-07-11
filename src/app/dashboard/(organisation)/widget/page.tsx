@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useColor } from 'react-color-palette';
 import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
+import { Consent } from './components/consent';
 
 const OrganisationDashboard = () => {
   const [displayName, setDisplayName] = useState<string>('Flitchcoin');
@@ -219,22 +220,26 @@ const OrganisationDashboard = () => {
           <WidgetFooter reset={resetCustomization} />
         </TabsContent>
         <TabsContent value="consent" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-7 shadow-none">
-              <CardContent className="pl-2">
-                <div>Hello</div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 min-h-[36rem]">
+            <Card className="col-span-4 shadow-none">
+              <CardContent className="p-10">
+                <Consent />
               </CardContent>
             </Card>
+            <Widget />
           </div>
+          <WidgetFooter reset={resetCustomization} />
         </TabsContent>
         <TabsContent value="dev-settings" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-7 shadow-none">
-              <CardContent className="pl-2">
-                <div>Hello</div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 min-h-[36rem]">
+            <Card className="col-span-4 shadow-none">
+              <CardContent className="p-10">
+                <Consent />
               </CardContent>
             </Card>
+            <Widget />
           </div>
+          <WidgetFooter reset={resetCustomization} />
         </TabsContent>
       </Tabs>
     </div>
