@@ -33,7 +33,7 @@ export function AccountDropdown() {
           <ChevronDown className="mt-1" />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 m-6 bg-white cursor-pointer">
+      <DropdownMenuContent align='end' className="w-56 bg-white cursor-pointer">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <MenuItem icon={<ProfileItemSvg />} title="Profile" />
