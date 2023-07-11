@@ -99,6 +99,7 @@ export function WidgetBranding({
         <LogoUpload logoState={logoState} />
       </div>
       <Input
+        className="h-11 shadow-none"
         onChange={e => setDisplayName(e.target.value)}
         type="text"
         placeholder="Change Display Name"
@@ -110,7 +111,7 @@ export function WidgetBranding({
         </span>
         <Input
           onChange={e => setGreeting(e.target.value)}
-          className="text-lg text-center py-14"
+          className="text-lg text-center py-14 shadow-none"
           type="text"
           placeholder="Continue to Log in to Flitchcoin"
           maxLength={100}

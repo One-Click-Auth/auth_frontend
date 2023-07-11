@@ -12,11 +12,28 @@ import Link from 'next/link';
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true);
-  const [isSmall, setIsSmall] = useState(window.innerWidth);
+  const [isSmall, setIsSmall] = useState(1024);
 
-  window.addEventListener('resize', () => {
-    setIsSmall(window.innerWidth);
-  });
+  useEffect(() => {
+    if (isSmall < 1024) {
+      setOpen(false);
+      // console.log(isSmall);
+    } else {
+      setOpen(true);
+    }
+  }, [isSmall]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmall(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <div

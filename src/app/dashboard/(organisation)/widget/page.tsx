@@ -9,8 +9,11 @@ import { useEffect, useState } from 'react';
 import { useColor } from 'react-color-palette';
 import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
+import { Consent } from './components/consent';
+import { DevSettings } from './components/dev-settings';
 
 const OrganisationDashboard = () => {
+  // Branding
   const [displayName, setDisplayName] = useState<string>('Flitchcoin');
   const [greeting, setGreeting] = useState<string>(
     'Continue to Log in to Flitchcoin'
@@ -22,6 +25,7 @@ const OrganisationDashboard = () => {
   const [color3, setColor3] = useColor('hex', '#121212');
   const [button2Status, setButton2Status] = useState(false);
   const [button3Status, setButton3Status] = useState(false);
+  // Customization
   const [inputBorderColor, setInputBorderColor] = useColor('hex', '#121212');
   const [widgetBorderColor, setWidgetBorderColor] = useColor('hex', '#FFFFFF');
   const [widgetColor, setWidgetColor] = useColor('hex', '#FFFFFF');
@@ -29,6 +33,13 @@ const OrganisationDashboard = () => {
   const [inputBoxRadius, setInputBoxRadius] = useState('6');
   const [widgetBoxRadius, setWidgetBoxRadius] = useState('8');
   const [widgetBorderWidth, setWidgetBorderWidth] = useState('1');
+  // Consent
+  const [tncURL, setTncURL] = useState("");
+  const [ppURL, setPpURL] = useState("");
+  // Dev-settings
+  const [hostURL, setHostURL] = useState("");
+  const [callbackURL, setCallbackURL] = useState("");
+  const [redirectURL, setRedirectURL] = useState("");
 
   // Widget Component
   const Widget = () => {
@@ -37,7 +48,7 @@ const OrganisationDashboard = () => {
         style={{
           backgroundColor: widgetBgColor.hex
         }}
-        className="col-span-4 lg:col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center"
+        className="col-span-1 lg:col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center"
       >
         <CardContent
           style={{
@@ -114,6 +125,17 @@ const OrganisationDashboard = () => {
     setWidgetBorderWidth('1');
   };
 
+  const resetConsent = () => {
+    setTncURL("");
+    setPpURL("");
+  }
+
+  const resetDevSettings = () => {
+    setCallbackURL("");
+    setHostURL("");
+    setRedirectURL("")
+  }
+
   // Set values back to default when input is empty
   useEffect(() => {
     if (displayName === '') {
@@ -154,14 +176,12 @@ const OrganisationDashboard = () => {
               Customization
             </TabsTrigger>
             <TabsTrigger
-              disabled
               value="consent"
               className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
             >
               Consent
             </TabsTrigger>
             <TabsTrigger
-              disabled
               value="dev-settings"
               className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
             >
@@ -172,7 +192,7 @@ const OrganisationDashboard = () => {
         </div>
         <TabsContent value="branding" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4 shadow-none">
+            <Card className="col-span-1 lg:col-span-4 shadow-none">
               <CardContent className="p-10 space-y-7">
                 <WidgetBranding
                   setDisplayName={setDisplayName}
@@ -196,7 +216,7 @@ const OrganisationDashboard = () => {
         </TabsContent>
         <TabsContent value="customization" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4 shadow-none">
+            <Card className="col-span-1 lg:col-span-4 shadow-none">
               <CardContent className="p-10 space-y-7">
                 <WidgetCustom
                   inputBorderColor={{ inputBorderColor, setInputBorderColor }}
@@ -220,13 +240,29 @@ const OrganisationDashboard = () => {
           <WidgetFooter reset={resetCustomization} />
         </TabsContent>
         <TabsContent value="consent" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-7 shadow-none">
-              <CardContent className="pl-2">
-                <div>Hello</div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 min-h-[36rem]">
+            <Card className="col-span-1 lg:col-span-4 shadow-none">
+              <CardContent className="p-10">
+                <Consent setters={{setTncURL, setPpURL}} inputValues={{tncURL, ppURL}}/>
               </CardContent>
             </Card>
+            <Widget />
           </div>
+          <WidgetFooter reset={resetConsent} />
+        </TabsContent>
+        <TabsContent value="dev-settings" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 min-h-[36rem]">
+            <Card className="col-span-1 lg:col-span-4 shadow-none">
+              <CardContent className="p-10">
+                <DevSettings 
+                  setters={{setCallbackURL, setHostURL, setRedirectURL}}
+                  inputValues={{callbackURL, hostURL, redirectURL}}
+                />
+              </CardContent>
+            </Card>
+            <Widget />
+          </div>
+          <WidgetFooter reset={resetDevSettings} />
         </TabsContent>
       </Tabs>
     </div>
