@@ -154,7 +154,6 @@ const OrganisationDashboard = () => {
               Customization
             </TabsTrigger>
             <TabsTrigger
-              disabled
               value="consent"
               className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
             >
@@ -220,6 +219,15 @@ const OrganisationDashboard = () => {
           <WidgetFooter reset={resetCustomization} />
         </TabsContent>
         <TabsContent value="consent" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <Card className="col-span-7 shadow-none">
+              <CardContent className="pl-2">
+                <div>Hello</div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        <TabsContent value="dev-settings" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-7 shadow-none">
               <CardContent className="pl-2">
