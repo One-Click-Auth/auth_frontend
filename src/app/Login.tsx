@@ -92,7 +92,7 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
               <form method="get" action={`${API_DOMAIN}/signup/github`}>
                 <Button
                   type="submit"
-                  className="w-full h-12 mb-6 text-md hover:bg-black hover:text-white"
+                  className="w-full h-12 mb-6 text-md border-slate-500 hover:bg-black hover:text-white"
                   variant="outline"
                 >
                   <Icons.gitHub className="mr-2 h-4 w-4" />
