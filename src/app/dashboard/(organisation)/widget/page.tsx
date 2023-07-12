@@ -6,7 +6,7 @@ import { LanguageSwitcher } from './components/language-switcher';
 import { WidgetPreview } from './components/widget-preview';
 import { WidgetBranding } from './components/widget-branding';
 import { useEffect, useState } from 'react';
-import { useColor } from 'react-color-palette';
+import { useColor, toColor } from 'react-color-palette';
 import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
@@ -82,21 +82,9 @@ const OrganisationDashboard = () => {
     // Reset Button State
     setButton2Status(false);
     setButton3Status(false);
-    setColor({
-      hex: '#121212',
-      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
-      rgb: { r: 18, g: 18, b: 18, a: undefined }
-    });
-    setColor2({
-      hex: '#121212',
-      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
-      rgb: { r: 18, g: 18, b: 18, a: undefined }
-    });
-    setColor3({
-      hex: '#121212',
-      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
-      rgb: { r: 18, g: 18, b: 18, a: undefined }
-    });
+    setColor(toColor("hex", '#121212'));
+    setColor2(toColor("hex", '#121212'));
+    setColor3(toColor("hex", '#121212'));
   };
 
   const resetCustomization = () => {

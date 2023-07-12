@@ -75,7 +75,8 @@ export function WidgetPreview({
         <div className="relative">
           <label
             style={{
-              backgroundColor: widgetColor.hex
+              backgroundColor: widgetColor.hex,
+              color: inputBorderColor.hex
             }}
             htmlFor="email"
             className="form-label text-[0.6rem] absolute translate-x-3 translate-y-[-7px] bg-white px-1"
