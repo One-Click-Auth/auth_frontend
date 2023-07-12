@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { TermsInput } from './terms-input';
 import { Button } from '@/components/ui/Button';
 import {
@@ -10,7 +10,7 @@ import {
   GoogleIcon,
   LinkedinIcon,
   MicrosoftIcon,
-  TiktokIcon,
+  TiktokIcon2,
   TwitterIcon,
   WhatsappIcon
 } from '@/assets/Svg/Account/Account';
@@ -21,7 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { Socials } from '../page';
+import { Social } from '../page';
 
 type DevProps = {
   setters: {
@@ -35,8 +35,8 @@ type DevProps = {
     redirectURL: string;
   };
   socials: {
-    social: Socials;
-    setSocial: Dispatch<SetStateAction<Socials>>;
+    social: Social;
+    setSocial: Dispatch<SetStateAction<Social>>;
   };
 };
 
@@ -47,7 +47,7 @@ type SocialList = {
     disabled: boolean;
     active: boolean;
   };
-}
+};
 
 export function DevSettings({
   setters: { setCallbackURL, setHostURL, setRedirectURL },
@@ -76,19 +76,19 @@ export function DevSettings({
     apple: {
       name: 'Apple',
       icon: <AppleIcon className="w-6" />,
-      disabled: true,
+      disabled: false,
       active: social.apple
     },
     whatsapp: {
       name: 'WhatsApp',
       icon: <WhatsappIcon className="w-6" />,
-      disabled: true,
+      disabled: false,
       active: social.whatsapp
     },
     tiktok: {
       name: 'Tiktok',
-      icon: <TiktokIcon className="h-8" />,
-      disabled: true,
+      icon: <TiktokIcon2 className="h-7" />,
+      disabled: false,
       active: social.tiktok
     },
     facebook: {
@@ -118,8 +118,8 @@ export function DevSettings({
         [key]: !prevSocials[key]
       };
       return newSocials;
-    })
-  }
+    });
+  };
 
   return (
     <div className="flex flex-col space-y-10">
@@ -146,16 +146,14 @@ export function DevSettings({
           <small className="text-sm pl-2">Add a Social Sign-In</small>
           <hr className="border-t-2 border-slate-800" />
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mt-5">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mt-5 mb-3">
           {Object.entries(socialsList).map(([key, social]) => (
             <TooltipProvider key={social.name + key} delayDuration={400}>
               <Tooltip>
                 <TooltipTrigger>
                   <Button
                     variant="outline"
-                    onClick={() =>
-                      handleButtonToggle(key)
-                    }
+                    onClick={() => handleButtonToggle(key)}
                     className={cn(
                       'w-full flex items-center justify-evenly rounded-lg h-14 py-4 px-1 hover:bg-blue-50',
                       social.active && 'border-slate-700 bg-blue-50'
