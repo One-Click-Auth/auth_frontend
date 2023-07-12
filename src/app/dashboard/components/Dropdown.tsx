@@ -22,25 +22,31 @@ import {
 } from '@/assets/Svg/Account/DropDown';
 import { useAuth } from '@/contexts/AuthContext';
 import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 export function AccountDropdown() {
   const { user } = useAuth();
+  console.log({ user });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="active:border-0 active:outline-none">
         <div className="text-xs sm:text-sm flex items-center font-semibold  min-w-max">
-          <span className="hidden sm:block">{user?.full_name}</span>
+          <span className="hidden sm:block">
+            {user?.full_name !== 'Test User' ? user?.full_name : user?.email}
+          </span>
           <ChevronDown className="mt-1" />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-56 mt-2 mx-7 bg-white cursor-pointer"
-      >
+      <DropdownMenuContent className="w-56 mt-2 mx-7 bg-white cursor-pointer">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <MenuItem icon={<ProfileItemSvg />} title="Profile" />
         <MenuItem icon={<BillingSvg />} title="Billing" />
-        <MenuItem icon={<SettingsSvg />} title="Setting" />
+        <MenuItem
+          icon={<SettingsSvg />}
+          title="Settings"
+          href="/dashboard/settings"
+        />
         <DropdownMenuSeparator />
         <MenuItem icon={<TeamSvg />} title="Team" />
         <MenuItem icon={<InviteSvg />} title="Invite users" />
@@ -72,13 +78,16 @@ export function AccountDropdown() {
 interface MenuItemType {
   icon: React.ReactNode;
   title: string;
+  href?: string;
 }
 
-const MenuItem = ({ icon, title }: MenuItemType) => {
+const MenuItem = ({ icon, title, href = '#' }: MenuItemType) => {
   return (
-    <DropdownMenuItem className="flex items-center p-1 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm">
-      <span className="w-5 h-5 mt-1">{icon}</span>
-      <span className="ml-2"> {title} </span>
+    <DropdownMenuItem className="p-1 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm">
+      <Link href={href} className="flex items-center ">
+        <span className="w-5 h-5 mt-1">{icon}</span>
+        <span className="ml-2"> {title} </span>
+      </Link>
     </DropdownMenuItem>
   );
 };
