@@ -17,6 +17,7 @@ function AddOrganization() {
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    router.push('/dashboard/keys');
     // fetch('https://api.trustauthx.com/org', {
     //     method: 'POST',
     //     headers: {
@@ -31,7 +32,7 @@ function AddOrganization() {
     //     .then(response => response.json())
     //     .then(data => {
     //         console.log(data);
-    //         router.push("/dashboard")
+    //
     //     })
     //     .catch(error => {
     //         console.error(error);
