@@ -64,31 +64,31 @@ export function DevSettings({
     microsoft: {
       name: 'Microsoft',
       icon: <MicrosoftIcon className="w-6" />,
-      disabled: false,
+      disabled: true,
       active: social.microsoft
     },
     google: {
       name: 'Google',
       icon: <GoogleIcon className="w-5" />,
-      disabled: false,
+      disabled: true,
       active: social.google
     },
     apple: {
       name: 'Apple',
       icon: <AppleIcon className="w-6" />,
-      disabled: false,
+      disabled: true,
       active: social.apple
     },
     whatsapp: {
       name: 'WhatsApp',
       icon: <WhatsappIcon className="w-6" />,
-      disabled: false,
+      disabled: true,
       active: social.whatsapp
     },
     tiktok: {
       name: 'Tiktok',
       icon: <TiktokIcon2 className="h-7" />,
-      disabled: false,
+      disabled: true,
       active: social.tiktok
     },
     facebook: {
