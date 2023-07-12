@@ -339,8 +339,8 @@ export const EllipseFlitchCoin = () => {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(26.6793 26.472) rotate(90) scale(25.8238)"
         >
-          <stop stop-color="white" stop-opacity="0" />
-          <stop offset="1" stop-color="#A4FFA3" />
+          <stop stopColor="white" stopOpacity="0" />
+          <stop offset="1" stopColor="#A4FFA3" />
         </radialGradient>
         <image
           id="image0_906_867"
@@ -470,8 +470,8 @@ export const FacebookIcon = (props: any) => {
           y2="0.160889"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#0062E0" />
-          <stop offset="1" stop-color="#19AFFF" />
+          <stop stopColor="#0062E0" />
+          <stop offset="1" stopColor="#19AFFF" />
         </linearGradient>
       </defs>
     </svg>
@@ -657,8 +657,8 @@ export const WhatsappIcon = (props: any) => {
           y2="0.551147"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#25CF43" />
-          <stop offset="1" stop-color="#61FD7D" />
+          <stop stopColor="#25CF43" />
+          <stop offset="1" stopColor="#61FD7D" />
         </linearGradient>
       </defs>
     </svg>

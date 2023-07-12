@@ -12,6 +12,22 @@ import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
 import { DevSettings } from './components/dev-settings';
 
+const socials = {
+  github: true,
+  microsoft: false,
+  google: false,
+  apple: false,
+  whatsapp: false,
+  tiktok: false,
+  facebook: false,
+  linkedin: false,
+  twitter: false,
+}
+
+export type Socials = {
+  [key: string]: boolean
+};
+
 const OrganisationDashboard = () => {
   // Branding
   const [displayName, setDisplayName] = useState<string>('Flitchcoin');
@@ -40,6 +56,7 @@ const OrganisationDashboard = () => {
   const [hostURL, setHostURL] = useState("");
   const [callbackURL, setCallbackURL] = useState("");
   const [redirectURL, setRedirectURL] = useState("");
+  const [social, setSocial] = useState<Socials>(socials);
 
   // Widget Component
   const Widget = () => {
@@ -243,6 +260,7 @@ const OrganisationDashboard = () => {
             <Card className="col-span-1 lg:col-span-4 shadow-none">
               <CardContent className="p-10">
                 <DevSettings 
+                  socials={{social, setSocial}}
                   setters={{setCallbackURL, setHostURL, setRedirectURL}}
                   inputValues={{callbackURL, hostURL, redirectURL}}
                 />

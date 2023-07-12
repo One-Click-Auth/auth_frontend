@@ -26,7 +26,6 @@ import Link from 'next/link';
 
 export function AccountDropdown() {
   const { user } = useAuth();
-  console.log({ user });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="active:border-0 active:outline-none">
