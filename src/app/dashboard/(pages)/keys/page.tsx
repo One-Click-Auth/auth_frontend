@@ -1,8 +1,9 @@
 import React from 'react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { CopyPasteSvg } from '@/assets/Svg/Account/Account';
+
 import { CheckSquareValid } from '@/assets/Svg/Account/Account';
+
 import { ClipboardCopy } from 'lucide-react';
 function InputWithButtons() {
   return (
@@ -32,7 +33,7 @@ export default function KeysCard() {
           Your API Key & Secret Key
         </h2>
         <p className="text-lg font-extralight tracking-wide">
-          <span className="font-semibold ">*Note</span> : The secret key is a
+          <span className="font-semibold">*Note</span> : The secret key is a
           sensitive piece of information that is only shown once. You will not
           be able to see it again, so it is important to save it in a safe
           place. In the future, you can only change your API key and secret key.{' '}

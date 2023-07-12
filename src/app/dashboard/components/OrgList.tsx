@@ -3,17 +3,18 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { SearchBy } from './searchBy';
+import { OrgTable } from './orgTable';
 
-interface dataType {
-  data: object[];
-}
-function OrgList({ data }: dataType) {
+function OrgList() {
   const router = useRouter();
+
   const handleNavigation = () => {
     router.push('/dashboard/add-organization');
   };
+
   return (
-    <section className="max-w-[1180px] pt-9 overflow-x-auto">
+    <section className="max-w-[1180px] pt-9 p-6  mx-auto sm:p-10">
       <div className="flex flex-col lg:flex-row lg:items-center gap-y-4 justify-between">
         <div className="max-w-2xl">
           <h1 className="font-bold text-2xl sm:text-3xl">Your Organizations</h1>
@@ -24,7 +25,7 @@ function OrgList({ data }: dataType) {
           </p>
         </div>
         <div className="hover:text-white">
-          <Button onClick={handleNavigation}>
+          <Button variant={'authx'} onClick={handleNavigation}>
             <span className="mt-0.5 mr-1">
               <Plus />
             </span>
@@ -36,15 +37,21 @@ function OrgList({ data }: dataType) {
       <div className="mt-12">
         <p className="font-semibold">Search Organization</p>
         <div className="flex flex-col md:flex-row gap-2 md:items-center">
-          <Input type="email" placeholder="Email" className="w-full" />
-          <button className="px-12 py-2 bg-[#4338CA] text-white rounded-sm">
+          <Input
+            type="email"
+            placeholder="Email"
+            className="bg-transparent appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:border-black"
+          />
+          <Button className="px-12 md:w-[200px] py-2 bg-[#4338CA] text-white rounded-sm hover:bg-black hover:text-white">
             Search
-          </button>
-          {/* <button className="px-12 py-2 bg-[#fff] text-black border-2 border-gray-300 font-semibold rounded-sm max-w-max w-full" >Search by</button> */}
+          </Button>
+          <SearchBy />
         </div>
       </div>
 
-      <div className="max-h-[400px] overflow-hidden mt-12"></div>
+      <div className=" mt-12">
+        <OrgTable />
+      </div>
     </section>
   );
 }
