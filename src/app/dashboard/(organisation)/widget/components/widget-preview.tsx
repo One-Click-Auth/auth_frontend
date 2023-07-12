@@ -2,9 +2,21 @@
 import { Button } from '@/components/ui/Button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { Color } from 'react-color-palette';
+import {
+  AppleIcon,
+  FacebookIcon,
+  GithubIcon,
+  GoogleIcon,
+  LinkedinIcon,
+  MicrosoftIcon,
+  TiktokIcon2,
+  TwitterIcon,
+  WhatsappIcon
+} from '@/assets/Svg/Account/Account';
+import { Social } from '../page';
+import { cn } from '@/lib/utils';
 
 type WidgetProp = {
   logoImage: string;
@@ -22,6 +34,7 @@ type WidgetProp = {
   inputBorderColor: Color;
   widgetColor: Color;
   inputBoxRadius: string;
+  social: Social;
 };
 
 export function WidgetPreview({
@@ -32,8 +45,12 @@ export function WidgetPreview({
   buttonStatus: { button2Status, button3Status },
   inputBorderColor,
   widgetColor,
-  inputBoxRadius
+  inputBoxRadius,
+  social
 }: WidgetProp) {
+  const socialValues = Object.values(social);
+  const show = socialValues.includes(true);
+
   const updateButtonColor = () => {
     if (!button2Status && !button3Status) {
       return color.hex;
@@ -75,7 +92,8 @@ export function WidgetPreview({
         <div className="relative">
           <label
             style={{
-              backgroundColor: widgetColor.hex
+              backgroundColor: widgetColor.hex,
+              color: inputBorderColor.hex
             }}
             htmlFor="email"
             className="form-label text-[0.6rem] absolute translate-x-3 translate-y-[-7px] bg-white px-1"
@@ -97,30 +115,45 @@ export function WidgetPreview({
         </div>
         <Button
           style={{ background: buttonBackground }}
-          className={`w-44 h-8 text-white`}
+          className={cn('w-44 h-8 text-white', !show && 'mb-3')}
         >
           <span className="ml-6">Go !!</span>
           <ChevronRightIcon className="ml-3" />
         </Button>
-        <div className="relative w-full">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-black border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span
-              style={{ backgroundColor: widgetColor.hex }}
-              className="bg-background px-2 text-black"
-            >
-              or
-            </span>
-          </div>
-        </div>
-        <Image
+        {show && (
+          <>
+            <div className="relative w-full">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-black border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span
+                  style={{ backgroundColor: widgetColor.hex }}
+                  className="bg-background px-2 text-black"
+                >
+                  or
+                </span>
+              </div>
+            </div>
+            <div className='flex flex-wrap items-center justify-evenly gap-y-4 w-full'>
+              {social.github && <GithubIcon className="h-6 basis-1/4"/>}
+              {social.microsoft && <MicrosoftIcon className="h-6 basis-1/4"/>}
+              {social.google && <GoogleIcon className="h-6 basis-1/4"/>}
+              {social.apple && <AppleIcon className="h-6 basis-1/4"/>}
+              {social. whatsapp && <WhatsappIcon className="h-6 basis-1/4"/>}
+              {social. tiktok && <TiktokIcon2 className="h-7 basis-1/4"/>}
+              {social.facebook && <FacebookIcon className="h-6 basis-1/4"/>}
+              {social.linkedin && <LinkedinIcon className="h-6 basis-1/4"/>}
+              {social.twitter && <TwitterIcon className="h-6 basis-1/4"/>}
+            </div>
+          </>
+        )}
+        {/* <Image
           width={159}
           height={22}
           src="/widget-logos.svg"
           alt="Google, Apple, Microsoft, WhatsApp logos"
-        />
+        /> */}
       </div>
     </div>
   );

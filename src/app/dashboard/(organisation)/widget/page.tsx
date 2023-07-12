@@ -6,11 +6,28 @@ import { LanguageSwitcher } from './components/language-switcher';
 import { WidgetPreview } from './components/widget-preview';
 import { WidgetBranding } from './components/widget-branding';
 import { useEffect, useState } from 'react';
-import { useColor } from 'react-color-palette';
+import { useColor, toColor } from 'react-color-palette';
 import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
 import { DevSettings } from './components/dev-settings';
+
+export type Social = {
+  [key: string]: boolean;
+};
+
+const socialDefaults = {
+  github: false,
+  microsoft: false,
+  google: false,
+  apple: false,
+  whatsapp: false,
+  tiktok: false,
+  facebook: false,
+  linkedin: false,
+  twitter: false
+};
+
 
 const OrganisationDashboard = () => {
   // Branding
@@ -34,12 +51,13 @@ const OrganisationDashboard = () => {
   const [widgetBoxRadius, setWidgetBoxRadius] = useState('8');
   const [widgetBorderWidth, setWidgetBorderWidth] = useState('1');
   // Consent
-  const [tncURL, setTncURL] = useState("");
-  const [ppURL, setPpURL] = useState("");
+  const [tncURL, setTncURL] = useState('');
+  const [ppURL, setPpURL] = useState('');
   // Dev-settings
-  const [hostURL, setHostURL] = useState("");
-  const [callbackURL, setCallbackURL] = useState("");
-  const [redirectURL, setRedirectURL] = useState("");
+  const [hostURL, setHostURL] = useState('');
+  const [callbackURL, setCallbackURL] = useState('');
+  const [redirectURL, setRedirectURL] = useState('');
+  const [social, setSocial] = useState<Social>(socialDefaults);
 
   // Widget Component
   const Widget = () => {
@@ -68,6 +86,7 @@ const OrganisationDashboard = () => {
             inputBorderColor={inputBorderColor}
             widgetColor={widgetColor}
             inputBoxRadius={inputBoxRadius}
+            social={social}
           />
         </CardContent>
       </Card>
@@ -82,59 +101,32 @@ const OrganisationDashboard = () => {
     // Reset Button State
     setButton2Status(false);
     setButton3Status(false);
-    setColor({
-      hex: '#121212',
-      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
-      rgb: { r: 18, g: 18, b: 18, a: undefined }
-    });
-    setColor2({
-      hex: '#121212',
-      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
-      rgb: { r: 18, g: 18, b: 18, a: undefined }
-    });
-    setColor3({
-      hex: '#121212',
-      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
-      rgb: { r: 18, g: 18, b: 18, a: undefined }
-    });
+    setColor(toColor('hex', '#121212'));
+    setColor2(toColor('hex', '#121212'));
+    setColor3(toColor('hex', '#121212'));
   };
 
   const resetCustomization = () => {
-    setInputBorderColor({
-      hex: '#121212',
-      hsv: { h: 0, s: 1.953125, v: 7.03125, a: undefined },
-      rgb: { r: 18, g: 18, b: 18, a: undefined }
-    });
-    setWidgetBorderColor({
-      hex: '#FFFFFF',
-      hsv: { h: 0, s: 0, v: 100, a: undefined },
-      rgb: { r: 255, g: 255, b: 255, a: undefined }
-    });
-    setWidgetColor({
-      hex: '#FFFFFF',
-      hsv: { h: 0, s: 0, v: 100, a: undefined },
-      rgb: { r: 255, g: 255, b: 255, a: undefined }
-    });
-    setWidgetBgColor({
-      hex: '#EEF5F1',
-      hsv: { h: 145.7142857142856, s: 2.734375, v: 96.09375, a: undefined },
-      rgb: { r: 238, g: 245, b: 241, a: undefined }
-    });
+    setInputBorderColor(toColor('hex', '#121212'));
+    setWidgetBorderColor(toColor('hex', '#FFFFFF'));
+    setWidgetColor(toColor('hex', '#FFFFFF'));
+    setWidgetBgColor(toColor('hex', '#EEF5F1'));
     setInputBoxRadius('6');
     setWidgetBoxRadius('8');
     setWidgetBorderWidth('1');
   };
 
   const resetConsent = () => {
-    setTncURL("");
-    setPpURL("");
-  }
+    setTncURL('');
+    setPpURL('');
+  };
 
   const resetDevSettings = () => {
-    setCallbackURL("");
-    setHostURL("");
-    setRedirectURL("")
-  }
+    setCallbackURL('');
+    setHostURL('');
+    setRedirectURL('');
+    setSocial(socialDefaults);
+  };
 
   // Set values back to default when input is empty
   useEffect(() => {
@@ -243,7 +235,10 @@ const OrganisationDashboard = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 min-h-[36rem]">
             <Card className="col-span-1 lg:col-span-4 shadow-none">
               <CardContent className="p-10">
-                <Consent setters={{setTncURL, setPpURL}} inputValues={{tncURL, ppURL}}/>
+                <Consent
+                  setters={{ setTncURL, setPpURL }}
+                  inputValues={{ tncURL, ppURL }}
+                />
               </CardContent>
             </Card>
             <Widget />
@@ -254,9 +249,10 @@ const OrganisationDashboard = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 min-h-[36rem]">
             <Card className="col-span-1 lg:col-span-4 shadow-none">
               <CardContent className="p-10">
-                <DevSettings 
-                  setters={{setCallbackURL, setHostURL, setRedirectURL}}
-                  inputValues={{callbackURL, hostURL, redirectURL}}
+                <DevSettings
+                  socials={{ social, setSocial }}
+                  setters={{ setCallbackURL, setHostURL, setRedirectURL }}
+                  inputValues={{ callbackURL, hostURL, redirectURL }}
                 />
               </CardContent>
             </Card>
