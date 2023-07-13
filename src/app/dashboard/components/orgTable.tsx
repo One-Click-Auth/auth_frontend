@@ -15,7 +15,6 @@ import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useRouter } from 'next/navigation';
 
-// import sample from './data.json';
 import useOrgData from '../orgDataStore';
 
 export const OrgTable = () => {
