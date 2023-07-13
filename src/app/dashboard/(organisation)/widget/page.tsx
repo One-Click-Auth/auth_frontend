@@ -28,6 +28,12 @@ const socialDefaults = {
   twitter: false
 };
 
+const TABS = {
+  consent: "consent",
+  branding: "branding",
+  customization: "customization",
+  dev_settings: "dev_settings",
+}
 
 const OrganisationDashboard = () => {
   // Branding
@@ -59,39 +65,6 @@ const OrganisationDashboard = () => {
   const [redirectURL, setRedirectURL] = useState('');
   const [social, setSocial] = useState<Social>(socialDefaults);
 
-  // Widget Component
-  const Widget = () => {
-    return (
-      <Card
-        style={{
-          backgroundColor: widgetBgColor.hex
-        }}
-        className="col-span-1 lg:col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center"
-      >
-        <CardContent
-          style={{
-            borderRadius: Number(widgetBoxRadius),
-            borderWidth: Number(widgetBorderWidth),
-            borderColor: widgetBorderColor.hex,
-            backgroundColor: widgetColor.hex
-          }}
-          className="p-10 bg-primary m-4 rounded-lg drop-shadow-lg"
-        >
-          <WidgetPreview
-            displayName={displayName}
-            greeting={greeting}
-            logoImage={logoImage}
-            buttonColor={{ color, color2, color3 }}
-            buttonStatus={{ button2Status, button3Status }}
-            inputBorderColor={inputBorderColor}
-            widgetColor={widgetColor}
-            inputBoxRadius={inputBoxRadius}
-            social={social}
-          />
-        </CardContent>
-      </Card>
-    );
-  };
 
   // Reset Methods
   const resetBranding = () => {
@@ -149,118 +122,148 @@ const OrganisationDashboard = () => {
       setLogoImage('/flitchcoin-logo.svg');
     }
   }, [logo]);
-
+  const [tabs, setTabs] = useState(TABS.branding)
+  const handleReset = () => {
+    switch (tabs) {
+      case TABS.branding: return resetBranding();
+      case TABS.consent: return resetConsent();
+      case TABS.customization: return resetCustomization();
+      case TABS.dev_settings: return resetDevSettings();
+    }
+  }
   return (
-    <div className="flex-1 space-y-4 p-10 pt-14 max-w-7xl mx-auto">
-      <Tabs defaultValue="branding" className="space-y-4">
-        <div className="flex flex-wrap gap-3 justify-between">
-          <TabsList className="bg-gray-100 flex-wrap h-full">
-            <TabsTrigger
-              value="branding"
-              className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
-            >
-              Branding
-            </TabsTrigger>
-            <TabsTrigger
-              value="customization"
-              className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
-            >
-              Customization
-            </TabsTrigger>
-            <TabsTrigger
-              value="consent"
-              className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
-            >
-              Consent
-            </TabsTrigger>
-            <TabsTrigger
-              value="dev-settings"
-              className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
-            >
-              Dev Settings
-            </TabsTrigger>
-          </TabsList>
-          <LanguageSwitcher />
-        </div>
-        <TabsContent value="branding" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-1 lg:col-span-4 shadow-none">
-              <CardContent className="p-10 space-y-7">
-                <WidgetBranding
-                  setDisplayName={setDisplayName}
-                  setGreeting={setGreeting}
-                  logoState={{ logo, setLogo, logoImage }}
-                  colorState={{ color, setColor }}
-                  colorState2={{ color2, setColor2 }}
-                  colorState3={{ color3, setColor3 }}
-                  buttonStatus={{
-                    button2Status,
-                    button3Status,
-                    setButton2Status,
-                    setButton3Status
+    <div>
+      <div className="flex-1 gap-2 p-10 pt-14">
+        <Tabs value={tabs} className="space-y-4 w-full flex-1" onValueChange={e => setTabs(e)}>
+          <div className="flex flex-wrap gap-3 justify-between ">
+            <TabsList className="bg-gray-100 flex-wrap h-full">
+              <TabsTrigger
+                value={TABS.branding}
+                className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+              >
+                Branding
+              </TabsTrigger>
+              <TabsTrigger
+                value={TABS.customization}
+                className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+              >
+                Customization
+              </TabsTrigger>
+              <TabsTrigger
+                value={TABS.consent}
+                className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+              >
+                Consent
+              </TabsTrigger>
+              <TabsTrigger
+                value={TABS.dev_settings}
+                className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+              >
+                Dev Settings
+              </TabsTrigger>
+            </TabsList>
+            <LanguageSwitcher />
+          </div>
+          <div className=' flex min-h-[60vh] gap-4'>
+            <TabsContent value={TABS.branding} className="space-y-4 w-full">
+              <Card >
+                <CardContent className="p-10 space-y-7">
+                  <WidgetBranding
+                    setDisplayName={setDisplayName}
+                    setGreeting={setGreeting}
+                    logoState={{ logo, setLogo, logoImage }}
+                    colorState={{ color, setColor }}
+                    colorState2={{ color2, setColor2 }}
+                    colorState3={{ color3, setColor3 }}
+                    buttonStatus={{
+                      button2Status,
+                      button3Status,
+                      setButton2Status,
+                      setButton3Status
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value={TABS.customization} className="space-y-4 w-full">
+              <Card >
+                <CardContent className="p-10 space-y-7">
+                  <WidgetCustom
+                    inputBorderColor={{ inputBorderColor, setInputBorderColor }}
+                    widgetBorderColor={{
+                      widgetBorderColor,
+                      setWidgetBorderColor
+                    }}
+                    widgetColor={{ widgetColor, setWidgetColor }}
+                    widgetBgColor={{ widgetBgColor, setWidgetBgColor }}
+                    inputBoxRadius={{ inputBoxRadius, setInputBoxRadius }}
+                    widgetBoxRadius={{ widgetBoxRadius, setWidgetBoxRadius }}
+                    widgetBorderWidth={{
+                      widgetBorderWidth,
+                      setWidgetBorderWidth
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value={TABS.consent} className="space-y-4 w-full">
+              <Card >
+                <CardContent className="p-10 ">
+                  <Consent
+                    setters={{ setTncURL, setPpURL }}
+                    inputValues={{ tncURL, ppURL }}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value={TABS.dev_settings} className="space-y-4 w-full">
+              <Card >
+                <CardContent className="p-10">
+                  <DevSettings
+                    socials={{ social, setSocial }}
+                    setters={{ setCallbackURL, setHostURL, setRedirectURL }}
+                    inputValues={{ callbackURL, hostURL, redirectURL }}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <div className='max-h-full rounded-xl w-5/12 m-0 mt-2 min-h-[60vh] bg-[#EEF5F1] '>
+              <div
+                style={{
+                  backgroundColor: widgetBgColor.hex
+                }}
+                className="col-span-1 rounded-xl lg:col-span-3 shadow-none mt-[10vh]"
+              >
+                <CardContent
+                  style={{
+                    borderRadius: Number(widgetBoxRadius),
+                    borderWidth: Number(widgetBorderWidth),
+                    borderColor: widgetBorderColor.hex,
+                    backgroundColor: widgetColor.hex
                   }}
-                />
-              </CardContent>
-            </Card>
-            <Widget />
+                  className="mt-2 border border-red-800 bg-primary m-4 rounded-lg drop-shadow-lg "
+                >
+                  <WidgetPreview
+                    displayName={displayName}
+                    greeting={greeting}
+                    logoImage={logoImage}
+                    buttonColor={{ color, color2, color3 }}
+                    buttonStatus={{ button2Status, button3Status }}
+                    inputBorderColor={inputBorderColor}
+                    widgetColor={widgetColor}
+                    inputBoxRadius={inputBoxRadius}
+                    social={social}
+                  />
+                </CardContent>
+              </div>
+            </div>
           </div>
-          <WidgetFooter reset={resetBranding} />
-        </TabsContent>
-        <TabsContent value="customization" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-1 lg:col-span-4 shadow-none">
-              <CardContent className="p-10 space-y-7">
-                <WidgetCustom
-                  inputBorderColor={{ inputBorderColor, setInputBorderColor }}
-                  widgetBorderColor={{
-                    widgetBorderColor,
-                    setWidgetBorderColor
-                  }}
-                  widgetColor={{ widgetColor, setWidgetColor }}
-                  widgetBgColor={{ widgetBgColor, setWidgetBgColor }}
-                  inputBoxRadius={{ inputBoxRadius, setInputBoxRadius }}
-                  widgetBoxRadius={{ widgetBoxRadius, setWidgetBoxRadius }}
-                  widgetBorderWidth={{
-                    widgetBorderWidth,
-                    setWidgetBorderWidth
-                  }}
-                />
-              </CardContent>
-            </Card>
-            <Widget />
-          </div>
-          <WidgetFooter reset={resetCustomization} />
-        </TabsContent>
-        <TabsContent value="consent" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 min-h-[36rem]">
-            <Card className="col-span-1 lg:col-span-4 shadow-none">
-              <CardContent className="p-10">
-                <Consent
-                  setters={{ setTncURL, setPpURL }}
-                  inputValues={{ tncURL, ppURL }}
-                />
-              </CardContent>
-            </Card>
-            <Widget />
-          </div>
-          <WidgetFooter reset={resetConsent} />
-        </TabsContent>
-        <TabsContent value="dev-settings" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 min-h-[36rem]">
-            <Card className="col-span-1 lg:col-span-4 shadow-none">
-              <CardContent className="p-10">
-                <DevSettings
-                  socials={{ social, setSocial }}
-                  setters={{ setCallbackURL, setHostURL, setRedirectURL }}
-                  inputValues={{ callbackURL, hostURL, redirectURL }}
-                />
-              </CardContent>
-            </Card>
-            <Widget />
-          </div>
-          <WidgetFooter reset={resetDevSettings} />
-        </TabsContent>
-      </Tabs>
+        </Tabs>
+
+      </div>
+      <div className='flex-1 px-6'>
+        <WidgetFooter reset={handleReset} />
+      </div>
     </div>
   );
 };
