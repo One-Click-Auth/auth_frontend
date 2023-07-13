@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
-import { Switch } from "@/components/ui/Switch";
-import { AiGenerate } from "@/assets/Svg/Account/Account";
-import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Image from 'next/image';
+import { Switch } from '@/components/ui/Switch';
+import { AiGenerate } from '@/assets/Svg/Account/Account';
+import { Button } from '@/components/ui/Button';
 
 const OrganisationDashboard = () => {
   return (
@@ -46,7 +46,9 @@ const OrganisationDashboard = () => {
       <div className="grid gap-11">
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
-            <CardTitle className="text-2xl font-medium">Password-less</CardTitle>
+            <CardTitle className="text-2xl font-medium">
+              Password-less
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex px-10 gap-28">
             <p className="leading-tight text-slate-500 font-normal">
@@ -80,7 +82,9 @@ const OrganisationDashboard = () => {
         </Card>
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
-            <CardTitle className="text-2xl font-medium">User Consent Management </CardTitle>
+            <CardTitle className="text-2xl font-medium">
+              User Consent Management{' '}
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex px-10 gap-28">
             <p className="leading-tight text-slate-500 font-normal">
@@ -109,7 +113,9 @@ const OrganisationDashboard = () => {
         </Card>
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
-            <CardTitle className="text-2xl font-medium">Email Validation</CardTitle>
+            <CardTitle className="text-2xl font-medium">
+              Email Validation
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex px-10 gap-28">
             <p className="leading-tight text-slate-500 font-normal">
@@ -124,8 +130,10 @@ const OrganisationDashboard = () => {
         </Card>
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
-            <AiGenerate/>
-            <CardTitle className="text-2xl !mt-2 font-medium">Single Sign-On</CardTitle>
+            <AiGenerate />
+            <CardTitle className="text-2xl !mt-2 font-medium">
+              Single Sign-On
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex px-10 gap-8">
             <p className="leading-tight text-slate-500 font-normal">
@@ -136,7 +144,9 @@ const OrganisationDashboard = () => {
               platform and other integrated services using a single set of login
               credentials.
             </p>
-            <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">Upgrade to Enterprise</Button>
+            <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
+              Upgrade to Enterprise
+            </Button>
           </CardContent>
         </Card>
       </div>

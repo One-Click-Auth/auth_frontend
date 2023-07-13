@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -13,34 +13,30 @@ import { Button } from '@/components/ui/Button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/Skeleton';
-import sample from './data.json';
+import { useRouter } from 'next/navigation';
+
+// import sample from './data.json';
 import useOrgData from '../orgDataStore';
 
 export const OrgTable = () => {
-  const org = {
-    org_id: '',
-    name: '',
-    validity: 0,
-    widget: {
-      logo_url: ''
-    }
-  };
+  const router = useRouter();
 
   const [loading, setLoading] = useState(true);
-  const [orgList, setOrgList] = useState<object[]>([
-    {
-      org_id: 'ss',
-      name: 'ss',
-      validity: 0,
-      widget: {
-        logo_url: 'ss'
-      }
-    }
-  ]);
-  const data = useOrgData(state => state.data);
+  const [orgList, setOrgList] = useState<object[]>([]);
 
   console.log(orgList);
+  const data = useOrgData(state => state.data);
+  const setManageOrg = useOrgData(state => state.setManageOrg);
+  const manageOrg = useOrgData(state => state.manageOrg);
+  const setManageOrgData = useOrgData(state => state.setManageOrgData);
 
+  const handleManageOrg = (id: string) => {
+    setManageOrg(id);
+    setManageOrgData(data.find(org => org.org_id === id) || {});
+    router.push('/dashboard/apple');
+  };
+
+  console.log(manageOrg);
   useEffect(() => {
     if (data.length > 0) {
       setOrgList(data);
@@ -107,10 +103,13 @@ export const OrgTable = () => {
             ))}
           </>
         ) : (
-          sample.map(org => (
+          data.map(org => (
             <TableRow key={org.org_id}>
               <TableCell className="py-[1.2rem] mr-2">
-                <Button className="px-10 py-2 bg-[#4338CA] text-white rounded-sm hover:bg-black hover:text-white">
+                <Button
+                  className="px-10 py-2 bg-[#4338CA] text-white rounded-sm hover:bg-black hover:text-white"
+                  onClick={() => handleManageOrg(org.org_id)}
+                >
                   Manage
                 </Button>
               </TableCell>
