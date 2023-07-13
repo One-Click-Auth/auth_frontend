@@ -27,11 +27,11 @@ export const Sidebar = () => {
     const handleResize = () => {
       setIsSmall(window.innerWidth);
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     handleResize();
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -114,7 +114,7 @@ export const Sidebar = () => {
               {open ? <span>Support</span> : ''}
             </Link>
             <Link
-              href={'/dashboard/settings'}
+              href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
