@@ -11,8 +11,6 @@ import { useSearchParams } from 'next/navigation';
 const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [widget, setWidget] = useState<any>('');
-  const params = new URLSearchParams(window.location.search);
-  //   const router=useRouter()
   const searchParams = useSearchParams();
 
   console.log('searchParams.get(org_id)', searchParams.get('org_id'));
