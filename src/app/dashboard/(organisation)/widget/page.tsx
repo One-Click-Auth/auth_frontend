@@ -227,7 +227,7 @@ const OrganisationDashboard = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            <div className='max-h-full rounded-xl w-5/12 m-0 mt-2 min-h-[60vh] bg-[#EEF5F1] '>
+            <div className='max-h-full rounded-xl w-5/12 m-0 mt-2 px-3 min-h-[60vh] bg-[#EEF5F1] '>
               <div
                 style={{
                   backgroundColor: widgetBgColor.hex
