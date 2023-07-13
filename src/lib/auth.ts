@@ -24,9 +24,8 @@ async function refreshAccessToken(token: string) {
     }
 
     return {
-      accessToken: refreshedTokens.access_token,
       accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
-      refreshToken: refreshedTokens.refresh_token
+      ...refreshedTokens
     };
   } catch (error) {
     console.log(JSON.stringify(error));
@@ -93,7 +92,7 @@ export const authOptions: NextAuthOptions = {
           const tokenData = await refreshAccessToken(githubToken);
           const {
             userData: { profile, ...restUser }
-          } = await fetchUserInfo(tokenData.accessToken);
+          } = await fetchUserInfo(tokenData.access_token);
           return { user: { ...profile, ...restUser }, ...tokenData };
         }
         const body = {
