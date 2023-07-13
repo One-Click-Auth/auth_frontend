@@ -89,16 +89,7 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
               Login to your AuthX account
             </h1>
             <div>
-              <form method="get" action={`${API_DOMAIN}/signup/github`}>
-                <Button
-                  type="submit"
-                  className="w-full h-12 mb-6 text-md border-slate-500 hover:bg-black hover:text-white"
-                  variant="outline"
-                >
-                  <Icons.gitHub className="mr-2 h-4 w-4" />
-                  Login with Github
-                </Button>
-              </form>
+              <GithubLogin />
               <div className="relative mb-8">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
@@ -108,7 +99,7 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
                     Or continue with
                   </span>
                 </div>
-              </div>
+                </div>
               {!values.username ? (
                 <EmailComponent
                   handleEmailSubmit={handleEmailSubmit}
@@ -128,7 +119,7 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
         src={LOGIN_GRAPHIC}
       />
 
-      <Modal 
+      <Modal
         show={show}
         onHide={() => setShow(false)}
       >
@@ -152,9 +143,34 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
           </div>
         </div>
       </Modal>
-      <LoadingModal show={loading}/>
+      <LoadingModal show={loading} />
     </div>
   );
+
 };
 
+function GithubLogin() {
+  const [loading, setLoading] = useState(false)
+  const initiateLogin = () => {
+    setLoading(true)
+    // axios.get(`${API_DOMAIN}/signup/github`, {
+    //   headers: {
+    //     "X-APP-URI": window.location.origin
+    //   }
+    // })
+  }
+  return <form method='get' action={`${API_DOMAIN}/signup/github`}>
+    <Button
+      onClick={initiateLogin}
+      className="w-full h-12 mb-6 text-md border-slate-500 hover:bg-black hover:text-white"
+      variant="outline"
+      type='submit'
+    >
+      <Icons.gitHub className="mr-2 h-4 w-4" />
+      Login with Github
+    </Button>
+    <LoadingModal show={loading} />
+
+  </form>
+}
 export default Login;
