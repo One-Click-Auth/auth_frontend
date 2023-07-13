@@ -3,38 +3,103 @@ import { FormButton } from '@/components/authForm/FormButton';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/card';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
+
 import {
   LOGO,
   GOOGLEICON,
   APPLEICON,
   GITHUBICON,
-  MICROSOFT
+  MICROSOFT,
+  API_DOMAIN
 } from '@/constants';
+import { Icons } from '@/components/icons';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Login = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [widget, setWidget] = useState<any>('');
+  const params = new URLSearchParams(window.location.search);
+
+  const orgId =
+    params.get('org_id') ||
+    '2876350533bf401eafebbce9c9aaa642ef61bb561c1e11eea5b3244bfebae8ec';
+
+  useEffect(() => {
+    fetchOrgDetails();
+  }, []);
+
+  const fetchOrgDetails = async () => {
+    try {
+      setLoading(true);
+      const orgData = await fetch('https://api.trustauthx.com/settings/auth', {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          'org-id': orgId
+        }
+      });
+      const OrgDataRes = await orgData.json();
+      console.log('OrgDataRes ', OrgDataRes);
+      setWidget(OrgDataRes?.data?.widget);
+    } catch (err) {
+      console.log('Error inside fetch orgaization details', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleGithubClick = () => {
+    fetch(
+      'https://api.trustauthx.com/signup/github?org_id=2876350533bf401eafebbce9c9aaa642ef61bb561c1e11eea5b3244bfebae8ec',
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          'Access-Control-Expose-Headers': 'Location'
+        }
+      }
+    )
+      .then(response => {
+        console.log('res headers are ', response.headers);
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('error is ', error);
+      });
+  };
+
   const handleSubmit = () => {
     console.log('submit called');
   };
   return (
-    <div className="w-full top-1/2 flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 md:w-2/5  ">
-      <div className="flex flex-col items-center w-full mr-0 !important bg-white border-2 border-gray-300 rounded-2xl shadow-2xl sm:w-8/12">
+    <div className="top-1/2 flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 md:w-[440px]  bg-white border-2 border-gray-300 rounded-2xl shadow-2xl ">
+      <div className="flex flex-col items-center p-[70px] mr-0 !important ">
         <div className="flex flex-col justify-center items-center mt-7">
-          <Image width={34} height={34} src={LOGO} alt="AuthX logo" />
+          <Image
+            width={87}
+            height={87}
+            src={
+              widget?.logo_url ||
+              'https://flitchcoin.s3.eu-west-2.amazonaws.com/authxlogo.svg'
+            }
+            alt="AuthX logo"
+          />
           <div className="mt-4">
-            <span className="text-xl font-semibold">Trust AUTHX</span>
+            <span className="text-3xl font-semibold">Trust AUTHX</span>
           </div>
           <div className="mt-4">
-            <span className="text-sm text-slate-600">
+            <span className="text-base text-slate-900">
               Continue to Log in to AuthX
             </span>
           </div>
         </div>
-
         <form
           onSubmit={handleSubmit}
-          className={`mt-10 flex flex-col items-center w-9/12 `}
+          className={`w-[300px] mt-[60px] flex flex-col items-center`}
         >
           <div className="grid grid-cols-1 w-full">
             <label
@@ -46,24 +111,49 @@ const Login = () => {
             <input
               id="email"
               type="text"
-              className=" p-2 pl-2.5 border-2 border-gray-500 bg-white text-gray-900 rounded-lg focus:ring-gray-900 focus:border-gray-900 "
+              className=" p-1 pl-2.5  h-12 border-2 border-gray-500 bg-white text-gray-900 rounded-lg focus:ring-gray-900 focus:border-gray-900 "
               placeholder="name@example.com"
             />
           </div>
-          <div className="w-full mt-0">
-            <FormButton padding={1} marginTop={8}>{`GO `}</FormButton>
+          <div className="w-full mt-12">
+            <Button
+              style={{
+                background: 'black',
+                backgroundImage: 'linear-gradient(to right)'
+              }}
+              className={`w-full h-12 text-white`}
+            >
+              <span className="ml-6">Go !!</span>
+              <ChevronRightIcon className="ml-3" />
+            </Button>
           </div>
         </form>
-        <div className="flex w-11/12 justify-center mt-4">
-          <div className="mt-4 w-10/12 border-t-2 border-gray-900 "></div>
+        <div className="flex w-full justify-center mt-[60px]">
+          <div className="mt-4 w-[136px] border-t-2 border-gray-900 "></div>
           <span className="p-1"> or </span>
-          <div className="mt-4 w-10/12 border-t-2 border-gray-900 "></div>
+          <div className="mt-4 w-[136px] border-t-2 border-gray-900 "></div>
         </div>
-        <div className="flex my-10 w-8/12 justify-around">
-          <Image width={25} height={25} src={GOOGLEICON} alt="AuthX logo" />
-          <Image width={30} height={30} src={APPLEICON} alt="AuthX logo" />
-          <Image width={30} height={30} src={GITHUBICON} alt="AuthX logo" />
-          <Image width={30} height={30} src={MICROSOFT} alt="AuthX logo" />
+        <div className="flex mt-[60px] px-[6] justify-around">
+          <form method="get" action={`${API_DOMAIN}/signup/github`}>
+            <Button type="submit">
+              <Icons.gitHub className=" h-9 w-9" />
+            </Button>
+          </form>
+          <form method="get" action={`${API_DOMAIN}/signup/github`}>
+            <Button type="submit">
+              <Icons.gitHub className=" h-9 w-9" />
+            </Button>
+          </form>
+          <form method="get" action={`${API_DOMAIN}/signup/github`}>
+            <Button type="submit">
+              <Icons.gitHub className=" h-9 w-9" />
+            </Button>
+          </form>
+          <form method="get" action={`${API_DOMAIN}/signup/github`}>
+            <Button type="submit">
+              <Icons.gitHub className=" h-9 w-9" />
+            </Button>
+          </form>
         </div>
       </div>
     </div>
