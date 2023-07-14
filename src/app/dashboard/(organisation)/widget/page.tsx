@@ -12,10 +12,6 @@ import { Consent } from './components/consent';
 import { DevSettings } from './components/dev-settings';
 import { useWidgetStore } from './widgetStore';
 
-export type Social = {
-  [key: string]: boolean;
-};
-
 const TABS = {
   consent: 'consent',
   branding: 'branding',
@@ -23,6 +19,8 @@ const TABS = {
   dev_settings: 'dev_settings'
 };
 
+// TODO: Update server state on clicking save
+// Clear text input when pressing reset in branding
 // Object to update server state
 const widgetObj = {
   widget: {
