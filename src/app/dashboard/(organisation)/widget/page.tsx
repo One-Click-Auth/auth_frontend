@@ -29,11 +29,11 @@ const socialDefaults: Social = {
 };
 
 const TABS = {
-  consent: "consent",
-  branding: "branding",
-  customization: "customization",
-  dev_settings: "dev_settings",
-}
+  consent: 'consent',
+  branding: 'branding',
+  customization: 'customization',
+  dev_settings: 'dev_settings'
+};
 
 const widgetObj = {
   widget: {
@@ -94,7 +94,6 @@ const OrganisationDashboard = () => {
   const [redirectURL, setRedirectURL] = useState('');
   const [social, setSocial] = useState<Social>(socialDefaults);
 
-
   // Reset Methods
   const resetBranding = () => {
     setDisplayName('Flitchcoin');
@@ -151,19 +150,27 @@ const OrganisationDashboard = () => {
       setLogoImage('/flitchcoin-logo.svg');
     }
   }, [logo]);
-  const [tabs, setTabs] = useState(TABS.branding)
+  const [tabs, setTabs] = useState(TABS.branding);
   const handleReset = () => {
     switch (tabs) {
-      case TABS.branding: return resetBranding();
-      case TABS.consent: return resetConsent();
-      case TABS.customization: return resetCustomization();
-      case TABS.dev_settings: return resetDevSettings();
+      case TABS.branding:
+        return resetBranding();
+      case TABS.consent:
+        return resetConsent();
+      case TABS.customization:
+        return resetCustomization();
+      case TABS.dev_settings:
+        return resetDevSettings();
     }
-  }
+  };
   return (
-    <div>
-      <div className="flex-1 gap-2 p-10 pt-14">
-        <Tabs value={tabs} className="space-y-4 w-full flex-1" onValueChange={e => setTabs(e)}>
+      <div className="flex-1 space-y-4 p-10 pt-14 max-w-7xl mx-auto">
+        <Tabs
+          // value={tabs}
+          defaultValue={TABS.branding}
+          className="space-y-4"
+          onValueChange={e => setTabs(e)}
+        >
           <div className="flex flex-wrap gap-3 justify-between ">
             <TabsList className="bg-gray-100 flex-wrap h-full">
               <TabsTrigger
@@ -193,9 +200,12 @@ const OrganisationDashboard = () => {
             </TabsList>
             <LanguageSwitcher />
           </div>
-          <div className=' flex min-h-[60vh] gap-4'>
-            <TabsContent value={TABS.branding} className="space-y-4 w-full">
-              <Card >
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <TabsContent
+              value={TABS.branding}
+              className="mt-0 space-y-4 col-span1 lg:col-span-4"
+            >
+              <Card className="shadow-none">
                 <CardContent className="p-10 space-y-7">
                   <WidgetBranding
                     setDisplayName={setDisplayName}
@@ -214,11 +224,17 @@ const OrganisationDashboard = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value={TABS.customization} className="space-y-4 w-full">
-              <Card >
+            <TabsContent
+              value={TABS.customization}
+              className="mt-0 space-y-4 col-span1 lg:col-span-4"
+            >
+              <Card className="shadow-none">
                 <CardContent className="p-10 space-y-7">
                   <WidgetCustom
-                    inputBorderColor={{ inputBorderColor, setInputBorderColor }}
+                    inputBorderColor={{
+                      inputBorderColor,
+                      setInputBorderColor
+                    }}
                     widgetBorderColor={{
                       widgetBorderColor,
                       setWidgetBorderColor
@@ -235,9 +251,12 @@ const OrganisationDashboard = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value={TABS.consent} className="space-y-4 w-full">
-              <Card >
-                <CardContent className="p-10 ">
+            <TabsContent
+              value={TABS.consent}
+              className="mt-0 space-y-4 col-span1 lg:col-span-4"
+            >
+              <Card className="shadow-none min-h-[36rem]">
+                <CardContent className="p-10">
                   <Consent
                     setters={{ setTncURL, setPpURL }}
                     inputValues={{ tncURL, ppURL }}
@@ -245,8 +264,11 @@ const OrganisationDashboard = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value={TABS.dev_settings} className="space-y-4 w-full">
-              <Card >
+            <TabsContent
+              value={TABS.dev_settings}
+              className="mt-0 space-y-4 col-span1 lg:col-span-4"
+            >
+              <Card className="shadow-none min-h-[36rem]">
                 <CardContent className="p-10">
                   <DevSettings
                     socials={{ social, setSocial }}
@@ -256,44 +278,39 @@ const OrganisationDashboard = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            <div className='max-h-full rounded-xl w-5/12 m-0 mt-2 px-3 min-h-[60vh] bg-[#EEF5F1] '>
-              <div
+            {/* Widget Preview */}
+            <Card
+              style={{
+                backgroundColor: widgetBgColor.hex
+              }}
+              className="col-span-1 lg:col-span-3 bg-[#EEF5F1] shadow-none grid place-content-center"
+            >
+              <CardContent
                 style={{
-                  backgroundColor: widgetBgColor.hex
+                  borderRadius: Number(widgetBoxRadius),
+                  borderWidth: Number(widgetBorderWidth),
+                  borderColor: widgetBorderColor.hex,
+                  backgroundColor: widgetColor.hex
                 }}
-                className="col-span-1 rounded-xl lg:col-span-3 shadow-none mt-[10vh]"
+                className="p-10 bg-primary m-4 rounded-lg drop-shadow-lg"
               >
-                <CardContent
-                  style={{
-                    borderRadius: Number(widgetBoxRadius),
-                    borderWidth: Number(widgetBorderWidth),
-                    borderColor: widgetBorderColor.hex,
-                    backgroundColor: widgetColor.hex
-                  }}
-                  className="mt-2 border border-red-800 bg-primary m-4 rounded-lg drop-shadow-lg "
-                >
-                  <WidgetPreview
-                    displayName={displayName}
-                    greeting={greeting}
-                    logoImage={logoImage}
-                    buttonColor={{ color, color2, color3 }}
-                    buttonStatus={{ button2Status, button3Status }}
-                    inputBorderColor={inputBorderColor}
-                    widgetColor={widgetColor}
-                    inputBoxRadius={inputBoxRadius}
-                    social={social}
-                  />
-                </CardContent>
-              </div>
-            </div>
+                <WidgetPreview
+                  displayName={displayName}
+                  greeting={greeting}
+                  logoImage={logoImage}
+                  buttonColor={{ color, color2, color3 }}
+                  buttonStatus={{ button2Status, button3Status }}
+                  inputBorderColor={inputBorderColor}
+                  widgetColor={widgetColor}
+                  inputBoxRadius={inputBoxRadius}
+                  social={social}
+                />
+              </CardContent>
+            </Card>
           </div>
+          <WidgetFooter reset={handleReset} />
         </Tabs>
-
       </div>
-      <div className='flex-1 px-6'>
-        <WidgetFooter reset={handleReset} />
-      </div>
-    </div>
   );
 };
 
