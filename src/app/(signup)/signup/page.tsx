@@ -14,7 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useForm } from 'react-hook-form';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ApiResponse } from '../../../types';
+import { ApiResponse } from '@/types';
 
 // TS types
 type RequestObjectType = {
