@@ -36,7 +36,10 @@ const NewPassword: React.FC = () => {
   const param = searchparams && searchparams?.get('param');
   const router = useRouter();
   const [pass, setPass] = useState('');
+  const [passErr, setPassErr] = useState(false);
+
   const [add, setAdd] = useState('');
+
   const [show, setShow] = useState(false);
   const [alert, setAlert] = useState(false);
   const [email, setEmail] = useState('');
@@ -57,6 +60,10 @@ const NewPassword: React.FC = () => {
   ) => {
     e.preventDefault();
     // console.log(email, pass);
+    setPassErr(false);
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,20}$/.test(pass)) {
+      return setPassErr(true);
+    }
     fetch('https://api.trustauthx.com/forgot/Signup', {
       method: 'PUT',
       headers: {
@@ -111,10 +118,7 @@ const NewPassword: React.FC = () => {
                   <label
                     htmlFor="password"
                     className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 
-                    ${
-                      ''
-                      // errors.password && "text-red-600"
-                    }
+                    ${passErr ? 'text-red-400' : ''}
                     `}
                   >
                     Password
@@ -123,19 +127,21 @@ const NewPassword: React.FC = () => {
                     // {...register("password")}
                     id="password"
                     type="password"
-                    className={`form-control w-full px-8 py-3 border rounded-lg border-slate-500
-                    ${
-                      ''
-                      // errors.password ? "border-red-600" : "border-slate-500"
-                    }`}
+                    className={`form-control w-full px-8 py-3 border rounded-lg border-slate-500 ${
+                      passErr ? 'border-red-400' : ''
+                    } `}
                     placeholder="Enter Password"
                     onChange={e => setPass(e.target.value)}
                   />
-                  {/* {errors.password && (
+                  {passErr && (
                     <div className="mt-2 color text-red-600">
-                      <span>{errors.password?.message}</span>
+                      <span>
+                        Password must be between 8 and 20 characters long,
+                        contain at least one letter and one digit, and can
+                        include special characters.
+                      </span>
                     </div>
-                  )} */}
+                  )}
                 </div>
 
                 <div className="form-group">

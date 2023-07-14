@@ -1,23 +1,19 @@
-"use client";
+'use client';
 
-import { ErrorMessage } from "@hookform/error-message";
-import { FormButton } from "@/components/authForm/FormButton";
-import { LinkText } from "@/components/authForm/LinkText";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import * as yup from "yup";
-import { LuXCircle } from "react-icons/lu";
-import OtpInput from "react-otp-input";
-import Modal from "@/components/Modal";
-import LoadingModal from "@/components/authForm/LoadingModal";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
-import { useForm } from "react-hook-form";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
-import { yupResolver } from "@hookform/resolvers/yup";
+import { ErrorMessage } from '@hookform/error-message';
+import { FormButton } from '@/components/authForm/FormButton';
+import { LinkText } from '@/components/authForm/LinkText';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import * as yup from 'yup';
+import { LuXCircle } from 'react-icons/lu';
+import OtpInput from 'react-otp-input';
+import Modal from '@/components/Modal';
+import LoadingModal from '@/components/authForm/LoadingModal';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useForm } from 'react-hook-form';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 // TS types
 type RequestObjectType = {
@@ -33,7 +29,7 @@ type RequestObjectType = {
 type RegisterUser = {
   username: string;
   password: string;
-  "referral-id": string | null | undefined;
+  'referral-id': string | null | undefined;
   agreeTerms: boolean | undefined;
 };
 
@@ -42,57 +38,68 @@ const registerSchema = yup
   .object({
     username: yup
       .string()
-      .required("Please enter your email address")
-      .email("Please enter a valid email"),
-    password: yup.string().required("Please enter a password").min(8),
-    "referral-id": yup.string().nullable(),
+      .required('Please enter your email address')
+      .email('Please enter a valid email'),
+    password: yup
+      .string()
+      .required('Please enter a password')
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,20}$/,
+        'Password must be between 8 and 20 characters long, contain at least one letter and one digit, and can include special characters.'
+      ),
+    'referral-id': yup.string().nullable(),
     agreeTerms: yup
       .boolean()
-      .oneOf([true], "Please accept our Terms of Service and Privacy policy"),
+      .oneOf([true], 'Please accept our Terms of Service and Privacy policy')
   })
   .required();
 
-  // Alert component
-  const AlertMessage = ({ message ,setAlert}: { message: string,setAlert:React.Dispatch<boolean> }) => {
-    return (
-      <Alert className="fixed top-6 w-[22rem] left-[calc(50vw_-_11rem)] bg-yellow-400 z-[1100]">
-        <ExclamationTriangleIcon className="w-4 h-4" />
-        <AlertTitle>Notice!</AlertTitle>
-        <button
-          onClick={() => setAlert(false)}
-          className="absolute right-2 top-2"
-        >
-          <LuXCircle className="w-5 h-5" />
-        </button>
-        <AlertDescription>{message}</AlertDescription>
-      </Alert>
-    );
-  };
+// Alert component
+const AlertMessage = ({
+  message,
+  setAlert
+}: {
+  message: string;
+  setAlert: React.Dispatch<boolean>;
+}) => {
+  return (
+    <Alert className="fixed top-6 w-[22rem] left-[calc(50vw_-_11rem)] bg-yellow-400 z-[1100]">
+      <ExclamationTriangleIcon className="w-4 h-4" />
+      <AlertTitle>Notice!</AlertTitle>
+      <button
+        onClick={() => setAlert(false)}
+        className="absolute right-2 top-2"
+      >
+        <LuXCircle className="w-5 h-5" />
+      </button>
+      <AlertDescription>{message}</AlertDescription>
+    </Alert>
+  );
+};
 
 export default function Signup() {
   const router = useRouter();
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [messageToken, setMessageToken] = useState("");
+  const [otp, setOtp] = useState('');
+  const [messageToken, setMessageToken] = useState('');
   const [alert, setAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertMessage, setAlertMessage] = useState('');
   const [requestObject, setRequestObject] = useState<RequestObjectType>();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm<RegisterUser>({
     resolver: yupResolver(registerSchema),
-    mode: "onSubmit",
+    mode: 'onSubmit'
   });
 
-  
   // OTP action
   useEffect(() => {
     if (otp.length === 8) {
-      console.log("verifying OTP", otp);
+      console.log('verifying OTP', otp);
       setLoading(true);
       handleOTPValidation();
     }
@@ -124,25 +131,25 @@ export default function Signup() {
 
   //handle OTP Validation
   const handleOTPValidation = () => {
-    fetch("https://api.trustauthx.com/verify_email/false", {
-      method: "POST",
+    fetch('https://api.trustauthx.com/verify_email/false', {
+      method: 'POST',
       headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
+        accept: 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         otp,
         add: messageToken,
-        types: "email",
-      }),
+        types: 'email'
+      })
     })
-      .then((response) => response.json())
-      .then((data) => {
+      .then(response => response.json())
+      .then(data => {
         console.log(data);
         setLoading(false);
         if (data.status === 200 && data.is_ok === true) {
           setShow(false);
-          router.push("/");
+          router.push('/');
         }
         if (data.is_ok === false) {
           setAlertMessage(data.msg);
@@ -153,7 +160,7 @@ export default function Signup() {
           setAlert(true);
         }
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   };
 
   // Handle resend OTP email
@@ -175,16 +182,16 @@ export default function Signup() {
 
   // Signup request
   const handleSignUpRequest = async () => {
-    return await fetch("https://api.trustauthx.com/signup", {
-      method: "POST",
+    return await fetch('https://api.trustauthx.com/signup', {
+      method: 'POST',
       headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
+        accept: 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(requestObject),
+      body: JSON.stringify(requestObject)
     })
-      .then((response) => response.json())
-      .catch((err) => console.log(err));
+      .then(response => response.json())
+      .catch(err => console.log(err));
   };
 
   // form submit handler
@@ -192,11 +199,11 @@ export default function Signup() {
     const reqObject = {
       username: data.username,
       password: data.password,
-      full_name: "Test User",
+      full_name: 'Test User',
       is_pool: true,
       link: true,
-      ref: "string",
-      types: "string",
+      ref: 'string',
+      types: 'string'
     };
 
     setAlert(false);
@@ -207,24 +214,22 @@ export default function Signup() {
   return (
     <>
       <div className="login-wrapper form-wrapper">
-        <form
-          onSubmit={handleSubmit(handleFormSubmit)}
-        >
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="form-group relative">
             <label
               htmlFor="email"
               className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 ${
-                errors.username && "text-red-600"
+                errors.username && 'text-red-600'
               }`}
             >
               Email
             </label>
             <input
-              {...register("username")}
+              {...register('username')}
               id="email"
               type="text"
               className={`form-control w-full px-8 py-3 border rounded-lg ${
-                errors.username ? "border-red-600" : "border-slate-500"
+                errors.username ? 'border-red-600' : 'border-slate-500'
               }`}
               placeholder="name@example.com"
             />
@@ -241,17 +246,17 @@ export default function Signup() {
             <label
               htmlFor="password"
               className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 ${
-                errors.password && "text-red-600"
+                errors.password && 'text-red-600'
               }`}
             >
               Password
             </label>
             <input
-              {...register("password")}
+              {...register('password')}
               id="password"
               type="password"
               className={`form-control w-full px-8 py-3 border rounded-lg ${
-                errors.password ? "border-red-600" : "border-slate-500"
+                errors.password ? 'border-red-600' : 'border-slate-500'
               }`}
               placeholder="Enter password"
             />
@@ -272,7 +277,7 @@ export default function Signup() {
               Referral ID (Optional)
             </label>
             <input
-              {...register("referral-id")}
+              {...register('referral-id')}
               id="referral-id"
               type="text"
               className="form-control w-full px-8 py-3 border border-slate-500 rounded-lg"
@@ -288,22 +293,22 @@ export default function Signup() {
 
           <div className="flex items-center mt-8 md:mt-11">
             <input
-              {...register("agreeTerms")}
+              {...register('agreeTerms')}
               id="terms"
               type="checkbox"
               className={`checkbox-customized w-7 h-7 cursor-pointer ${
-                errors.agreeTerms && "border-red-600"
+                errors.agreeTerms && 'border-red-600'
               }`}
             />
             <label
               htmlFor="terms"
               className="ml-5 text-sm font-medium tracking-[.13em] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              I have read and agree to Flitchcoin's{" "}
+              I have read and agree to Flitchcoin's{' '}
               <a className="underline underline-offset-2" href="#">
                 Terms of Service
-              </a>{" "}
-              and{" "}
+              </a>{' '}
+              and{' '}
               <a href="#" className="underline underline-offset-2">
                 Privacy Policy
               </a>
@@ -337,13 +342,13 @@ export default function Signup() {
         <div className="bg-white max-w-3xl rounded-3xl p-16">
           <p className="font-light text-center">
             Please check your email for a registration link or OTP. You can
-            register any way by clicking on the{" "}
+            register any way by clicking on the{' '}
             <span className="bg-gradient-to-r text-transparent bg-clip-text from-[#2932FF] to-[#589BFF] ">
-              link in E-mail{" "}
+              link in E-mail{' '}
             </span>
-            or{" "}
+            or{' '}
             <span className="bg-gradient-to-r text-transparent bg-clip-text from-[#589BFF] to-[#2932FF]">
-              by entering OTP{" "}
+              by entering OTP{' '}
             </span>
             in the designated column. If you didn't receive an email, you can
             click "Resend Email".
@@ -362,7 +367,7 @@ export default function Signup() {
                   onChange={setOtp}
                   numInputs={8}
                   renderSeparator={<span></span>}
-                  renderInput={(props) => <input {...props} />}
+                  renderInput={props => <input {...props} />}
                 />
               </div>
               <div className="row">
