@@ -17,20 +17,21 @@ import {
 } from '@/assets/Svg/Account/Account';
 import { Social } from '../page';
 import { cn } from '@/lib/utils';
+import { useWidgetStore } from '../widgetStore';
 
 type WidgetProp = {
   logoImage: string;
   displayName: string;
   greeting: string;
-  buttonColor: {
-    color: Color;
-    color2: Color;
-    color3: Color;
-  };
-  buttonStatus: {
-    button2Status: boolean;
-    button3Status: boolean;
-  };
+  // buttonColor: {
+  //   color: Color;
+  //   color2: Color;
+  //   color3: Color;
+  // };
+  // buttonStatus: {
+  //   button2Status: boolean;
+  //   button3Status: boolean;
+  // };
   inputBorderColor: Color;
   widgetColor: Color;
   inputBoxRadius: string;
@@ -41,13 +42,15 @@ export function WidgetPreview({
   logoImage,
   displayName,
   greeting,
-  buttonColor: { color, color2, color3 },
-  buttonStatus: { button2Status, button3Status },
+  // buttonColor: { color, color2, color3 },
+  // buttonStatus: { button2Status, button3Status },
   inputBorderColor,
   widgetColor,
   inputBoxRadius,
   social
 }: WidgetProp) {
+  const {color, color2, color3} = useWidgetStore();
+  const {button2Status, button3Status} = useWidgetStore()
   const socialValues = Object.values(social);
   const show = socialValues.includes(true);
 

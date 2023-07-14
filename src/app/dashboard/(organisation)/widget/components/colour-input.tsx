@@ -12,10 +12,10 @@ import { Trash2 } from 'lucide-react';
 type ColorProps = {
   colorState: {
     color: Color;
-    setColor: Dispatch<SetStateAction<Color>>;
+    setColor: (color: Color) => void;
   };
   removable?: boolean;
-  setButtonStatus?: Dispatch<SetStateAction<boolean>>
+  setButtonStatus?: (buttonStatus: boolean) => void
 };
 
 export function ColourInput({
