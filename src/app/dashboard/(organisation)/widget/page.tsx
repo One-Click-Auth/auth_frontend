@@ -16,18 +16,6 @@ export type Social = {
   [key: string]: boolean;
 };
 
-const socialDefaults: Social = {
-  github: false,
-  microsoft: false,
-  google: false,
-  apple: false,
-  whatsapp: false,
-  tiktok: false,
-  facebook: false,
-  linkedin: false,
-  twitter: false
-};
-
 const TABS = {
   consent: 'consent',
   branding: 'branding',
@@ -66,14 +54,12 @@ const widgetObj = {
 };
 
 const OrganisationDashboard = () => {
-  // Branding
   const {
     displayName,
     greeting,
     setDisplayName,
     setGreeting,
     logo,
-    logoImage,
     setLogoImage,
     resetBranding,
     resetCustomisation,
@@ -84,49 +70,7 @@ const OrganisationDashboard = () => {
     widgetBorderWidth,
     widgetBorderColor,
     widgetColor,
-    inputBorderColor,
-    inputBoxRadius
   } = useWidgetStore();
-  // const [displayName, setDisplayName] = useState<string>('Flitchcoin');
-  // const [greeting, setGreeting] = useState<string>(
-  //   'Continue to Log in to Flitchcoin'
-  // );
-  // const [logo, setLogo] = useState<File>();
-  // const [logoImage, setLogoImage] = useState<string>('/flitchcoin-logo.svg');
-  // const [color, setColor] = useColor('hex', '#121212');
-  // const [color2, setColor2] = useColor('hex', '#121212');
-  // const [color3, setColor3] = useColor('hex', '#121212');
-  // const [button2Status, setButton2Status] = useState(false);
-  // const [button3Status, setButton3Status] = useState(false);
-
-  // Customization
-  // const [inputBorderColor, setInputBorderColor] = useColor('hex', '#121212');
-  // const [widgetBorderColor, setWidgetBorderColor] = useColor('hex', '#FFFFFF');
-  // const [widgetColor, setWidgetColor] = useColor('hex', '#FFFFFF');
-  // const [widgetBgColor, setWidgetBgColor] = useColor('hex', '#EEF5F1');
-  // const [inputBoxRadius, setInputBoxRadius] = useState('6');
-  // const [widgetBoxRadius, setWidgetBoxRadius] = useState('8');
-  // const [widgetBorderWidth, setWidgetBorderWidth] = useState('1');
-  // Consent
-  // const [tncURL, setTncURL] = useState('');
-  // const [ppURL, setPpURL] = useState('');
-  // Dev-settings
-  // const [hostURL, setHostURL] = useState('');
-  // const [callbackURL, setCallbackURL] = useState('');
-  // const [redirectURL, setRedirectURL] = useState('');
-  // const [social, setSocial] = useState<Social>(socialDefaults);
-
-  // const resetConsent = () => {
-  //   setTncURL('');
-  //   setPpURL('');
-  // };
-
-  // const resetDevSettings = () => {
-  //   setCallbackURL('');
-  //   setHostURL('');
-  //   setRedirectURL('');
-  //   setSocial(socialDefaults);
-  // };
 
   // Set values back to default when input is empty
   useEffect(() => {
@@ -259,15 +203,7 @@ const OrganisationDashboard = () => {
               }}
               className="p-10 bg-primary m-4 rounded-lg drop-shadow-lg"
             >
-              <WidgetPreview
-                displayName={displayName}
-                greeting={greeting}
-                logoImage={logoImage}
-                inputBorderColor={inputBorderColor}
-                widgetColor={widgetColor}
-                inputBoxRadius={inputBoxRadius}
-                // social={social}
-              />
+              <WidgetPreview />
             </CardContent>
           </Card>
         </div>

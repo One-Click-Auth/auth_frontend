@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/Button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
-import { Color } from 'react-color-palette';
 import {
   AppleIcon,
   FacebookIcon,
@@ -15,42 +14,25 @@ import {
   TwitterIcon,
   WhatsappIcon
 } from '@/assets/Svg/Account/Account';
-import { Social } from '../page';
 import { cn } from '@/lib/utils';
 import { useWidgetStore } from '../widgetStore';
 
-type WidgetProp = {
-  logoImage: string;
-  displayName: string;
-  greeting: string;
-  // buttonColor: {
-  //   color: Color;
-  //   color2: Color;
-  //   color3: Color;
-  // };
-  // buttonStatus: {
-  //   button2Status: boolean;
-  //   button3Status: boolean;
-  // };
-  inputBorderColor: Color;
-  widgetColor: Color;
-  inputBoxRadius: string;
-  // social: Social;
-};
-
-export function WidgetPreview({
-  logoImage,
-  displayName,
-  greeting,
-  // buttonColor: { color, color2, color3 },
-  // buttonStatus: { button2Status, button3Status },
-  inputBorderColor,
-  widgetColor,
-  inputBoxRadius,
-  // social
-}: WidgetProp) {
-  const { button2Status, button3Status, color, color2, color3, social } =
-    useWidgetStore();
+export function WidgetPreview() {
+  const {
+    button2Status,
+    button3Status,
+    color,
+    color2,
+    color3,
+    social,
+    logoImage,
+    displayName,
+    greeting,
+    inputBorderColor,
+    widgetColor,
+    inputBoxRadius
+  } = useWidgetStore();
+  
   const socialValues = Object.values(social);
   const show = socialValues.includes(true);
 
