@@ -1,10 +1,9 @@
 import { Input } from '@/components/ui/Input';
-import { Dispatch, SetStateAction } from 'react';
 
 type InputProps = {
   heading: string;
   placeholder: string;
-  changeHandler: Dispatch<SetStateAction<string>>;
+  changeHandler: (input: string) => void;
   value: string;
 };
 

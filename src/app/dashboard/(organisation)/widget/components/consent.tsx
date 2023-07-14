@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { TermsInput } from './terms-input';
+import { useWidgetStore } from '../widgetStore';
 
 type ConsentProps = {
   setters: {
@@ -12,10 +13,13 @@ type ConsentProps = {
   };
 };
 
-export function Consent({
-  setters: { setTncURL, setPpURL },
-  inputValues: { tncURL, ppURL }
-}: ConsentProps) {
+export function Consent(
+//   {
+//   setters: { setTncURL, setPpURL },
+//   inputValues: { tncURL, ppURL }
+// }: ConsentProps
+) {
+  const {tncURL, setTncURL, ppURL, setPpURL} = useWidgetStore()
   return (
     <div className="flex flex-col space-y-10">
       <TermsInput

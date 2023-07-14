@@ -1,6 +1,5 @@
 'use client';
 
-import { Dispatch, SetStateAction } from 'react';
 import { TermsInput } from './terms-input';
 import { Button } from '@/components/ui/Button';
 import {
@@ -21,24 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { Social } from '../page';
-
-type DevProps = {
-  setters: {
-    setCallbackURL: Dispatch<SetStateAction<string>>;
-    setHostURL: Dispatch<SetStateAction<string>>;
-    setRedirectURL: Dispatch<SetStateAction<string>>;
-  };
-  inputValues: {
-    callbackURL: string;
-    hostURL: string;
-    redirectURL: string;
-  };
-  socials: {
-    social: Social;
-    setSocial: Dispatch<SetStateAction<Social>>;
-  };
-};
+import { useWidgetStore } from '../widgetStore';
 
 type SocialList = {
   [key: string]: {
@@ -49,11 +31,18 @@ type SocialList = {
   };
 };
 
-export function DevSettings({
-  setters: { setCallbackURL, setHostURL, setRedirectURL },
-  inputValues: { callbackURL, hostURL, redirectURL },
-  socials: { social, setSocial }
-}: DevProps) {
+export function DevSettings() {
+  const {
+    social,
+    setSocial,
+    callbackURL,
+    setCallbackURL,
+    hostURL,
+    setHostURL,
+    redirectURL,
+    setRedirectURL
+  } = useWidgetStore();
+
   const socialsList: SocialList = {
     github: {
       name: 'Github',
@@ -81,7 +70,7 @@ export function DevSettings({
     },
     whatsapp: {
       name: 'WhatsApp',
-      icon: <WhatsappIcon className="w-6" />,
+      icon: <WhatsappIcon className="w-7 h-7" />,
       disabled: true,
       active: social.whatsapp
     },
@@ -111,14 +100,9 @@ export function DevSettings({
     }
   };
 
-  const handleButtonToggle = (key: string) => {
-    setSocial(prevSocials => {
-      const newSocials = {
-        ...prevSocials,
-        [key]: !prevSocials[key]
-      };
-      return newSocials;
-    });
+  const handleButtonToggle = (key: string, value: boolean) => {
+    const newSocial = { [key]: !value };
+    setSocial(newSocial);
   };
 
   return (
@@ -153,7 +137,7 @@ export function DevSettings({
                 <TooltipTrigger>
                   <Button
                     variant="outline"
-                    onClick={() => handleButtonToggle(key)}
+                    onClick={() => handleButtonToggle(key, social.active)}
                     className={cn(
                       'w-full flex items-center justify-evenly rounded-lg h-14 py-4 px-1 hover:bg-blue-50',
                       social.active && 'border-slate-700 bg-blue-50'

@@ -2,49 +2,25 @@
 
 import { Input } from '@/components/ui/Input';
 import { ColourInput } from './colour-input';
-import { Color } from 'react-color-palette';
-import { Dispatch, SetStateAction } from 'react';
+import { useWidgetStore } from '../widgetStore';
 
-type WidgetCustomProps = {
-  inputBorderColor: {
-    inputBorderColor: Color;
-    setInputBorderColor: Dispatch<SetStateAction<Color>>;
-  };
-  widgetBorderColor: {
-    widgetBorderColor: Color;
-    setWidgetBorderColor: Dispatch<SetStateAction<Color>>;
-  };
-  widgetColor: {
-    widgetColor: Color;
-    setWidgetColor: Dispatch<SetStateAction<Color>>;
-  };
-  widgetBgColor: {
-    widgetBgColor: Color;
-    setWidgetBgColor: Dispatch<SetStateAction<Color>>;
-  };
-  inputBoxRadius: {
-    inputBoxRadius: string;
-    setInputBoxRadius: Dispatch<SetStateAction<string>>;
-  };
-  widgetBoxRadius: {
-    widgetBoxRadius: string;
-    setWidgetBoxRadius: Dispatch<SetStateAction<string>>;
-  };
-  widgetBorderWidth: {
-    widgetBorderWidth: string;
-    setWidgetBorderWidth: Dispatch<SetStateAction<string>>;
-  };
-};
-
-export function WidgetCustom({
-  inputBorderColor: { inputBorderColor, setInputBorderColor },
-  widgetBorderColor: { widgetBorderColor, setWidgetBorderColor },
-  widgetColor: { widgetColor, setWidgetColor },
-  widgetBgColor: { widgetBgColor, setWidgetBgColor },
-  inputBoxRadius: { inputBoxRadius, setInputBoxRadius },
-  widgetBoxRadius: { widgetBoxRadius, setWidgetBoxRadius },
-  widgetBorderWidth: { widgetBorderWidth, setWidgetBorderWidth }
-}: WidgetCustomProps) {
+export function WidgetCustom() {
+  const {
+    inputBorderColor,
+    setInputBorderColor,
+    widgetBorderColor,
+    setWidgetBorderColor,
+    widgetColor,
+    setWidgetColor,
+    widgetBgColor,
+    setWidgetBgColor,
+    inputBoxRadius,
+    setInputBoxRadius,
+    widgetBoxRadius,
+    setWidgetBoxRadius,
+    widgetBorderWidth,
+    setWidgetBorderWidth
+  } = useWidgetStore();
   return (
     <div className="flex flex-col space-y-4">
       <div>

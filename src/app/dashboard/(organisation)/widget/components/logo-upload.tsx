@@ -3,23 +3,12 @@
 import { UploadComputer } from '@/assets/Svg/Account/Account';
 import { Input } from '@/components/ui/Input';
 import Image from 'next/image';
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction
-} from 'react';
+import { ChangeEvent } from 'react';
+import { useWidgetStore } from '../widgetStore';
 
-type LogoProps = {
-  logoState: {
-    logo: File | undefined;
-    setLogo: Dispatch<SetStateAction<File | undefined>>;
-    logoImage: string;
-  };
-};
-
-export function LogoUpload({
-  logoState: { logo, setLogo, logoImage }
-}: LogoProps) {
+export function LogoUpload() {
+  const { logo, setLogo, logoImage } = useWidgetStore();
+  
   const handleLogoInput = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.target.files) {
@@ -46,7 +35,6 @@ export function LogoUpload({
       <div className="basis-1/3">
         <label className="cursor-pointer" htmlFor="logo">
           <div className="border rounded-lg flex justify-center items-center h-[6.25rem] w-full">
-            {/* <Image src="" /> */}
             <UploadComputer />
             <Input
               onChange={handleLogoInput}
