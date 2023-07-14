@@ -148,12 +148,6 @@ export function WidgetPreview({
             </div>
           </>
         )}
-        {/* <Image
-          width={159}
-          height={22}
-          src="/widget-logos.svg"
-          alt="Google, Apple, Microsoft, WhatsApp logos"
-        /> */}
       </div>
     </div>
   );

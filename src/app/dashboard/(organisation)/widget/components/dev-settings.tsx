@@ -81,7 +81,7 @@ export function DevSettings({
     },
     whatsapp: {
       name: 'WhatsApp',
-      icon: <WhatsappIcon className="w-6" />,
+      icon: <WhatsappIcon className="w-7 h-7" />,
       disabled: true,
       active: social.whatsapp
     },

@@ -16,7 +16,7 @@ export type Social = {
   [key: string]: boolean;
 };
 
-const socialDefaults = {
+const socialDefaults: Social = {
   github: false,
   microsoft: false,
   google: false,
@@ -34,6 +34,35 @@ const TABS = {
   customization: "customization",
   dev_settings: "dev_settings",
 }
+
+const widgetObj = {
+  widget: {
+    name: 'string',
+    logo_url: 'string',
+    font: 'string',
+    greeting: 'string',
+    input_border: {
+      radius: 0,
+      color: 'string'
+    },
+    widget_border: {
+      style: 0,
+      radius: 0,
+      color: 'string'
+    },
+    color0: 'string',
+    color1: 'string',
+    color2: 'string',
+    color3: 'string',
+    color4: 'string',
+    color5: 'string',
+    color6: 'string',
+    social: {
+      google: 'string'
+    },
+    redirect_url: 'string'
+  }
+};
 
 const OrganisationDashboard = () => {
   // Branding
