@@ -1,7 +1,25 @@
 import { StateCreator, create } from 'zustand';
 import { Color, toColor } from 'react-color-palette';
 
-type WidgetStore = BrandingSlice & CustomisationSlice;
+type WidgetStore = BrandingSlice &
+  CustomisationSlice &
+  ConsentAndDevSettingsSlice;
+
+export type Social = {
+  [key: string]: boolean;
+};
+
+const socialDefaults: Social = {
+  github: false,
+  microsoft: false,
+  google: false,
+  apple: false,
+  whatsapp: false,
+  tiktok: false,
+  facebook: false,
+  linkedin: false,
+  twitter: false
+};
 
 interface BrandingSlice {
   displayName: string;
@@ -115,7 +133,64 @@ const createCustomisationSlice: StateCreator<
     })
 });
 
+interface ConsentAndDevSettingsSlice {
+  tncURL: string;
+  ppURL: string;
+  hostURL: string;
+  callbackURL: string;
+  redirectURL: string;
+  social: Social;
+  setTncURL: (tncURL: string) => void;
+  setPpURL: (ppURL: string) => void;
+  setHostURL: (hostURL: string) => void;
+  setCallbackURL: (callbackURL: string) => void;
+  setRedirectURL: (redirectURL: string) => void;
+  setSocial: (newSocial: { [x: string]: boolean }) => void;
+  resetConsent: () => void;
+  resetDevSettings: () => void;
+}
+
+const createConsentAndDevSettingsSlice: StateCreator<
+  WidgetStore,
+  [],
+  [],
+  ConsentAndDevSettingsSlice
+> = set => ({
+  tncURL: '',
+  ppURL: '',
+  hostURL: '',
+  callbackURL: '',
+  redirectURL: '',
+  social: socialDefaults,
+  setTncURL: (tncURL: string) => set({ tncURL }),
+  setPpURL: (ppURL: string) => set({ ppURL }),
+  setHostURL: (hostURL: string) => set({ hostURL }),
+  setCallbackURL: (callbackURL: string) => set({ callbackURL }),
+  setRedirectURL: (redirectURL: string) => set({ redirectURL }),
+  setSocial: (newSocial: { [x: string]: boolean }) =>
+    set(state => ({
+      ...state,
+      social: {
+        ...state.social,
+        ...newSocial
+      }
+    })),
+  resetConsent: () =>
+    set({
+      tncURL: '',
+      ppURL: ''
+    }),
+  resetDevSettings: () =>
+    set({
+      hostURL: '',
+      callbackURL: '',
+      redirectURL: '',
+      social: socialDefaults
+    })
+});
+
 export const useWidgetStore = create<WidgetStore>()((...a) => ({
   ...createBrandingSlice(...a),
-  ...createCustomisationSlice(...a)
+  ...createCustomisationSlice(...a),
+  ...createConsentAndDevSettingsSlice(...a)
 }));

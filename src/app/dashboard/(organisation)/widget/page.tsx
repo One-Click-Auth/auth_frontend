@@ -6,7 +6,6 @@ import { LanguageSwitcher } from './components/language-switcher';
 import { WidgetPreview } from './components/widget-preview';
 import { WidgetBranding } from './components/widget-branding';
 import { useEffect, useState } from 'react';
-import { useColor, toColor } from 'react-color-palette';
 import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
@@ -78,6 +77,8 @@ const OrganisationDashboard = () => {
     setLogoImage,
     resetBranding,
     resetCustomisation,
+    resetConsent,
+    resetDevSettings,
     widgetBgColor,
     widgetBoxRadius,
     widgetBorderWidth,
@@ -107,25 +108,25 @@ const OrganisationDashboard = () => {
   // const [widgetBoxRadius, setWidgetBoxRadius] = useState('8');
   // const [widgetBorderWidth, setWidgetBorderWidth] = useState('1');
   // Consent
-  const [tncURL, setTncURL] = useState('');
-  const [ppURL, setPpURL] = useState('');
+  // const [tncURL, setTncURL] = useState('');
+  // const [ppURL, setPpURL] = useState('');
   // Dev-settings
-  const [hostURL, setHostURL] = useState('');
-  const [callbackURL, setCallbackURL] = useState('');
-  const [redirectURL, setRedirectURL] = useState('');
-  const [social, setSocial] = useState<Social>(socialDefaults);
+  // const [hostURL, setHostURL] = useState('');
+  // const [callbackURL, setCallbackURL] = useState('');
+  // const [redirectURL, setRedirectURL] = useState('');
+  // const [social, setSocial] = useState<Social>(socialDefaults);
 
-  const resetConsent = () => {
-    setTncURL('');
-    setPpURL('');
-  };
+  // const resetConsent = () => {
+  //   setTncURL('');
+  //   setPpURL('');
+  // };
 
-  const resetDevSettings = () => {
-    setCallbackURL('');
-    setHostURL('');
-    setRedirectURL('');
-    setSocial(socialDefaults);
-  };
+  // const resetDevSettings = () => {
+  //   setCallbackURL('');
+  //   setHostURL('');
+  //   setRedirectURL('');
+  //   setSocial(socialDefaults);
+  // };
 
   // Set values back to default when input is empty
   useEffect(() => {
@@ -228,10 +229,7 @@ const OrganisationDashboard = () => {
           >
             <Card className="shadow-none min-h-[36rem]">
               <CardContent className="p-10">
-                <Consent
-                  setters={{ setTncURL, setPpURL }}
-                  inputValues={{ tncURL, ppURL }}
-                />
+                <Consent />
               </CardContent>
             </Card>
           </TabsContent>
@@ -241,11 +239,7 @@ const OrganisationDashboard = () => {
           >
             <Card className="shadow-none min-h-[36rem]">
               <CardContent className="p-10">
-                <DevSettings
-                  socials={{ social, setSocial }}
-                  setters={{ setCallbackURL, setHostURL, setRedirectURL }}
-                  inputValues={{ callbackURL, hostURL, redirectURL }}
-                />
+                <DevSettings />
               </CardContent>
             </Card>
           </TabsContent>
@@ -272,7 +266,7 @@ const OrganisationDashboard = () => {
                 inputBorderColor={inputBorderColor}
                 widgetColor={widgetColor}
                 inputBoxRadius={inputBoxRadius}
-                social={social}
+                // social={social}
               />
             </CardContent>
           </Card>

@@ -35,7 +35,7 @@ type WidgetProp = {
   inputBorderColor: Color;
   widgetColor: Color;
   inputBoxRadius: string;
-  social: Social;
+  // social: Social;
 };
 
 export function WidgetPreview({
@@ -47,10 +47,10 @@ export function WidgetPreview({
   inputBorderColor,
   widgetColor,
   inputBoxRadius,
-  social
+  // social
 }: WidgetProp) {
-  const {color, color2, color3} = useWidgetStore();
-  const {button2Status, button3Status} = useWidgetStore()
+  const { button2Status, button3Status, color, color2, color3, social } =
+    useWidgetStore();
   const socialValues = Object.values(social);
   const show = socialValues.includes(true);
 
@@ -138,16 +138,16 @@ export function WidgetPreview({
                 </span>
               </div>
             </div>
-            <div className='flex flex-wrap items-center justify-evenly gap-y-4 w-full'>
-              {social.github && <GithubIcon className="h-6 basis-1/4"/>}
-              {social.microsoft && <MicrosoftIcon className="h-6 basis-1/4"/>}
-              {social.google && <GoogleIcon className="h-6 basis-1/4"/>}
-              {social.apple && <AppleIcon className="h-6 basis-1/4"/>}
-              {social. whatsapp && <WhatsappIcon className="h-6 basis-1/4"/>}
-              {social. tiktok && <TiktokIcon2 className="h-7 basis-1/4"/>}
-              {social.facebook && <FacebookIcon className="h-6 basis-1/4"/>}
-              {social.linkedin && <LinkedinIcon className="h-6 basis-1/4"/>}
-              {social.twitter && <TwitterIcon className="h-6 basis-1/4"/>}
+            <div className="flex flex-wrap items-center justify-evenly gap-y-4 w-full">
+              {social.github && <GithubIcon className="h-6 basis-1/4" />}
+              {social.microsoft && <MicrosoftIcon className="h-6 basis-1/4" />}
+              {social.google && <GoogleIcon className="h-6 basis-1/4" />}
+              {social.apple && <AppleIcon className="h-6 basis-1/4" />}
+              {social.whatsapp && <WhatsappIcon className="h-6 basis-1/4" />}
+              {social.tiktok && <TiktokIcon2 className="h-7 basis-1/4" />}
+              {social.facebook && <FacebookIcon className="h-6 basis-1/4" />}
+              {social.linkedin && <LinkedinIcon className="h-6 basis-1/4" />}
+              {social.twitter && <TwitterIcon className="h-6 basis-1/4" />}
             </div>
           </>
         )}
