@@ -179,7 +179,7 @@ export const SidebarOrg = () => {
               {open ? <span>Widget Settings</span> : ''}
             </Link>
             <Link
-              href="/dashboard/keys"
+              href="/dashboard/manage-keys"
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
