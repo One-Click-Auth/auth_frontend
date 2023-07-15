@@ -6,12 +6,11 @@ import { Input } from '@/components/ui/Input';
 import { LogoUpload } from './logo-upload';
 import { useWidgetStore } from '../widgetStore';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
-// import { BrandingRef } from '../page';
 export interface WidgetBrandingRef {
   clearDisplayNameAndGreetings: () => void;
 }
 
-const  WidgetBranding = forwardRef<WidgetBrandingRef>((props, ref) => {
+const WidgetBranding = forwardRef<WidgetBrandingRef>((props, ref) => {
   const displayNameRef = useRef<HTMLInputElement>(null);
   const greetingsRef = useRef<HTMLInputElement>(null);
 
@@ -30,18 +29,22 @@ const  WidgetBranding = forwardRef<WidgetBrandingRef>((props, ref) => {
     setColor3
   } = useWidgetStore();
 
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle(
+    ref,
+    () => ({
       clearDisplayNameAndGreetings() {
         if (displayNameRef.current && greetingsRef.current) {
-          displayNameRef.current.value = "";
-          greetingsRef.current.value = "";
+          displayNameRef.current.value = '';
+          greetingsRef.current.value = '';
         }
       }
-  }), []);
+    }),
+    []
+  );
 
   const handleShowButton = () => {
     if (button2Status === false) {
-      return setButton2Status(true);      
+      return setButton2Status(true);
     }
 
     if (button3Status === false) {
@@ -109,6 +112,6 @@ const  WidgetBranding = forwardRef<WidgetBrandingRef>((props, ref) => {
       </div>
     </>
   );
-})
+});
 
 export default WidgetBranding;

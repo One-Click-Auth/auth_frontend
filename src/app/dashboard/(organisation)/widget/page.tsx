@@ -11,7 +11,7 @@ import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
 import { DevSettings } from './components/dev-settings';
 import { useWidgetStore } from './widgetStore';
-import {WidgetBrandingRef} from './components/widget-branding';
+import { WidgetBrandingRef } from './components/widget-branding';
 
 const TABS = {
   consent: 'consent',
@@ -53,7 +53,7 @@ const widgetObj = {
 };
 
 const OrganisationDashboard = () => {
-  const brandingRef:RefObject<WidgetBrandingRef> = useRef(null);
+  const brandingRef: RefObject<WidgetBrandingRef> = useRef(null);
 
   const {
     displayName,
@@ -70,7 +70,7 @@ const OrganisationDashboard = () => {
     widgetBoxRadius,
     widgetBorderWidth,
     widgetBorderColor,
-    widgetColor,
+    widgetColor
   } = useWidgetStore();
 
   // Set values back to default when input is empty
@@ -101,8 +101,7 @@ const OrganisationDashboard = () => {
     switch (tabs) {
       case TABS.branding:
         if (brandingRef.current) {
-          console.log(brandingRef.current);
-          brandingRef?.current.clearDisplayNameAndGreetings()
+          brandingRef.current.clearDisplayNameAndGreetings();
         }
         resetBranding();
         return;
@@ -157,9 +156,7 @@ const OrganisationDashboard = () => {
           >
             <Card className="shadow-none">
               <CardContent className="p-10 space-y-7">
-                <WidgetBranding
-                  ref={brandingRef}
-                />
+                <WidgetBranding ref={brandingRef} />
               </CardContent>
             </Card>
           </TabsContent>
