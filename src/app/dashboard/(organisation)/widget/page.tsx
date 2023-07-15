@@ -4,13 +4,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { LanguageSwitcher } from './components/language-switcher';
 import { WidgetPreview } from './components/widget-preview';
-import { WidgetBranding } from './components/widget-branding';
-import { useEffect, useState } from 'react';
+import WidgetBranding from './components/widget-branding';
+import { RefObject, useEffect, useRef, useState } from 'react';
 import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
 import { DevSettings } from './components/dev-settings';
 import { useWidgetStore } from './widgetStore';
+import {WidgetBrandingRef} from './components/widget-branding';
 
 const TABS = {
   consent: 'consent',
@@ -52,6 +53,8 @@ const widgetObj = {
 };
 
 const OrganisationDashboard = () => {
+  const brandingRef:RefObject<WidgetBrandingRef> = useRef(null);
+
   const {
     displayName,
     greeting,
@@ -97,6 +100,10 @@ const OrganisationDashboard = () => {
   const handleReset = () => {
     switch (tabs) {
       case TABS.branding:
+        if (brandingRef.current) {
+          console.log(brandingRef.current);
+          brandingRef?.current.clearDisplayNameAndGreetings()
+        }
         resetBranding();
         return;
       case TABS.consent:
@@ -151,6 +158,7 @@ const OrganisationDashboard = () => {
             <Card className="shadow-none">
               <CardContent className="p-10 space-y-7">
                 <WidgetBranding
+                  ref={brandingRef}
                 />
               </CardContent>
             </Card>

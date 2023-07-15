@@ -5,8 +5,16 @@ import { Plus } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { LogoUpload } from './logo-upload';
 import { useWidgetStore } from '../widgetStore';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
+// import { BrandingRef } from '../page';
+export interface WidgetBrandingRef {
+  clearDisplayNameAndGreetings: () => void;
+}
 
-export function WidgetBranding() {
+const  WidgetBranding = forwardRef<WidgetBrandingRef>((props, ref) => {
+  const displayNameRef = useRef<HTMLInputElement>(null);
+  const greetingsRef = useRef<HTMLInputElement>(null);
+
   const {
     setDisplayName,
     setGreeting,
@@ -21,6 +29,15 @@ export function WidgetBranding() {
     setColor2,
     setColor3
   } = useWidgetStore();
+
+  useImperativeHandle(ref, () => ({
+      clearDisplayNameAndGreetings() {
+        if (displayNameRef.current && greetingsRef.current) {
+          displayNameRef.current.value = "";
+          greetingsRef.current.value = "";
+        }
+      }
+  }), []);
 
   const handleShowButton = () => {
     if (button2Status === false) {
@@ -70,6 +87,7 @@ export function WidgetBranding() {
         <LogoUpload />
       </div>
       <Input
+        ref={displayNameRef}
         className="h-11 shadow-none"
         onChange={e => setDisplayName(e.target.value)}
         type="text"
@@ -81,6 +99,7 @@ export function WidgetBranding() {
           Change Greetings Text
         </span>
         <Input
+          ref={greetingsRef}
           onChange={e => setGreeting(e.target.value)}
           className="text-lg text-center py-14 shadow-none"
           type="text"
@@ -90,4 +109,6 @@ export function WidgetBranding() {
       </div>
     </>
   );
-}
+})
+
+export default WidgetBranding;
