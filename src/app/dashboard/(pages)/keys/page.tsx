@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 
@@ -6,15 +7,22 @@ import { CheckSquareValid } from '@/assets/Svg/Account/Account';
 
 import { ClipboardCopy } from 'lucide-react';
 function InputWithButtons() {
+  const [show, setShow] = useState(false);
   return (
     <div className="flex w-full items-center space-x-2 tracking-wide">
       <Input
-        type="text"
-        placeholder="*****************"
+        type={show ? 'text' : 'password'}
+        disabled
+        value="ac55aad0b6e748d9afrfrf4e25da79997JTBJRXSFRGKMTDZDUFXY"
         className="bg-transparent appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:border-black"
       />
-      <Button variant={'authx'} type="button">
-        Reveal
+      <Button
+        variant={'authx'}
+        className="w-20"
+        type="button"
+        onClick={() => setShow(!show)}
+      >
+        {show ? 'Hide' : 'Reveal'}
       </Button>
       <Button variant={'authx'} type="button">
         <ClipboardCopy size={18} />
