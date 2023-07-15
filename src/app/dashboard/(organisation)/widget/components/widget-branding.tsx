@@ -10,7 +10,7 @@ export interface WidgetBrandingRef {
   clearDisplayNameAndGreetings: () => void;
 }
 
-const WidgetBranding = forwardRef<WidgetBrandingRef>((props, ref) => {
+const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
   const displayNameRef = useRef<HTMLInputElement>(null);
   const greetingsRef = useRef<HTMLInputElement>(null);
 
