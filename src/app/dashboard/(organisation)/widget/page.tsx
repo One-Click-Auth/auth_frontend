@@ -13,7 +13,7 @@ import { DevSettings } from './components/dev-settings';
 import { useWidgetStore } from './widgetStore';
 import { WidgetBrandingRef } from './components/widget-branding';
 
-const TABS = {
+export const TABS = {
   consent: 'consent',
   branding: 'branding',
   customization: 'customization',
@@ -54,6 +54,7 @@ const widgetObj = {
 
 const OrganisationDashboard = () => {
   const brandingRef: RefObject<WidgetBrandingRef> = useRef(null);
+  const [tabs, setTabs] = useState(TABS.branding);
 
   const {
     displayName,
@@ -95,30 +96,6 @@ const OrganisationDashboard = () => {
     }
   }, [logo]);
 
-  const [tabs, setTabs] = useState(TABS.branding);
-
-  // Save methods
-  async function saveBranding() {
-    // Fetch Upload url
-    const { url } = await fetch(`/api/preSignedUrl?fileName=${logo?.name}`)
-      .then(res => res.json())
-      .catch(err => console.log(err));
-    
-    // PUT file to s3 bucket
-    const res = await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "multipart/form-data"
-      },
-      body: logo
-    })
-    // const data = await res.json();
-    console.log({res});
-
-    const imageUrl = url.split('?')[0];
-    console.log({imageUrl})
-  }
-
   const handleReset = () => {
     switch (tabs) {
       case TABS.branding:
@@ -136,12 +113,7 @@ const OrganisationDashboard = () => {
     }
   };
 
-  const handleSave = () => {
-    switch (tabs) {
-      case TABS.branding:
-        return saveBranding();
-    }
-  };
+  
 
   return (
     <div className="flex-1 space-y-4 p-10 pt-14 max-w-7xl mx-auto">
@@ -240,7 +212,7 @@ const OrganisationDashboard = () => {
             </CardContent>
           </Card>
         </div>
-        <WidgetFooter reset={handleReset} save={handleSave}/>
+        <WidgetFooter reset={handleReset} tabs={tabs}/>
       </Tabs>
     </div>
   );
