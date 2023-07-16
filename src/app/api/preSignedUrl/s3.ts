@@ -3,10 +3,10 @@ import crypto from 'crypto';
 import { promisify } from 'util';
 const randomBytes = promisify(crypto.randomBytes);
 
-const region = process.env.AWS_S3_REGION;
-const bucketName = process.env.AWS_S3_BUCKET;
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const region = process.env._S3_REGION;
+const bucketName = process.env._S3_BUCKET;
+const accessKeyId = process.env._ACCESS_KEY_ID;
+const secretAccessKey = process.env._SECRET_ACCESS_KEY;
 
 // Setup s3 client
 const s3 = new aws.S3({
