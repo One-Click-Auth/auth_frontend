@@ -97,6 +97,28 @@ const OrganisationDashboard = () => {
 
   const [tabs, setTabs] = useState(TABS.branding);
 
+  // Save methods
+  async function saveBranding() {
+    // Fetch Upload url
+    const { url } = await fetch(`/api/preSignedUrl?fileName=${logo?.name}`)
+      .then(res => res.json())
+      .catch(err => console.log(err));
+    
+    // PUT file to s3 bucket
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "multipart/form-data"
+      },
+      body: logo
+    })
+    // const data = await res.json();
+    console.log({res});
+
+    const imageUrl = url.split('?')[0];
+    console.log({imageUrl})
+  }
+
   const handleReset = () => {
     switch (tabs) {
       case TABS.branding:
@@ -113,6 +135,14 @@ const OrganisationDashboard = () => {
         return resetDevSettings();
     }
   };
+
+  const handleSave = () => {
+    switch (tabs) {
+      case TABS.branding:
+        return saveBranding();
+    }
+  };
+
   return (
     <div className="flex-1 space-y-4 p-10 pt-14 max-w-7xl mx-auto">
       <Tabs
@@ -210,7 +240,7 @@ const OrganisationDashboard = () => {
             </CardContent>
           </Card>
         </div>
-        <WidgetFooter reset={handleReset} />
+        <WidgetFooter reset={handleReset} save={handleSave}/>
       </Tabs>
     </div>
   );
