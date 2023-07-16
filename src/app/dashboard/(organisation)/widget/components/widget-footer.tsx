@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/Button';
 import { useWidgetStore } from '../widgetStore';
-import { TABS } from '../page';
 import { useToast } from '@/components/ui/use-toast';
 import { useState } from 'react';
 import { Icons } from '@/components/icons';
@@ -10,6 +9,13 @@ import { Icons } from '@/components/icons';
 type FooterProps = {
   reset: () => void;
   tabs: string;
+};
+
+const TABS = {
+  consent: 'consent',
+  branding: 'branding',
+  customization: 'customization',
+  dev_settings: 'dev_settings'
 };
 
 export function WidgetFooter({ reset, tabs }: FooterProps) {

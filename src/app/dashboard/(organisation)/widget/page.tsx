@@ -13,7 +13,7 @@ import { DevSettings } from './components/dev-settings';
 import { useWidgetStore } from './widgetStore';
 import { WidgetBrandingRef } from './components/widget-branding';
 
-export const TABS = {
+const TABS = {
   consent: 'consent',
   branding: 'branding',
   customization: 'customization',
