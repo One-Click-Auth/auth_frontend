@@ -4,6 +4,7 @@ import { Providers } from '@/redux/provider';
 const inter = Inter({ subsets: ['latin'] });
 import './globals.css';
 import { Metadata } from 'next';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'TrustAuthX',
@@ -25,6 +26,7 @@ export default async function RootLayout({
       <head />
       <body>
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );
