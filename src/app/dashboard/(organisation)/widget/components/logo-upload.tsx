@@ -2,7 +2,6 @@
 
 import { UploadComputer } from '@/assets/Svg/Account/Account';
 import { Input } from '@/components/ui/Input';
-import Image from 'next/image';
 import { ChangeEvent } from 'react';
 import { useWidgetStore } from '../widgetStore';
 
@@ -20,11 +19,10 @@ export function LogoUpload() {
     <div className="flex border gap-2 rounded-lg py-1.5 px-2">
       <div className="basis-2/3">
         <div className="border rounded-lg h-[6.25rem]">
-          <Image
-            className="mx-auto py-2 h-[6.25rem]"
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="mx-auto aspect-auto py-2 h-[6.25rem]"
             src={logoImage}
-            width={90}
-            height={70}
             alt="Logo preview"
           />
         </div>

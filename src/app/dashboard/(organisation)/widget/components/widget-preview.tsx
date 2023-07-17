@@ -62,8 +62,8 @@ export function WidgetPreview() {
   return (
     <div className="space-y-10">
       <div className="flex flex-col justify-center items-center">
-        <Avatar className="w-12 h-12 rounded-none">
-          <AvatarImage src={logoImage} alt="Organisation Logo" />
+        <Avatar className="max-w-[11rem] w-auto h-12 rounded-none">
+          <AvatarImage className='aspect-auto' src={logoImage} alt="Organisation Logo" />
           <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
         </Avatar>
         <h1 className="text-lg font-medium text-center break-words w-44 mt-0.5 mb-1.5">
