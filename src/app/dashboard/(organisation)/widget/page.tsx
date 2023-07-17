@@ -12,49 +12,11 @@ import { Consent } from './components/consent';
 import { DevSettings } from './components/dev-settings';
 import { useWidgetStore } from './widgetStore';
 import { WidgetBrandingRef } from './components/widget-branding';
-
-const TABS = {
-  consent: 'consent',
-  branding: 'branding',
-  customization: 'customization',
-  dev_settings: 'dev_settings'
-};
-
-// TODO: Update server state on clicking save
-// Clear text input when pressing reset in branding
-// Object to update server state
-const widgetObj = {
-  widget: {
-    name: 'string',
-    logo_url: 'string',
-    font: 'string',
-    greeting: 'string',
-    input_border: {
-      radius: 0,
-      color: 'string'
-    },
-    widget_border: {
-      style: 0,
-      radius: 0,
-      color: 'string'
-    },
-    color0: 'string',
-    color1: 'string',
-    color2: 'string',
-    color3: 'string',
-    color4: 'string',
-    color5: 'string',
-    color6: 'string',
-    social: {
-      google: 'string'
-    },
-    redirect_url: 'string'
-  }
-};
+import { WIDGET_TABS as TABS } from '@/constants';
 
 const OrganisationDashboard = () => {
   const brandingRef: RefObject<WidgetBrandingRef> = useRef(null);
-  const [tabs, setTabs] = useState(TABS.branding);
+  const [tab, setTab] = useState(TABS.branding);
 
   const {
     displayName,
@@ -97,7 +59,7 @@ const OrganisationDashboard = () => {
   }, [logo]);
 
   const handleReset = () => {
-    switch (tabs) {
+    switch (tab) {
       case TABS.branding:
         if (brandingRef.current) {
           brandingRef.current.clearDisplayNameAndGreetings();
@@ -113,14 +75,12 @@ const OrganisationDashboard = () => {
     }
   };
 
-  
-
   return (
     <div className="flex-1 space-y-4 p-10 pt-14 max-w-7xl mx-auto">
       <Tabs
         defaultValue={TABS.branding}
         className="space-y-4"
-        onValueChange={e => setTabs(e)}
+        onValueChange={e => setTab(e)}
       >
         <div className="flex flex-wrap gap-3 justify-between ">
           <TabsList className="bg-gray-100 flex-wrap h-full">
@@ -212,7 +172,7 @@ const OrganisationDashboard = () => {
             </CardContent>
           </Card>
         </div>
-        <WidgetFooter reset={handleReset} tabs={tabs}/>
+        <WidgetFooter reset={handleReset} tab={tab}/>
       </Tabs>
     </div>
   );

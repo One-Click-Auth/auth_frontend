@@ -6,8 +6,13 @@ export async function GET(req: NextRequest) {
   const fileName = searchParams.get("fileName");
   
   if (fileName) {
-    const url = await grenerateUploadURL(fileName);
-    console.log(url);
-    return NextResponse.json({url});
+    try {
+      const url = await grenerateUploadURL(fileName);
+      console.log(url);
+      return NextResponse.json({url});
+    } catch (err) {
+      console.log(err);
+      return NextResponse.json({error: "Internal Sever Error"}, {status: 500})
+    }
   }
 }
