@@ -11,27 +11,28 @@ import { useSearchParams } from 'next/navigation';
 const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [widget, setWidget] = useState<any>('');
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
-  console.log('searchParams.get(org_id)', searchParams.get('org_id'));
-  const org_id =
-    searchParams.get('org_id') ||
-    '2876350533bf401eafebbce9c9aaa642ef61bb561c1e11eea5b3244bfebae8ec';
+  // console.log('searchParams.get(org_id)', searchParams.get('org_id'));
+  // const org_id =
+  //   searchParams.get('org_id') ||
+  //   '2876350533bf401eafebbce9c9aaa642ef61bb561c1e11eea5b3244bfebae8ec';
 
   useEffect(() => {
-    fetchOrgDetails();
+    // fetchOrgDetails();
+    handleGithubClick();
   }, []);
 
   const fetchOrgDetails = async () => {
     try {
       setLoading(true);
-      const orgData = await fetch('https://api.trustauthx.com/settings/auth', {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          'org-id': org_id
+      const orgData = await fetch(
+        'https://api.trustauthx.com/settings/auth?org_id=ab8274e0906642ccb809e9b4c2898ab481e4bde820c911ee88069dc8f7663e88',
+        {
+          method: 'GET'
         }
-      });
+      );
+      console.log(orgData);
       const OrgDataRes = await orgData.json();
       console.log('OrgDataRes ', OrgDataRes);
       setWidget(OrgDataRes?.data?.widget);
@@ -41,28 +42,27 @@ const Login = () => {
       setLoading(false);
     }
   };
-  //   const handleGithubClick = () => {
-  //     fetch(
-  //       'https://api.trustauthx.com/signup/github?org_id=2876350533bf401eafebbce9c9aaa642ef61bb561c1e11eea5b3244bfebae8ec',
-  //       {
-  //         method: 'GET',
-  //         headers: {
-  //           accept: 'application/json',
-  //           'Access-Control-Expose-Headers': 'Location'
-  //         }
-  //       }
-  //     )
-  //       .then(response => {
-  //         console.log('res headers are ', response.headers);
-  //         return response.json();
-  //       })
-  //       .then(data => {
-  //         console.log(data);
-  //       })
-  //       .catch(error => {
-  //         console.error('error is ', error);
-  //       });
-  //   };
+  const handleGithubClick = () => {
+    fetch(
+      'https://api.trustauthx.com/signup/github?org_id=ab8274e0906642ccb809e9b4c2898ab481e4bde820c911ee88069dc8f7663e88',
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json'
+        }
+      }
+    )
+      .then(response => {
+        console.log('res headers are ', response.headers);
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('error is ', error);
+      });
+  };
 
   const handleSubmit = () => {
     console.log('submit called');
