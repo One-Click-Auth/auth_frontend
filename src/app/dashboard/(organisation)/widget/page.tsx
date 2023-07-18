@@ -4,13 +4,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { LanguageSwitcher } from './components/language-switcher';
 import { WidgetPreview } from './components/widget-preview';
-import { WidgetBranding } from './components/widget-branding';
-import { useEffect, useState } from 'react';
+import WidgetBranding from './components/widget-branding';
+import { RefObject, useEffect, useRef, useState } from 'react';
 import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
 import { DevSettings } from './components/dev-settings';
 import { useWidgetStore } from './widgetStore';
+import { WidgetBrandingRef } from './components/widget-branding';
 
 const TABS = {
   consent: 'consent',
@@ -52,6 +53,9 @@ const widgetObj = {
 };
 
 const OrganisationDashboard = () => {
+  const brandingRef: RefObject<WidgetBrandingRef> = useRef(null);
+  const [tabs, setTabs] = useState(TABS.branding);
+
   const {
     displayName,
     greeting,
@@ -67,7 +71,7 @@ const OrganisationDashboard = () => {
     widgetBoxRadius,
     widgetBorderWidth,
     widgetBorderColor,
-    widgetColor,
+    widgetColor
   } = useWidgetStore();
 
   // Set values back to default when input is empty
@@ -92,11 +96,12 @@ const OrganisationDashboard = () => {
     }
   }, [logo]);
 
-  const [tabs, setTabs] = useState(TABS.branding);
-
   const handleReset = () => {
     switch (tabs) {
       case TABS.branding:
+        if (brandingRef.current) {
+          brandingRef.current.clearDisplayNameAndGreetings();
+        }
         resetBranding();
         return;
       case TABS.consent:
@@ -107,6 +112,9 @@ const OrganisationDashboard = () => {
         return resetDevSettings();
     }
   };
+
+  
+
   return (
     <div className="flex-1 space-y-4 p-10 pt-14 max-w-7xl mx-auto">
       <Tabs
@@ -150,8 +158,7 @@ const OrganisationDashboard = () => {
           >
             <Card className="shadow-none">
               <CardContent className="p-10 space-y-7">
-                <WidgetBranding
-                />
+                <WidgetBranding ref={brandingRef} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -205,7 +212,7 @@ const OrganisationDashboard = () => {
             </CardContent>
           </Card>
         </div>
-        <WidgetFooter reset={handleReset} />
+        <WidgetFooter reset={handleReset} tabs={tabs}/>
       </Tabs>
     </div>
   );
