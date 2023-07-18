@@ -172,7 +172,7 @@ const OrganisationDashboard = () => {
             </CardContent>
           </Card>
         </div>
-        <WidgetFooter reset={handleReset} tab={tab}/>
+        <WidgetFooter reset={handleReset}/>
       </Tabs>
     </div>
   );

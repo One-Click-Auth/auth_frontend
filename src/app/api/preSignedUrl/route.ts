@@ -8,7 +8,6 @@ export async function GET(req: NextRequest) {
   if (fileName) {
     try {
       const url = await grenerateUploadURL(fileName);
-      console.log(url);
       return NextResponse.json({url});
     } catch (err) {
       console.log(err);

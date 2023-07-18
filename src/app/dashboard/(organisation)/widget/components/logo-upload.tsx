@@ -21,7 +21,7 @@ export function LogoUpload() {
         <div className="border rounded-lg h-[6.25rem]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            className="mx-auto aspect-auto py-2 h-[6.25rem]"
+            className="mx-auto aspect-auto py-4 h-[6.25rem]"
             src={logoImage}
             alt="Logo preview"
           />

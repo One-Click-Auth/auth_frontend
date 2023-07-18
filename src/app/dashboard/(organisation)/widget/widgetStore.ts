@@ -169,7 +169,6 @@ const createConsentAndDevSettingsSlice: StateCreator<
   setRedirectURL: (redirectURL: string) => set({ redirectURL }),
   setSocial: (newSocial: { [x: string]: boolean }) =>
     set(state => ({
-      ...state,
       social: {
         ...state.social,
         ...newSocial

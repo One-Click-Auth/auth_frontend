@@ -5,68 +5,150 @@ import { useWidgetStore } from '../widgetStore';
 import { useToast } from '@/components/ui/use-toast';
 import { useState } from 'react';
 import { Icons } from '@/components/icons';
-import { WIDGET_TABS as TABS } from '@/constants';
+import { useAuth } from '@/contexts/AuthContext';
+import { Social } from '../widgetStore';
+import '@total-typescript/ts-reset';
 
 type FooterProps = {
   reset: () => void;
-  tab: string;
 };
 
-// TODO: Update server state on clicking save
-// Clear text input when pressing reset in branding
-// Object to update server state / push
+type WidgetObject = {
+  name: string;
+  host: string;
+  widget: {
+    name: string;
+    logo_url: string;
+    font: string;
+    greeting: string;
+    input_border: {
+      radius: string;
+      color: string;
+    };
+    widget_border: {
+      radius: string;
+      color: string;
+      width: string;
+    };
+    color0: string;
+    color1: string;
+    color2: string;
+    color3: string;
+    color6: string;
+    social: Social;
+  };
+  callback_url?: string;
+  redirect_url?: string;
+};
 
-export function WidgetFooter({ reset, tab }: FooterProps) {
+const ORG_ID =
+  '73bbc4bf458a4f66acab0a8cfefa47d13aa33402120d11ee88069dc8f7663e88';
+
+// TODO: Update server state on clicking save
+// Object to update server state / push
+export function WidgetFooter({ reset }: FooterProps) {
+  const { token } = useAuth();
   const { toast } = useToast();
-  const { 
-    logo, 
-    displayName, 
-    greeting, 
-    inputBorderColor, 
+  const {
+    logo,
+    displayName,
+    greeting,
+    inputBorderColor,
     inputBoxRadius,
     widgetBorderWidth,
     widgetBoxRadius,
     widgetBorderColor,
-    social
+    social,
+    hostURL,
+    callbackURL,
+    redirectURL,
+    color,
+    color2,
+    color3,
+    widgetBgColor,
+    widgetColor
   } = useWidgetStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [s3ImageUrl, setS3ImageUrl] = useState('');
+  const [prevLogo, setPrevLogo] = useState<File>();
 
-  const widgetObj = {
+  const widgetObj: WidgetObject = {
+    name: displayName,
+    host: hostURL,
     widget: {
       name: displayName,
       logo_url: s3ImageUrl,
-      font: 'string',
+      font: 'inter',
       greeting,
       input_border: {
         radius: inputBoxRadius,
-        color: inputBorderColor
+        color: inputBorderColor.hex
       },
       widget_border: {
-        style: widgetBorderWidth,
         radius: widgetBoxRadius,
-        color: widgetBorderColor,
+        color: widgetBorderColor.hex,
+        width: widgetBorderWidth
       },
-      color0: 'string',
-      color1: 'string',
-      color2: 'string',
-      color3: 'string',
-      color4: 'string',
-      color5: 'string',
-      color6: 'string',
-      social,
-      redirect_url: 'string'
+      color0: color.hex,
+      color1: color2.hex,
+      color2: color3.hex,
+      color3: widgetBgColor.hex,
+      color6: widgetColor.hex,
+      social
     }
   };
 
+  if (callbackURL) widgetObj.callback_url = callbackURL;
+  if (redirectURL) widgetObj.redirect_url = redirectURL;
+
+  const destructiveToast = () => {
+    toast({
+      variant: 'destructive',
+      title: 'Uh oh! Something went wrong.',
+      description: 'There was a problem with your request.'
+    });
+  };
+
   // Save methods
+  async function putObject() {
+    try {
+      console.log(JSON.stringify(widgetObj));
+      const res = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
+        method: 'PUT',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(widgetObj)
+      });
+
+      if (res.status === 200) {
+        setIsLoading(false);
+        toast({
+          title: 'Success!',
+          description: 'Your settings have been saved successfully'
+        });
+      } else {
+        setIsLoading(false);
+        destructiveToast();
+      }
+    } catch (err) {
+      console.log(err);
+      setIsLoading(false);
+      destructiveToast();
+    }
+  }
+
   async function uploadImageToS3() {
     setIsLoading(true);
 
     // Fetch Upload url
-    const { url } = await fetch(`/api/preSignedUrl?fileName=${logo?.name}`)
-      .then(res => res.json())
-      .catch(err => console.log(err));
+    const response = await fetch(
+      `/api/preSignedUrl?fileName=${logo?.name}`
+    ).catch(err => console.log(err));
+    const data = await response?.json();
+    const { url } = data as { url: string };
 
     // PUT file to s3 bucket
     const res = await fetch(url, {
@@ -77,41 +159,42 @@ export function WidgetFooter({ reset, tab }: FooterProps) {
       body: logo
     }).catch(err => {
       setIsLoading(false);
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.'
-      });
+      destructiveToast();
       console.log(err);
     });
 
     if (res?.status === 200) {
       const imageUrl = url.split('?')[0];
       console.log({ imageUrl });
+      widgetObj.widget.logo_url = imageUrl;
       setS3ImageUrl(imageUrl);
-      setIsLoading(false);
-      toast({
-        title: 'Success!',
-        description: 'Your image has been uploaded successfully'
-      });
+      setPrevLogo(logo);
     }
 
     if (res?.status === 500 || res?.status === 404) {
       setIsLoading(false);
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.'
-      });
+      destructiveToast();
     }
   }
 
   // Call methods according to active tab
-  const handleSave = () => {
-    switch (tab) {
-      case TABS.branding:
-        return uploadImageToS3();
+  const handleSave = async () => {
+    // Attemp to upload logo only if it has been changed
+    if (!checkLogoEquality(logo, prevLogo)) {
+      await uploadImageToS3();
     }
+    await putObject();
+  };
+
+  const checkLogoEquality = (
+    logo: File | undefined,
+    prevLogo: File | undefined
+  ) => {
+    return logo?.name === prevLogo?.name &&
+      logo?.size === prevLogo?.size &&
+      logo?.lastModified === prevLogo?.lastModified
+      ? true
+      : false;
   };
 
   return (
