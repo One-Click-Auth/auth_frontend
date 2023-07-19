@@ -22,12 +22,13 @@ export function LogoUpload() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="mx-auto aspect-auto py-4 h-[6.25rem]"
+            // Cannot Properly display svg, has no issues with png
             src={logoImage}
             alt="Logo preview"
           />
         </div>
-        <small className="block mx-auto mt-2 text-center text-zinc-500">
-          {logo ? logo.name : 'Flitchcoin_logo.png'}
+        <small className="block max-w-[14ch] col-span-1 break-words mx-auto mt-2 text-center text-zinc-500">
+          {logo ? logo.name : 'Preview_logo.png'}
         </small>
       </div>
       <div className="basis-1/3">

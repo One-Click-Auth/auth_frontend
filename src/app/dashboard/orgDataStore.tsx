@@ -121,8 +121,8 @@ const useOrgData = create<OrgDataState>(set => ({
   data: [],
   manageOrg: '',
   manageOrgData: {},
-  addData: data => {
-    set(() => ({ data: [...data] }));
+  addData: newData => {
+    set((state) => ({ data: [...state.data, ...newData] }));
   },
   setManageOrg: manageOrg => set({ manageOrg }),
   setManageOrgData: manageOrgData => set({ manageOrgData })

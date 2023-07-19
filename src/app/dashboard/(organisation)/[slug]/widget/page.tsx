@@ -10,13 +10,22 @@ import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
 import { DevSettings } from './components/dev-settings';
-import { useWidgetStore } from './widgetStore';
+import { updateStoreWithFetch, useWidgetStore } from './widgetStore';
 import { WidgetBrandingRef } from './components/widget-branding';
 import { WIDGET_TABS as TABS } from '@/constants';
+import { useAuth } from '@/contexts/AuthContext';
 
-const OrganisationDashboard = () => {
+const ORG_ID =
+  '73bbc4bf458a4f66acab0a8cfefa47d13aa33402120d11ee88069dc8f7663e88';
+
+const WidgetSettings = () => {
+  const {token} = useAuth();
   const brandingRef: RefObject<WidgetBrandingRef> = useRef(null);
   const [tab, setTab] = useState(TABS.branding);
+  
+  useEffect(() => {
+    if (token) updateStoreWithFetch(token, ORG_ID)
+  },[])
 
   const {
     displayName,
@@ -37,15 +46,15 @@ const OrganisationDashboard = () => {
   } = useWidgetStore();
 
   // Set values back to default when input is empty
-  useEffect(() => {
-    if (displayName === '') {
-      setDisplayName('Flitchcoin');
-    }
+  // useEffect(() => {
+  //   if (displayName === '') {
+  //     setDisplayName('Flitchcoin');
+  //   }
 
-    if (greeting === '') {
-      setGreeting('Continue to Log in to Flitchcoin');
-    }
-  }, [displayName, greeting]);
+  //   if (greeting === '') {
+  //     setGreeting('Continue to Log in to Flitchcoin');
+  //   }
+  // }, [displayName, greeting]);
 
   // Set or reset logo
   useEffect(() => {
@@ -53,9 +62,9 @@ const OrganisationDashboard = () => {
       setLogoImage(URL.createObjectURL(logo));
     }
 
-    if (!logo) {
-      setLogoImage('/flitchcoin-logo.svg');
-    }
+    // if (!logo) {
+    //   setLogoImage('/flitchcoin-logo.svg');
+    // }
   }, [logo]);
 
   const handleReset = () => {
@@ -178,4 +187,4 @@ const OrganisationDashboard = () => {
   );
 };
 
-export default OrganisationDashboard;
+export default WidgetSettings;

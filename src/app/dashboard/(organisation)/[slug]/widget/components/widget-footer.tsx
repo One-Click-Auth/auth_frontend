@@ -1,44 +1,16 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
-import { useWidgetStore } from '../widgetStore';
+import { updateStoreWithFetch, useWidgetStore } from '../widgetStore';
 import { useToast } from '@/components/ui/use-toast';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icons } from '@/components/icons';
 import { useAuth } from '@/contexts/AuthContext';
-import { Social } from '../widgetStore';
+import { OrgObject } from '../widgetStore';
 import '@total-typescript/ts-reset';
 
 type FooterProps = {
   reset: () => void;
-};
-
-type WidgetObject = {
-  name: string;
-  host: string;
-  widget: {
-    name: string;
-    logo_url: string;
-    font: string;
-    greeting: string;
-    input_border: {
-      radius: string;
-      color: string;
-    };
-    widget_border: {
-      radius: string;
-      color: string;
-      width: string;
-    };
-    color0: string;
-    color1: string;
-    color2: string;
-    color3: string;
-    color6: string;
-    social: Social;
-  };
-  callback_url?: string;
-  redirect_url?: string;
 };
 
 const ORG_ID =
@@ -46,6 +18,7 @@ const ORG_ID =
 
 // TODO: Update server state on clicking save
 // Object to update server state / push
+// Logo string defaults to ""
 export function WidgetFooter({ reset }: FooterProps) {
   const { token } = useAuth();
   const { toast } = useToast();
@@ -59,9 +32,12 @@ export function WidgetFooter({ reset }: FooterProps) {
     widgetBoxRadius,
     widgetBorderColor,
     social,
+    ppURL,
+    tncURL,
     hostURL,
     callbackURL,
     redirectURL,
+    logoImage,
     color,
     color2,
     color3,
@@ -69,10 +45,14 @@ export function WidgetFooter({ reset }: FooterProps) {
     widgetColor
   } = useWidgetStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [s3ImageUrl, setS3ImageUrl] = useState('');
+  const [s3ImageUrl, setS3ImageUrl] = useState(logoImage);
   const [prevLogo, setPrevLogo] = useState<File>();
 
-  const widgetObj: WidgetObject = {
+  useEffect(() => {
+    setS3ImageUrl(logoImage);
+  }, [logoImage]);
+
+  const widgetObj: OrgObject = {
     name: displayName,
     host: hostURL,
     widget: {
@@ -100,6 +80,8 @@ export function WidgetFooter({ reset }: FooterProps) {
 
   if (callbackURL) widgetObj.callback_url = callbackURL;
   if (redirectURL) widgetObj.redirect_url = redirectURL;
+  if (tncURL) widgetObj.tnc_url = tncURL;
+  if (ppURL) widgetObj.pp_url = ppURL;
 
   const destructiveToast = () => {
     toast({
@@ -142,36 +124,57 @@ export function WidgetFooter({ reset }: FooterProps) {
 
   async function uploadImageToS3() {
     setIsLoading(true);
+    // Check filename extension
+    try {
+      if (logo) {
+        const splitName = logo?.name.split('.');
+        const fileExtension = splitName?.slice(-1);
+        const contentType =
+          fileExtension[0] === 'svg' ? 'image/svg+xml' : 'image/*';
 
-    // Fetch Upload url
-    const response = await fetch(
-      `/api/preSignedUrl?fileName=${logo?.name}`
-    ).catch(err => console.log(err));
-    const data = await response?.json();
-    const { url } = data as { url: string };
+        // Fetch Upload url
+        const response = await fetch(
+          `/api/preSignedUrl?fileName=${logo?.name}`
+        ).catch(err => console.log(err));
+        const data = await response?.json();
+        const { url } = data as { url: string };
 
-    // PUT file to s3 bucket
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      body: logo
-    }).catch(err => {
-      setIsLoading(false);
-      destructiveToast();
-      console.log(err);
-    });
+        // PUT file to s3 bucket
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': contentType
+          },
+          body: logo
+        }).catch(err => {
+          setIsLoading(false);
+          destructiveToast();
+          console.log(err);
+        });
 
-    if (res?.status === 200) {
-      const imageUrl = url.split('?')[0];
-      console.log({ imageUrl });
-      widgetObj.widget.logo_url = imageUrl;
-      setS3ImageUrl(imageUrl);
-      setPrevLogo(logo);
-    }
+        if (res?.status === 200) {
+          const imageUrl = url.split('?')[0];
+          console.log({ imageUrl });
+          widgetObj.widget.logo_url = imageUrl;
+          setS3ImageUrl(imageUrl);
+          setPrevLogo(logo);
+        }
 
-    if (res?.status === 500 || res?.status === 404) {
+        if (res?.status === 500 || res?.status === 404) {
+          setIsLoading(false);
+          destructiveToast();
+        }
+      }
+
+      // if (!logo) {
+      //   setIsLoading(false);
+      //   toast({
+      //     variant: 'destructive',
+      //     title: 'Logo not found!',
+      //     description: 'Please select a logo file to upload'
+      //   });
+      // }
+    } catch (error) {
       setIsLoading(false);
       destructiveToast();
     }
@@ -184,6 +187,7 @@ export function WidgetFooter({ reset }: FooterProps) {
       await uploadImageToS3();
     }
     await putObject();
+    if (token) await updateStoreWithFetch(token, ORG_ID);
   };
 
   const checkLogoEquality = (

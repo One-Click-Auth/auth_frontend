@@ -15,7 +15,9 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
   const greetingsRef = useRef<HTMLInputElement>(null);
 
   const {
+    displayName,
     setDisplayName,
+    greeting,
     setGreeting,
     button2Status,
     setButton2Status,
@@ -92,6 +94,7 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
       <Input
         ref={displayNameRef}
         className="h-11 shadow-none"
+        value={displayName}
         onChange={e => setDisplayName(e.target.value)}
         type="text"
         placeholder="Change Display Name"
@@ -103,6 +106,7 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
         </span>
         <Input
           ref={greetingsRef}
+          value={greeting}
           onChange={e => setGreeting(e.target.value)}
           className="text-lg text-center py-14 shadow-none"
           type="text"

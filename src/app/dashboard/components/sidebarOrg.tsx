@@ -112,7 +112,7 @@ export const SidebarOrg = () => {
               {open ? <span>Dashboard</span> : ''}
             </Link>
             <Link
-              href={'/dashboard/settings/method'}
+              href={'/dashboard/apple/settings/method'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
@@ -133,7 +133,7 @@ export const SidebarOrg = () => {
             </Link>
             <div className={`${openSettings ? '' : 'h-0 overflow-hidden'} `}>
               <Link
-                href={'/dashboard/settings/method'}
+                href={'/dashboard/apple/settings/method'}
                 className={`hover:bg-white hover:bg-opacity-40 ${
                   open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
                 } mb-4 rounded-md flex items-center space-x-2`}
@@ -144,7 +144,7 @@ export const SidebarOrg = () => {
                 {open ? <span>Method</span> : ''}
               </Link>
               <Link
-                href={'/dashboard/settings/security'}
+                href={'/dashboard/apple/settings/security'}
                 className={`hover:bg-white hover:bg-opacity-40 ${
                   open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
                 } mb-4 rounded-md flex items-center space-x-2`}
@@ -155,7 +155,7 @@ export const SidebarOrg = () => {
                 {open ? <span>Security</span> : ''}
               </Link>
               <Link
-                href={'/dashboard/settings/services'}
+                href={'/dashboard/apple/settings/services'}
                 className={`hover:bg-white hover:bg-opacity-40 ${
                   open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
                 } mb-4 rounded-md flex items-center space-x-2`}
@@ -168,7 +168,7 @@ export const SidebarOrg = () => {
             </div>
 
             <Link
-              href={'/dashboard/widget'}
+              href={'/dashboard/apple/widget'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
@@ -179,7 +179,7 @@ export const SidebarOrg = () => {
               {open ? <span>Widget Settings</span> : ''}
             </Link>
             <Link
-              href="/dashboard/manage-keys"
+              href="/dashboard/apple/manage-keys"
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
