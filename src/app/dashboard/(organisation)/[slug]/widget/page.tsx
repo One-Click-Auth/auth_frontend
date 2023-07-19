@@ -14,17 +14,19 @@ import { updateStoreWithFetch, useWidgetStore } from './widgetStore';
 import { WidgetBrandingRef } from './components/widget-branding';
 import { WIDGET_TABS as TABS } from '@/constants';
 import { useAuth } from '@/contexts/AuthContext';
+import { useParams } from 'next/navigation';
 
-const ORG_ID =
-  '73bbc4bf458a4f66acab0a8cfefa47d13aa33402120d11ee88069dc8f7663e88';
+// const ORG_ID =
+//   '73bbc4bf458a4f66acab0a8cfefa47d13aa33402120d11ee88069dc8f7663e88';
 
 const WidgetSettings = () => {
   const {token} = useAuth();
   const brandingRef: RefObject<WidgetBrandingRef> = useRef(null);
   const [tab, setTab] = useState(TABS.branding);
+  const {slug} = useParams()
   
   useEffect(() => {
-    if (token) updateStoreWithFetch(token, ORG_ID)
+    if (token) updateStoreWithFetch(token, slug)
   },[])
 
   const {

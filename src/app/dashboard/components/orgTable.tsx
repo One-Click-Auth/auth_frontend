@@ -31,8 +31,8 @@ export const OrgTable = () => {
 
   const handleManageOrg = (id: string) => {
     setManageOrg(id);
-    setManageOrgData(data.find(org => org.org_id === id) || {});
-    router.push('/dashboard/apple');
+    setManageOrgData(data.find(org => org?.org_id === id));
+    router.push(`/dashboard/${id}`);
   };
 
   console.log(manageOrg);
@@ -107,7 +107,7 @@ export const OrgTable = () => {
               <TableCell className="py-[1.2rem] mr-2">
                 <Button
                   className="px-10 py-2 bg-[#4338CA] text-white rounded-sm hover:bg-black hover:text-white"
-                  onClick={() => handleManageOrg(org.org_id)}
+                  onClick={() => router.push(`/dashboard/${org.org_id}`)}
                 >
                   Manage
                 </Button>

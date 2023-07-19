@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-
 import {
   DashboardSVG,
   ManageApiSVG,
@@ -21,20 +20,37 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeftRightIcon, ChevronsUpDown } from 'lucide-react';
-// import useOrgData from '../orgDataStore';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useParams } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import useOrgData, { Organization } from '../orgDataStore';
 
 export const SidebarOrg = () => {
   const [open, setOpen] = useState(true);
   const [isSmall, setIsSmall] = useState(1024);
   const [openSettings, setOpenSettings] = useState(false);
-  // const orgData = useOrgData(state=>state.manageOrgData)
-  // const data = useOrgData(state=>state.data)
+  const { slug } = useParams();
+  const { setManageOrgData } = useOrgData();
+
+  const { token } = useAuth();
+
+  // Update Org data
+  const { data } = useQuery({
+    queryKey: ['orgData'],
+    queryFn: () =>
+      fetch(`https://api.trustauthx.com/org/${slug}`, {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }).then(res => res.json()),
+    onSuccess: (orgData: Organization) => setManageOrgData(orgData)
+  });
 
   useEffect(() => {
     if (isSmall < 1024) {
       setOpen(false);
-      // console.log(isSmall);
     } else {
       setOpen(true);
     }
@@ -85,16 +101,27 @@ export const SidebarOrg = () => {
       )}
 
       <div className=" mt-[50px] sm:sticky sm:top-8 sm:mt-1 w-full overflow-y-auto  overscroll-none flex flex-col items-center max-h-[95vh] pb-4 ">
+        {/* <Avatar className="mx-auto py-2 h-[6.25rem]">
+          <AvatarImage
+            width={open ? 60 : 40}
+            src={FlitchcoinSVG}
+            alt={`${currentOrg?.name ?? 'Organisation'} logo`}
+          />
+          <AvatarFallback>{currentOrg?.name}</AvatarFallback>
+        </Avatar> */}
         <Image
-          className="mx-auto py-2 h-[6.25rem]"
-          src={FlitchcoinSVG}
+          className="mx-auto py-2"
+          src={data?.widget.logo_url ?? FlitchcoinSVG}
           width={open ? 60 : 40}
+          height={open ? 60 : 40}
           alt="Logo preview"
         />
-        <h3 className=" text-2xl text-bold mb-6">{open ? 'Flitchcoin' : ''}</h3>
+        <h3 className=" text-2xl text-bold mb-6">
+          {open ? data?.name ?? 'Flitchcoin' : ''}
+        </h3>
         <div className={`main-menu flex flex-col w-full`}>
           <h4 className="text-[0.75rem] opacity-50 ml-8 pl-8">
-            {open ? 'Flitchcoin' : ''}
+            {open ? data?.name ?? 'Flitchcoin' : ''}
           </h4>
           <div
             className={`mt-4 flex flex-col w-full ${
@@ -102,7 +129,7 @@ export const SidebarOrg = () => {
             }`}
           >
             <Link
-              href={'/dashboard/apple'}
+              href={`/dashboard/${slug}`}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
@@ -113,7 +140,7 @@ export const SidebarOrg = () => {
               {open ? <span>Dashboard</span> : ''}
             </Link>
             <Link
-              href={'/dashboard/apple/settings/method'}
+              href={`/dashboard/${slug}/settings/method`}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
@@ -134,7 +161,7 @@ export const SidebarOrg = () => {
             </Link>
             <div className={`${openSettings ? '' : 'h-0 overflow-hidden'} `}>
               <Link
-                href={'/dashboard/apple/settings/method'}
+                href={`/dashboard/${slug}/settings/method`}
                 className={`hover:bg-white hover:bg-opacity-40 ${
                   open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
                 } mb-4 rounded-md flex items-center space-x-2`}
@@ -145,7 +172,7 @@ export const SidebarOrg = () => {
                 {open ? <span>Method</span> : ''}
               </Link>
               <Link
-                href={'/dashboard/apple/settings/security'}
+                href={`/dashboard/${slug}/settings/security`}
                 className={`hover:bg-white hover:bg-opacity-40 ${
                   open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
                 } mb-4 rounded-md flex items-center space-x-2`}
@@ -156,7 +183,7 @@ export const SidebarOrg = () => {
                 {open ? <span>Security</span> : ''}
               </Link>
               <Link
-                href={'/dashboard/apple/settings/services'}
+                href={`/dashboard/${slug}/settings/services`}
                 className={`hover:bg-white hover:bg-opacity-40 ${
                   open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
                 } mb-4 rounded-md flex items-center space-x-2`}
@@ -169,7 +196,7 @@ export const SidebarOrg = () => {
             </div>
 
             <Link
-              href={'/dashboard/apple/widget'}
+              href={`/dashboard/${slug}/widget`}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
@@ -180,7 +207,7 @@ export const SidebarOrg = () => {
               {open ? <span>Widget Settings</span> : ''}
             </Link>
             <Link
-              href="/dashboard/apple/manage-keys"
+              href={`/dashboard/${slug}/manage-keys`}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}

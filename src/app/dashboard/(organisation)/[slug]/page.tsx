@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Session, getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { OrgObject } from './widget/widgetStore';
+import { notFound } from 'next/navigation';
 
 type ErrorObject = {
   detail: string;
@@ -68,7 +69,7 @@ export default async function Page({ params: { slug } }: ParamsProp) {
     : { success: res.ok, data: (await res.json()) as ErrorObject };
 
   if (!apiResponse.success) {
-    return '404! Organisation Not Found!';
+    notFound();
   }
 
   if (apiResponse.success) {
