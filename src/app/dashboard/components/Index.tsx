@@ -1,16 +1,13 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import { Minus, Plus, PlusIcon } from 'lucide-react';
-import { DatabaseSvg } from '../../../assets/Svg/Account/Account';
 import { Button } from '../../../components/ui/Button';
 import { useRouter } from 'next/navigation';
 import OrgList from './OrgList';
 import { useAuth } from '@/contexts/AuthContext';
-import useOrgdata, { Organization } from '../orgDataStore';
+import useOrgdata from '../orgDataStore';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
 import Image from 'next/image';
-import { DropdownMenu } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/Input';
 
 function AccountIndex() {
   const [hasOrg, setHasOrg] = useState(true);

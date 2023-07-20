@@ -26,6 +26,7 @@ import { useQuery } from '@tanstack/react-query';
 import useOrgData, { Organization } from '../orgDataStore';
 import { Skeleton } from '@/components/ui/Skeleton';
 
+
 export const SidebarOrg = () => {
   const [open, setOpen] = useState(true);
   const [isSmall, setIsSmall] = useState(1024);
