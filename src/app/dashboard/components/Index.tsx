@@ -6,7 +6,7 @@ import { Button } from '../../../components/ui/Button';
 import { useRouter } from 'next/navigation';
 import OrgList from './OrgList';
 import { useAuth } from '@/contexts/AuthContext';
-import useOrgdata from '../orgDataStore';
+import useOrgdata, { Organization } from '../orgDataStore';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
 import Image from 'next/image';
 import { DropdownMenu } from '@/components/ui/dropdown-menu';
@@ -27,8 +27,9 @@ function AccountIndex() {
       }
     })
       .then(response => response.json())
-      .then(data => {
-        if (data.detail) {
+      .then(jsonData => {
+        const data = jsonData as Organization[];
+        if (!data) {
           setHasOrg(false);
         } else {
           addData(data);
@@ -67,7 +68,8 @@ function AccountIndex() {
       .then(response => {
         return response.json();
       })
-      .then(data => {
+      .then(resData => {
+        const data = resData as {url: string};
         console.log('data', data);
         router.push(data.url);
       })
@@ -78,7 +80,7 @@ function AccountIndex() {
   const handleNavigation = () => {
     // router.push('/dashboard/add-organization');
     setPaymentPage(true);
-    if (triggerRef.current !== null) triggerRef.current.click();
+    if (triggerRef.current !== null) (triggerRef.current as HTMLButtonElement).click();
   };
 
   return (

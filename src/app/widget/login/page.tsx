@@ -7,6 +7,12 @@ import { Icons } from '@/components/icons';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { Organization } from '@/app/dashboard/orgDataStore';
+
+type OrganizationAuth = {
+  org_token: string;
+  data: Organization;
+};
 
 const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,7 +39,7 @@ const Login = () => {
         }
       );
       console.log(orgData);
-      const OrgDataRes = await orgData.json();
+      const OrgDataRes = (await orgData.json()) as OrganizationAuth;
       console.log('OrgDataRes ', OrgDataRes);
       setWidget(OrgDataRes?.data?.widget);
     } catch (err) {

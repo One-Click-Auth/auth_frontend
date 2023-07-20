@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as yup from 'yup';
-import { useDebounce } from '@/helper/hooks';
-import { useRouter } from 'next/navigation';
 import { FormButton } from './FormButton';
 import { LinkText } from './LinkText';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { checkUser } from '@/helper/api';
-import { Button } from '../ui/Button';
-import { Icons } from '../icons';
-import { signIn } from 'next-auth/react';
+import { UserResponse } from '@/types';
 
 type EmailSubmitType = {
   handleEmailSubmit: (data: { username: string }) => void;
@@ -24,14 +20,14 @@ export const EmailComponent = ({
   const asyncEmailValidation = async (email: string) => {
     try {
       const response = await checkUser({ emailid: email });
-      const { detail } = response;
+      const { detail, is_pool, fa2 } = response as UserResponse;
       if (!detail) {
-        if (response.is_pool) {
+        if (is_pool) {
           setValue('type', 'pool');
         } else {
           setValue('type', 'participant');
         }
-        setFa2(response.fa2 ?? false);
+        setFa2(fa2 ?? false);
         return true;
       } else {
         console.log('async email validation failed');
@@ -53,8 +49,6 @@ export const EmailComponent = ({
       type: yup.string().nullable().default('')
     })
     .required();
-
-  // useDebounce(() => verifyEmail(), [email], 300);
 
   const {
     register,

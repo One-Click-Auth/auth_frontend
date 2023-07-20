@@ -10,6 +10,7 @@ import { LinkText } from '@/components/authForm/LinkText';
 import { LuXCircle } from 'react-icons/lu';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import LayoutBanner from '@/components/authForm/LayoutBanner';
+import { ApiResponse } from '../../../types';
 
 const AlertMessage = ({
   message,
@@ -77,14 +78,15 @@ const NewPassword: React.FC = () => {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.is_ok == true && data.status === 200) {
+        const resData = data as ApiResponse;
+        if (resData.is_ok == true && resData.status === 200) {
           // console.log(data.msg);
-          setAdd(data.msg);
+          setAdd(resData.msg);
           console.log(add);
           handleModal();
         }
-        if (data.detail) {
-          setAlertMessage(data.detail);
+        if (resData.detail) {
+          setAlertMessage(resData.detail);
           setAlert(true);
           console.log(data);
         }

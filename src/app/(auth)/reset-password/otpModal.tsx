@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import OtpInput from 'react-otp-input';
 import { useRouter } from 'next/navigation';
+import { ApiResponse } from '@/types';
 interface ModalProps {
   handleForm: (e: React.MouseEvent<HTMLSpanElement>) => void;
   add: string;
@@ -34,12 +35,13 @@ const Modal: React.FC<ModalProps> = ({ handleForm, add }) => {
     })
       .then(response => response.json())
       .then(data => {
-        if (data.status === 200 && data.is_ok === true) {
+        const resData = data as ApiResponse;
+        if (resData.status === 200 && resData.is_ok === true) {
           router.push('/');
         }
-        if (data.detail) {
+        if (resData.detail) {
           setShow(true);
-          console.log(data.detail);
+          console.log(resData.detail);
         }
       })
       .catch(err => console.log(err));
