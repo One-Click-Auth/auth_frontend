@@ -8,18 +8,20 @@ import { Icons } from '@/components/icons';
 import { useAuth } from '@/contexts/AuthContext';
 import { OrgObject } from '../widgetStore';
 import '@total-typescript/ts-reset';
+import { useParams } from 'next/navigation';
 
 type FooterProps = {
   reset: () => void;
 };
 
-const ORG_ID =
-  '73bbc4bf458a4f66acab0a8cfefa47d13aa33402120d11ee88069dc8f7663e88';
+// const ORG_ID =
+//   '73bbc4bf458a4f66acab0a8cfefa47d13aa33402120d11ee88069dc8f7663e88';
 
 // TODO: Update server state on clicking save
 // Object to update server state / push
 // Logo string defaults to ""
 export function WidgetFooter({ reset }: FooterProps) {
+  const {slug: ORG_ID} = useParams()
   const { token } = useAuth();
   const { toast } = useToast();
   const {
