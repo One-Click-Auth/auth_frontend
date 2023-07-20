@@ -24,6 +24,7 @@ import { useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import useOrgData, { Organization } from '../orgDataStore';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 export const SidebarOrg = () => {
   const [open, setOpen] = useState(true);
@@ -35,7 +36,7 @@ export const SidebarOrg = () => {
   const { token } = useAuth();
 
   // Update Org data
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['orgData'],
     queryFn: () =>
       fetch(`https://api.trustauthx.com/org/${slug}`, {
@@ -109,19 +110,40 @@ export const SidebarOrg = () => {
           />
           <AvatarFallback>{currentOrg?.name}</AvatarFallback>
         </Avatar> */}
-        <Image
-          className="mx-auto py-2"
-          src={data?.widget.logo_url ?? FlitchcoinSVG}
-          width={open ? 60 : 40}
-          height={open ? 60 : 40}
-          alt="Logo preview"
-        />
+
+        {isLoading ? (
+          <Skeleton className="rounded-full w-[60px] h-[60px] mx-auto my-2" />
+        ) : (
+          <Image
+            className="mx-auto py-2"
+            src={data?.widget.logo_url ?? FlitchcoinSVG}
+            width={open ? 60 : 40}
+            height={open ? 60 : 40}
+            alt="Logo preview"
+          />
+        )}
         <h3 className=" text-2xl text-bold mb-6">
-          {open ? data?.name ?? 'Flitchcoin' : ''}
+          {open ? (
+            isLoading ? (
+              <Skeleton className="h-4 w-32" />
+            ) : (
+              data?.name
+            )
+          ) : (
+            ''
+          )}
         </h3>
         <div className={`main-menu flex flex-col w-full`}>
           <h4 className="text-[0.75rem] opacity-50 ml-8 pl-8">
-            {open ? data?.name ?? 'Flitchcoin' : ''}
+            {open ? (
+              isLoading ? (
+                <Skeleton className="h-2 w-24" />
+              ) : (
+                data?.name
+              )
+            ) : (
+              ''
+            )}
           </h4>
           <div
             className={`mt-4 flex flex-col w-full ${
