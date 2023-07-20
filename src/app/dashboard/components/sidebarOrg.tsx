@@ -36,7 +36,7 @@ export const SidebarOrg = () => {
   const { token } = useAuth();
 
   // Update Org data
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isSuccess } = useQuery({
     queryKey: ['orgData'],
     queryFn: () =>
       fetch(`https://api.trustauthx.com/org/${slug}`, {
@@ -48,6 +48,10 @@ export const SidebarOrg = () => {
       }).then(res => res.json()),
     onSuccess: (orgData: Organization) => setManageOrgData(orgData)
   });
+
+  if (isSuccess) {
+    console.log(data);
+  }
 
   useEffect(() => {
     if (isSmall < 1024) {
@@ -116,7 +120,7 @@ export const SidebarOrg = () => {
         ) : (
           <Image
             className="mx-auto py-2"
-            src={data?.widget.logo_url ?? FlitchcoinSVG}
+            src={data?.widget?.logo_url ?? FlitchcoinSVG}
             width={open ? 60 : 40}
             height={open ? 60 : 40}
             alt="Logo preview"
