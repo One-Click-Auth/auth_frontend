@@ -1,12 +1,10 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '../../../../components/ui/Input';
 import { Button } from '../../../../components/ui/Button';
-import { Minus, Plus, PlusIcon } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
-import Image from 'next/image';
 
 function AddOrganization() {
   const router = useRouter();
@@ -21,36 +19,63 @@ function AddOrganization() {
 
   const { token } = useAuth();
 
-  // const handleSubmit = (e: { preventDefault: () => void }) => {
-  //   e.preventDefault();
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
 
-  //   fetch('https://api.trustauthx.com/create_checkout_session', {
-  //     method: 'POST',
-  //     headers: {
-  //       accept: 'application/json',
-  //       Authorization: `Bearer ${token}`,
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       quantity: 0,
-  //       new_org: true
-  //     })
-  //   })
-  //     .then(response => {
-  //       if (response.status === 412) {
-  //         return setErr(true);
-  //       }
-  //       response.json();
-  //       router.push('/dashboard/keys');
-  //     })
-  //     .then(data => {
-  //       console.log('data', data);
-  //     })
-  //     .catch(error => {
-  //       console.log('error', error);
-  //       setErr(error);
-  //     });
-  // };
+    //   fetch('https://api.trustauthx.com/org', {
+    //     method: 'POST',
+    //     headers: {
+    //       accept: 'application/json',
+    //       Authorization: `Bearer ${token}`,
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({
+    //       name: orgName
+    //     })
+    //   })
+    //     .then(response => {
+    //       if (response.status === 412) {
+    //         return setErr(true);
+    //       }
+    //       response.json();
+    //       router.push('/dashboard/keys');
+    //     })
+    //     .then(data => {
+    //       console.log('data', data);
+    //     })
+    //     .catch(error => {
+    //       console.log('error', error);
+    //       setErr(error);
+    //     });
+    // };
+
+    fetch('https://api.trustauthx.com/create_checkout_session', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        quantity: 0,
+        new_org: true
+      })
+    })
+      .then(response => {
+        if (response.status === 412) {
+          return setErr(true);
+        }
+        response.json();
+        router.push('/dashboard/keys');
+      })
+      .then(data => {
+        console.log('data', data);
+      })
+      .catch(error => {
+        console.log('error', error);
+        setErr(error);
+      });
+  };
   // ______________________________________PRICING TABLE ____________________________________________
 
   // useEffect(() => {
@@ -72,73 +97,6 @@ function AddOrganization() {
 
   // ______________________________________PRICING TABLE ____________________________________________
 
-  const [orgCount, setOrgCount] = useState(1);
-  const triggerRef = useRef(null);
-
-  const handleIncrement = () => {
-    setOrgCount(e => e + 1);
-  };
-  const handleDecrement = () => {
-    setOrgCount(e => e - 1);
-  };
-
-  const checkForPayment = e => {
-    e.preventDefault();
-    fetch('https://api.trustauthx.com/org', {
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: orgName
-      })
-    })
-      .then(response => {
-        response.status === 412
-          ? triggerRef?.current?.click()
-          : router.push('/dashboard/keys');
-      })
-      .catch(error => {
-        console.log('error', error);
-        setErr(error);
-      });
-  };
-
-  const handlePayment = () => {
-    fetch('https://api.trustauthx.com/create_checkout_session', {
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        quantity: orgCount,
-        new_org: true
-      })
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        console.log('data', data);
-        router.push(data.url);
-      })
-      .catch(error => {
-        console.log('error', error);
-      });
-  };
-
-  useEffect(() => {
-    if (orgCount <= 0) {
-      setOrgCount(1);
-    }
-  }, [orgCount]);
-
-  // checkforpayment => 412 ? popUp => handlePayment : => orgCreate
-
   return (
     <div className="max-w-4xl h-[calc(100vh-100px)] m-auto text-start flex items-center justify-center flex-col">
       <div className="max-w-6xl m-auto border-[1.5px] border-slate-300 p-8 sm:p-12 rounded-md">
@@ -155,7 +113,7 @@ function AddOrganization() {
         </label>
         <form
           className="flex flex-col md:flex-row gap-2"
-          onSubmit={checkForPayment}
+          onSubmit={handleSubmit}
         >
           <Input
             type="text"
@@ -166,56 +124,13 @@ function AddOrganization() {
             required
           />
           <div>
-            <Button type="submit" variant={'authx'} onSubmit={checkForPayment}>
+            <Button type="submit" variant={'authx'}>
               <Plus />
               Create New Organization
             </Button>
           </div>
         </form>
       </div>
-
-      <Dialog>
-        <DialogTrigger asChild>
-          <button ref={triggerRef}></button>
-        </DialogTrigger>
-        <DialogContent>
-          <div className="min-h-[300px] flex items-center justify-center flex-col gap-y-5">
-            <div>
-              <Image
-                src="/logo.svg"
-                alt="AuthX Logo"
-                width="100"
-                height="100"
-                className="m-auto max-w-[80px] max-h-24 w-full"
-              />
-            </div>
-
-            <h3 className="text-xl font-semibold text-center ">
-              Choose the Number of Organization's
-            </h3>
-
-            <div className="px-4 text-center">
-              <p className=" border-2  border-black max-w-max m-auto px-8 py-2 rounded-sm mb-3 ">
-                {orgCount}
-              </p>
-              <Button variant="authx" onClick={handleIncrement}>
-                <PlusIcon />
-              </Button>
-              <Button
-                variant="authx"
-                className="ml-4"
-                onClick={handleDecrement}
-              >
-                <Minus />
-              </Button>
-            </div>
-
-            <Button variant="authx" className="w-full" onClick={handlePayment}>
-              Procced
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
