@@ -36,7 +36,7 @@ export const SidebarOrg = () => {
   const { token } = useAuth();
 
   // Update Org data
-  const { data, isLoading, isSuccess } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['orgData'],
     queryFn: () =>
       fetch(`https://api.trustauthx.com/org/${slug}`, {
@@ -48,10 +48,6 @@ export const SidebarOrg = () => {
       }).then(res => res.json()),
     onSuccess: (orgData: Organization) => setManageOrgData(orgData)
   });
-
-  if (isSuccess) {
-    console.log(data);
-  }
 
   useEffect(() => {
     if (isSmall < 1024) {
@@ -143,7 +139,7 @@ export const SidebarOrg = () => {
               isLoading ? (
                 <Skeleton className="h-2 w-24" />
               ) : (
-                data?.name
+                data?.name + "Menu"
               )
             ) : (
               ''

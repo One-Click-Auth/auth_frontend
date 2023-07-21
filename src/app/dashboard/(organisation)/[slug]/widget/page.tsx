@@ -15,25 +15,20 @@ import { WidgetBrandingRef } from './components/widget-branding';
 import { WIDGET_TABS as TABS } from '@/constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { useParams } from 'next/navigation';
-
-// const ORG_ID =
-//   '73bbc4bf458a4f66acab0a8cfefa47d13aa33402120d11ee88069dc8f7663e88';
+import { EmailSettings } from './components/email-settings';
 
 const WidgetSettings = () => {
-  const {token} = useAuth();
+  const { token } = useAuth();
   const brandingRef: RefObject<WidgetBrandingRef> = useRef(null);
   const [tab, setTab] = useState(TABS.branding);
-  const {slug} = useParams()
-  
+  const { slug } = useParams();
+
   useEffect(() => {
-    if (token) updateStoreWithFetch(token, slug)
-  },[])
+    if (token) updateStoreWithFetch(token, slug);
+  }, []);
 
   const {
-    displayName,
-    greeting,
-    setDisplayName,
-    setGreeting,
+    logoImage,
     logo,
     setLogoImage,
     resetBranding,
@@ -47,26 +42,16 @@ const WidgetSettings = () => {
     widgetColor
   } = useWidgetStore();
 
-  // Set values back to default when input is empty
-  // useEffect(() => {
-  //   if (displayName === '') {
-  //     setDisplayName('Flitchcoin');
-  //   }
-
-  //   if (greeting === '') {
-  //     setGreeting('Continue to Log in to Flitchcoin');
-  //   }
-  // }, [displayName, greeting]);
-
   // Set or reset logo
   useEffect(() => {
     if (logo) {
       setLogoImage(URL.createObjectURL(logo));
     }
 
-    // if (!logo) {
-    //   setLogoImage('/flitchcoin-logo.svg');
-    // }
+    // Maintain current logo Image when input is cleared
+    if (!logo) {
+      setLogoImage(logoImage);
+    }
   }, [logo]);
 
   const handleReset = () => {
@@ -119,6 +104,12 @@ const WidgetSettings = () => {
             >
               Dev Settings
             </TabsTrigger>
+            <TabsTrigger
+              value={TABS.email_settings}
+              className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+            >
+              Email Settings
+            </TabsTrigger>
           </TabsList>
           <LanguageSwitcher />
         </div>
@@ -163,6 +154,16 @@ const WidgetSettings = () => {
               </CardContent>
             </Card>
           </TabsContent>
+          <TabsContent
+            value={TABS.email_settings}
+            className="mt-0 space-y-4 col-span1 lg:col-span-4"
+          >
+            <Card className="shadow-none min-h-[36rem]">
+              <CardContent className="p-10">
+                <EmailSettings />
+              </CardContent>
+            </Card>
+          </TabsContent>
           {/* Widget Preview */}
           <Card
             style={{
@@ -183,7 +184,7 @@ const WidgetSettings = () => {
             </CardContent>
           </Card>
         </div>
-        <WidgetFooter reset={handleReset}/>
+        <WidgetFooter reset={handleReset} />
       </Tabs>
     </div>
   );

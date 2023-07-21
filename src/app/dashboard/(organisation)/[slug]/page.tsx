@@ -34,7 +34,7 @@ type AccessToken = {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-// export async function generateStaticParams() {
+// export async function generateStaticParams(context: any) {
 //   const {token: { access_token }} = await getServerSession(authOptions) as Session & AccessToken;
 
 //   const orgs = await fetch('https://api.trustauthx.com/org/all', {
@@ -68,6 +68,7 @@ export default async function Page({ params: { slug } }: ParamsProp) {
     ? { success: res.ok, data: (await res.json()) as OrgObject }
     : { success: res.ok, data: (await res.json()) as ErrorObject };
 
+  // If Response fails redirect to 404 page
   if (!apiResponse.success) {
     notFound();
   }

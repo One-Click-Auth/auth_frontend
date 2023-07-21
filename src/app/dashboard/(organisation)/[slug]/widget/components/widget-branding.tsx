@@ -45,11 +45,11 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
   );
 
   const handleShowButton = () => {
-    if (button2Status === false) {
+    if (!button2Status) {
       return setButton2Status(true);
     }
 
-    if (button3Status === false) {
+    if (!button3Status) {
       return setButton3Status(true);
     }
   };

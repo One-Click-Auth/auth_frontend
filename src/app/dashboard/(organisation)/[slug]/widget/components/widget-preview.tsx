@@ -36,6 +36,7 @@ export function WidgetPreview() {
   const socialValues = Object.values(social);
   const show = socialValues.includes(true);
 
+  // Method to determine if button color is solid or gradient
   const updateButtonColor = () => {
     if (!button2Status && !button3Status) {
       return color.hex;

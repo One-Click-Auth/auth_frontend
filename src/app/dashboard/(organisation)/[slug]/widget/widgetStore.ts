@@ -4,7 +4,8 @@ import '@total-typescript/ts-reset';
 
 type WidgetStore = BrandingSlice &
   CustomisationSlice &
-  ConsentAndDevSettingsSlice;
+  ConsentAndDevSettingsSlice &
+  EmailSettingSlice;
 
 export type Social = {
   [key: string]: boolean;
@@ -239,13 +240,46 @@ const createConsentAndDevSettingsSlice: StateCreator<
   resetDevSettings: () => set(initialDevSettingState)
 });
 
+interface EmailSettingSlice {
+  smtpProvider: string;
+  smtpPort: string;
+  userOrEmail: string;
+  password: string;
+  setSmtpProvider: (smtpProvider: string) => void;
+  setSmtpPort: (smtpPort: string) => void;
+  setUserOrEmail: (userOrEmail: string) => void;
+  setPassword: (password: string) => void;
+}
+
+let initialEmailSettingState = {
+  smtpProvider: '',
+  smtpPort: '',
+  userOrEmail: '',
+  password: ''
+};
+
+const createEmailSettingSlice: StateCreator<
+  WidgetStore,
+  [],
+  [],
+  EmailSettingSlice
+> = set => ({
+  ...initialEmailSettingState,
+  setSmtpProvider: (smtpProvider: string) => set({ smtpProvider }),
+  setSmtpPort: (smtpPort: string) => set({ smtpPort }),
+  setUserOrEmail: (userOrEmail: string) => set({ userOrEmail }),
+  setPassword: (password: string) => set({ password })
+});
+
 export const useWidgetStore = create<WidgetStore>()((...a) => ({
   ...createBrandingSlice(...a),
   ...createCustomisationSlice(...a),
-  ...createConsentAndDevSettingsSlice(...a)
+  ...createConsentAndDevSettingsSlice(...a),
+  ...createEmailSettingSlice(...a)
 }));
 
 // Fetch backend for organisation settings
+// TODO: Implement fetch with React Query
 export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
   try {
     const res = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
@@ -280,42 +314,53 @@ export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
       redirectURL: data.redirect_url ?? ''
     }));
 
-    // Set initial states
-    initialBrandingState = {
-      displayName: data.widget.name,
-      greeting: data.widget.greeting,
-      logoImage: data.widget.logo_url,
-      logo: undefined,
-      button2Status: false,
-      button3Status: false,
-      color: toColor('hex', data.widget.color0),
-      color2: toColor('hex', data.widget.color1),
-      color3: toColor('hex', data.widget.color2)
-    };
-
-    initialCustomisationState = {
-      inputBorderColor: toColor('hex', data.widget.input_border.color),
-      widgetBorderColor: toColor('hex', data.widget.widget_border.color),
-      widgetColor: toColor('hex', data.widget.color6),
-      widgetBgColor: toColor('hex', data.widget.color3),
-      inputBoxRadius: data.widget.input_border.radius,
-      widgetBoxRadius: data.widget.widget_border.radius,
-      widgetBorderWidth: data.widget.widget_border.width
-    };
-
-    initialConsentState = {
-      tncURL: data.tnc_url ?? '',
-      ppURL: data.pp_url ?? ''
-    };
-
-    initialDevSettingState = {
-      hostURL: data.host ?? '',
-      callbackURL: data.callback_url ?? '',
-      redirectURL: data.redirect_url ?? '',
-      social: socialDefaults ?? {}
-    };
+    setInitialState(data);
   } catch (error) {
     console.log(error);
     return { error };
   }
+};
+
+const setInitialState = (data: OrgObject) => {
+  // Set initial states
+  initialBrandingState = {
+    displayName: data.widget.name,
+    greeting: data.widget.greeting,
+    logoImage: data.widget.logo_url,
+    logo: undefined,
+    button2Status: false,
+    button3Status: false,
+    color: toColor('hex', data.widget.color0),
+    color2: toColor('hex', data.widget.color1),
+    color3: toColor('hex', data.widget.color2)
+  };
+
+  initialCustomisationState = {
+    inputBorderColor: toColor('hex', data.widget.input_border.color),
+    widgetBorderColor: toColor('hex', data.widget.widget_border.color),
+    widgetColor: toColor('hex', data.widget.color6),
+    widgetBgColor: toColor('hex', data.widget.color3),
+    inputBoxRadius: data.widget.input_border.radius,
+    widgetBoxRadius: data.widget.widget_border.radius,
+    widgetBorderWidth: data.widget.widget_border.width
+  };
+
+  initialConsentState = {
+    tncURL: data.tnc_url ?? '',
+    ppURL: data.pp_url ?? ''
+  };
+
+  initialDevSettingState = {
+    hostURL: data.host ?? '',
+    callbackURL: data.callback_url ?? '',
+    redirectURL: data.redirect_url ?? '',
+    social: socialDefaults ?? {}
+  };
+
+  initialEmailSettingState = {
+    smtpProvider: '',
+    smtpPort: '',
+    userOrEmail: '',
+    password: ''
+  };
 };
