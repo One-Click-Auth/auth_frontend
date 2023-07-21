@@ -139,7 +139,7 @@ export const SidebarOrg = () => {
               isLoading ? (
                 <Skeleton className="h-2 w-24" />
               ) : (
-                data?.name + "Menu"
+                data?.name + " Menu"
               )
             ) : (
               ''

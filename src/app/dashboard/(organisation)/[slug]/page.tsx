@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Session, getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { OrgObject } from './widget/widgetStore';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 
 type ErrorObject = {
   detail: string;
@@ -52,6 +52,7 @@ type AccessToken = {
 // }
 
 export default async function Page({ params: { slug } }: ParamsProp) {
+  // const router = useRouter();
   const {
     token: { access_token }
   } = (await getServerSession(authOptions)) as Session & AccessToken;
