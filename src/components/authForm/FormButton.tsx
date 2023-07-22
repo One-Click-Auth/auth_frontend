@@ -10,7 +10,7 @@ export const FormButton = ({
   marginTop?: number;
   padding?: number;
 }) => {
-  console.log('magin top i s', marginTop);
+  console.log('magin top is', marginTop);
   return (
     <button
       onClick={createRipple}

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Switch } from '@/components/ui/Switch';
 import { AiGenerate } from '@/assets/Svg/Account/Account';
 import { Button } from '@/components/ui/Button';
+import { SettingSwitch } from '../components/setting-switch';
 
 const OrganisationDashboard = () => {
   return (
@@ -59,7 +60,7 @@ const OrganisationDashboard = () => {
               authentication to provide a seamless and secure login experience
               for your users.
             </p>
-            <Switch />
+            <SettingSwitch />
           </CardContent>
         </Card>
         <Card className="shadow-none">

@@ -1,13 +1,15 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '../../../../components/ui/Input';
 import { Button } from '../../../../components/ui/Button';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 function AddOrganization() {
   const router = useRouter();
   const [orgName, setOrgName] = useState('');
+  const [err, setErr] = useState(false);
 
   const handleChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -15,34 +17,88 @@ function AddOrganization() {
     setOrgName(e.target.value);
   };
 
+  const { token } = useAuth();
+
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    router.push('/dashboard/keys');
-    // fetch('https://api.trustauthx.com/org', {
+
+    //   fetch('https://api.trustauthx.com/org', {
     //     method: 'POST',
     //     headers: {
-    //         'accept': 'application/json',
-    //         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaHlhbWNoNzI4QGdtYWlsLmNvbSIsImFsdCI6IjY3MGQ0ZTgzZDEwYjQzMzc4ZTRmMmVjZmVjODEwYzhjLTJlYTAyMTkwOTAyNjVlMDZiZjZlOWQ1MmUwYzU0MmNiIiwicG9vbCI6dHJ1ZSwic2NvcGUiOjEsImV4cCI6MTY4Nzg0MTk0MH0.q0S8wAeTx3GyWwyQ8R8wtGjNI6fCDz6rUkGXFPBVaW0',
-    //         'Content-Type': 'application/json'
+    //       accept: 'application/json',
+    //       Authorization: `Bearer ${token}`,
+    //       'Content-Type': 'application/json'
     //     },
     //     body: JSON.stringify({
-    //         "name": orgName
+    //       name: orgName
     //     })
-    // })
-    //     .then(response => response.json())
+    //   })
+    //     .then(response => {
+    //       if (response.status === 412) {
+    //         return setErr(true);
+    //       }
+    //       response.json();
+    //       router.push('/dashboard/keys');
+    //     })
     //     .then(data => {
-    //         console.log(data);
-    //
+    //       console.log('data', data);
     //     })
     //     .catch(error => {
-    //         console.error(error);
+    //       console.log('error', error);
+    //       setErr(error);
     //     });
+    // };
+
+    fetch('https://api.trustauthx.com/create_checkout_session', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        quantity: 0,
+        new_org: true
+      })
+    })
+      .then(response => {
+        if (response.status === 412) {
+          return setErr(true);
+        }
+        response.json();
+        router.push('/dashboard/keys');
+      })
+      .then(data => {
+        console.log('data', data);
+      })
+      .catch(error => {
+        console.log('error', error);
+        setErr(error);
+      });
   };
+  // ______________________________________PRICING TABLE ____________________________________________
+
+  // useEffect(() => {
+  //   const script = document.createElement('script');
+  //   script.src = 'https://js.stripe.com/v3/pricing-table.js';
+  //   script.async = true;
+  //   document.body.appendChild(script);
+
+  //   return () => {
+  //     document.body.removeChild(script);
+  //   };
+  // }, []);
+
+  // React.createElement('stripe-pricing-table', {
+  //   'pricing-table-id': 'prctbl_1NU7ryJBzkALt6nUsAwOQyrv',
+  //   'publishable-key':
+  //     'pk_live_51NKb26JBzkALt6nUUuWVM1q3UgNzlg4ERgvMmO2XWqQ8eR2xOrwtaL3M9eFRqcJAQYxgAhxbPJ1QoNvbQLvife9E00w02xIa33'
+  // })
+
+  // ______________________________________PRICING TABLE ____________________________________________
+
   return (
-    <div
-      // style={{ height: 'calc(100vh - 100px)' }}
-      className="max-w-4xl h-[calc(100vh-100px)] m-auto text-start flex items-center justify flex-col"
-    >
+    <div className="max-w-4xl h-[calc(100vh-100px)] m-auto text-start flex items-center justify-center flex-col">
       <div className="max-w-6xl m-auto border-[1.5px] border-slate-300 p-8 sm:p-12 rounded-md">
         <h3 className="text-xl sm:text-3xl font-bold sm:mb-8 text-[#0f172a]">
           Create A New Organization

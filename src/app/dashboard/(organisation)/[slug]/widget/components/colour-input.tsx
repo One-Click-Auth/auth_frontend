@@ -1,12 +1,11 @@
 'use client';
-import { Color, ColorPicker } from 'react-color-palette';
+import { Color, ColorPicker, toColor } from 'react-color-palette';
 import 'react-color-palette/lib/css/styles.css';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { Dispatch, SetStateAction } from 'react';
 import { Trash2 } from 'lucide-react';
 
 type ColorProps = {
@@ -25,7 +24,8 @@ export function ColourInput({
 }: ColorProps) {
   const handleButtonStatus = () => {
     if (setButtonStatus) {
-      setButtonStatus(false)
+      setButtonStatus(false);
+      setColor(toColor("hex", "#121212"));
     }
   }
   return (

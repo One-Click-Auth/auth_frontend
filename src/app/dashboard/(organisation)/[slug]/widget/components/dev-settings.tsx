@@ -1,6 +1,6 @@
 'use client';
 
-import { TermsInput } from './terms-input';
+import { WidgetInput } from './widget-input';
 import { Button } from '@/components/ui/Button';
 import {
   AppleIcon,
@@ -107,19 +107,19 @@ export function DevSettings() {
 
   return (
     <div className="flex flex-col space-y-10">
-      <TermsInput
+      <WidgetInput
         heading="**Add a Host URL"
         placeholder="http://app.trustauthx.com/"
         changeHandler={setHostURL}
         value={hostURL}
       />
-      <TermsInput
+      <WidgetInput
         heading="Add a callback URL"
         placeholder="http://api.trustauthx.com/github/callback"
         changeHandler={setCallbackURL}
         value={callbackURL}
       />
-      <TermsInput
+      <WidgetInput
         heading="**Add a Redirect URL"
         placeholder="http://api.trustauthx.com/login"
         changeHandler={setRedirectURL}

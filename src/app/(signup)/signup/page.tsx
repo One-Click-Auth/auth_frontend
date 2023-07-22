@@ -14,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useForm } from 'react-hook-form';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { ApiResponse } from '@/types';
 
 // TS types
 type RequestObjectType = {
@@ -108,7 +109,8 @@ export default function Signup() {
   // Execute fetch once requestObject is updated to ensure we use latest data
   useEffect(() => {
     async function fetchdata() {
-      const data = await handleSignUpRequest();
+      const res = await handleSignUpRequest();
+      const data = res as ApiResponse;
 
       if (data.msg) {
         setMessageToken(data.msg);
@@ -144,7 +146,8 @@ export default function Signup() {
       })
     })
       .then(response => response.json())
-      .then(data => {
+      .then(jsonData => {
+        const data = jsonData as ApiResponse;
         console.log(data);
         setLoading(false);
         if (data.status === 200 && data.is_ok === true) {
@@ -166,7 +169,8 @@ export default function Signup() {
   // Handle resend OTP email
   const resendEmail = async () => {
     setLoading(true);
-    const data = await handleSignUpRequest();
+    const response = await handleSignUpRequest();
+    const data = response as ApiResponse;
     if (data.msg) {
       setMessageToken(data.msg);
       setLoading(false);

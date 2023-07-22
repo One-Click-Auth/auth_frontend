@@ -10,57 +10,25 @@ import { WidgetFooter } from './components/widget-footer';
 import { WidgetCustom } from './components/widget-custom';
 import { Consent } from './components/consent';
 import { DevSettings } from './components/dev-settings';
-import { useWidgetStore } from './widgetStore';
+import { updateStoreWithFetch, useWidgetStore } from './widgetStore';
 import { WidgetBrandingRef } from './components/widget-branding';
+import { WIDGET_TABS as TABS } from '@/constants';
+import { useAuth } from '@/contexts/AuthContext';
+import { useParams } from 'next/navigation';
+import { EmailSettings } from './components/email-settings';
 
-const TABS = {
-  consent: 'consent',
-  branding: 'branding',
-  customization: 'customization',
-  dev_settings: 'dev_settings'
-};
-
-// TODO: Update server state on clicking save
-// Clear text input when pressing reset in branding
-// Object to update server state
-const widgetObj = {
-  widget: {
-    name: 'string',
-    logo_url: 'string',
-    font: 'string',
-    greeting: 'string',
-    input_border: {
-      radius: 0,
-      color: 'string'
-    },
-    widget_border: {
-      style: 0,
-      radius: 0,
-      color: 'string'
-    },
-    color0: 'string',
-    color1: 'string',
-    color2: 'string',
-    color3: 'string',
-    color4: 'string',
-    color5: 'string',
-    color6: 'string',
-    social: {
-      google: 'string'
-    },
-    redirect_url: 'string'
-  }
-};
-
-const OrganisationDashboard = () => {
+const WidgetSettings = () => {
+  const { token } = useAuth();
   const brandingRef: RefObject<WidgetBrandingRef> = useRef(null);
-  const [tabs, setTabs] = useState(TABS.branding);
+  const [tab, setTab] = useState(TABS.branding);
+  const { slug } = useParams();
+
+  useEffect(() => {
+    if (token) updateStoreWithFetch(token, slug);
+  }, []);
 
   const {
-    displayName,
-    greeting,
-    setDisplayName,
-    setGreeting,
+    logoImage,
     logo,
     setLogoImage,
     resetBranding,
@@ -74,30 +42,20 @@ const OrganisationDashboard = () => {
     widgetColor
   } = useWidgetStore();
 
-  // Set values back to default when input is empty
-  useEffect(() => {
-    if (displayName === '') {
-      setDisplayName('Flitchcoin');
-    }
-
-    if (greeting === '') {
-      setGreeting('Continue to Log in to Flitchcoin');
-    }
-  }, [displayName, greeting]);
-
   // Set or reset logo
   useEffect(() => {
     if (logo) {
       setLogoImage(URL.createObjectURL(logo));
     }
 
+    // Maintain current logo Image when input is cleared
     if (!logo) {
-      setLogoImage('/flitchcoin-logo.svg');
+      setLogoImage(logoImage);
     }
   }, [logo]);
 
   const handleReset = () => {
-    switch (tabs) {
+    switch (tab) {
       case TABS.branding:
         if (brandingRef.current) {
           brandingRef.current.clearDisplayNameAndGreetings();
@@ -113,14 +71,12 @@ const OrganisationDashboard = () => {
     }
   };
 
-  
-
   return (
     <div className="flex-1 space-y-4 p-10 pt-14 max-w-7xl mx-auto">
       <Tabs
         defaultValue={TABS.branding}
         className="space-y-4"
-        onValueChange={e => setTabs(e)}
+        onValueChange={e => setTab(e)}
       >
         <div className="flex flex-wrap gap-3 justify-between ">
           <TabsList className="bg-gray-100 flex-wrap h-full">
@@ -147,6 +103,12 @@ const OrganisationDashboard = () => {
               className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
             >
               Dev Settings
+            </TabsTrigger>
+            <TabsTrigger
+              value={TABS.email_settings}
+              className="px-8 text-disabled data-[state=active]:text-black data-[state=active]:border data-[state=active]:border-slate-400 data-[state=active]:bg-white"
+            >
+              Email Settings
             </TabsTrigger>
           </TabsList>
           <LanguageSwitcher />
@@ -192,6 +154,16 @@ const OrganisationDashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
+          <TabsContent
+            value={TABS.email_settings}
+            className="mt-0 space-y-4 col-span1 lg:col-span-4"
+          >
+            <Card className="shadow-none min-h-[36rem]">
+              <CardContent className="p-10">
+                <EmailSettings />
+              </CardContent>
+            </Card>
+          </TabsContent>
           {/* Widget Preview */}
           <Card
             style={{
@@ -212,10 +184,10 @@ const OrganisationDashboard = () => {
             </CardContent>
           </Card>
         </div>
-        <WidgetFooter reset={handleReset} tabs={tabs}/>
+        <WidgetFooter reset={handleReset} />
       </Tabs>
     </div>
   );
 };
 
-export default OrganisationDashboard;
+export default WidgetSettings;

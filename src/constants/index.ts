@@ -24,5 +24,11 @@ export const API_URL = {
   USER_INFO: `${API_DOMAIN}/user/info`,
   RANDOM_PASSWORD: `${API_DOMAIN}/api/random/str`
 };
-
+export const WIDGET_TABS = {
+  consent: 'consent',
+  branding: 'branding',
+  customization: 'customization',
+  dev_settings: 'dev_settings',
+  email_settings: 'email_settings'
+};
 export { LOGO, GOOGLEICON, APPLEICON, GITHUBICON, MICROSOFT };

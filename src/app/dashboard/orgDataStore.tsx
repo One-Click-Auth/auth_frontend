@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface Organization {
+export interface Organization {
   alt_id: string;
   org_id: string;
   act_cnt: number;
@@ -111,25 +111,21 @@ interface Border {
 interface OrgDataState {
   data: Organization[];
   manageOrg: string;
-  manageOrgData: object;
+  manageOrgData: Organization | undefined;
   addData: (data: Organization[]) => void;
   setManageOrg: (manageOrg: string) => void;
-  setManageOrgData: (manageOrg: object) => void;
+  setManageOrgData: (manageOrg: Organization | undefined) => void;
 }
 
 const useOrgData = create<OrgDataState>(set => ({
   data: [],
   manageOrg: '',
-  manageOrgData: {},
-  addData: data => {
-    set(state => ({ data: [...data] }));
+  manageOrgData: undefined,
+  addData: newData => {
+    set(state => ({ data: [...newData] }));
   },
-  setManageOrg: manageOrg => {
-    set(state => ({ manageOrg: manageOrg }));
-  },
-  setManageOrgData: manageOrgData => {
-    set(state => ({ manageOrgData: manageOrgData }));
-  }
+  setManageOrg: manageOrg => set({ manageOrg }),
+  setManageOrgData: manageOrgData => set({ manageOrgData })
 }));
 
 export default useOrgData;

@@ -5,20 +5,22 @@ type InputProps = {
   placeholder: string;
   changeHandler: (input: string) => void;
   value: string;
+  type?: 'url' | 'email' | 'password' | 'text' | 'number';
 };
 
-export function TermsInput({
+export function WidgetInput({
   heading,
   placeholder,
   changeHandler,
-  value
+  value,
+  type = 'url'
 }: InputProps) {
   return (
     <div>
       <span className="text-sm pl-2 text-gray-600">{heading}</span>
       <Input
-        className='h-11 shadow-none'
-        type="url"
+        className="h-11 shadow-none"
+        type={type}
         placeholder={placeholder}
         onChange={e => changeHandler(e.target.value)}
         value={value}
