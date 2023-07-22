@@ -1,12 +1,13 @@
 'use client';
 import * as React from 'react';
-import { DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
+  DropdownMenuItem
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
 import {

@@ -5,29 +5,12 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem
-} from '@/components/ui/command';
+import { Command, CommandGroup, CommandItem } from '@/components/ui/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-
-const frameworks = [
-  {
-    value: 'Id',
-    label: 'Id'
-  },
-  {
-    value: 'Name',
-    label: 'Name'
-  }
-];
 
 export function SearchBy() {
   const [open, setOpen] = React.useState(false);

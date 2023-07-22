@@ -11,7 +11,7 @@ import Image from 'next/image';
 function AddOrganization() {
   const router = useRouter();
   const [orgName, setOrgName] = useState('');
-  const [err, setErr] = useState(false);
+  // const [err, setErr] = useState(false);
 
   const handleChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -82,28 +82,28 @@ function AddOrganization() {
     setOrgCount(e => e - 1);
   };
 
-  const checkForPayment = e => {
-    e.preventDefault();
-    fetch('https://api.trustauthx.com/org', {
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: orgName
-      })
-    })
-      .then(response => {
-        response.status === 412
-          ? triggerRef?.current?.click()
-          : router.push('/dashboard/keys');
-      })
-      .catch(error => {
-        console.log('error', error);
-        setErr(error);
-      });
+  const checkForPayment = () => {
+    // e.preventDefault();
+    // fetch('https://api.trustauthx.com/org', {
+    //   method: 'POST',
+    //   headers: {
+    //     accept: 'application/json',
+    //     Authorization: `Bearer ${token}`,
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     name: orgName
+    //   })
+    // })
+    // .then(response => {
+    //   response.status === 412
+    //     ? triggerRef?.current?.click()
+    //     : router.push('/dashboard/keys');
+    // })
+    // .catch(error => {
+    //   console.log('error', error);
+    //   setErr(error);
+    // });
   };
 
   const handlePayment = () => {

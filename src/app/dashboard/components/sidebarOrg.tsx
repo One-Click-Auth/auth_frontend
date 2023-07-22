@@ -22,7 +22,6 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeftRightIcon, ChevronsUpDown } from 'lucide-react';
 // import useOrgData from '../orgDataStore';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 export const SidebarOrg = () => {
   const [open, setOpen] = useState(true);
