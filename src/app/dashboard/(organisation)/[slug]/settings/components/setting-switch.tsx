@@ -6,6 +6,8 @@ import { useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Organization } from '@/app/dashboard/orgDataStore';
 
+type PartialOrg = Partial<Organization>;
+
 export function SettingSwitch() {
   const { token } = useAuth();
   const { slug } = useParams();
@@ -22,7 +24,7 @@ export function SettingSwitch() {
           'Content-Type': 'application/json'
         }
       });
-      const data = (await res.json()) as Organization;
+      const data = (await res.json()) as PartialOrg;
       return data;
     }
   });
@@ -50,7 +52,7 @@ export function SettingSwitch() {
       // Prev state snapshot
       const prevState = queryClient.getQueryData(['settings']);
       // Optimistically Update
-      queryClient.setQueryData(['settings'], (oldData: any) => ({
+      queryClient.setQueryData<PartialOrg>(['settings'], (oldData) => ({
         ...oldData,
         ...updateState
       }));
