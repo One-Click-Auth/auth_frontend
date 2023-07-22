@@ -2,8 +2,9 @@
 import CryptoJS from 'crypto-js';
 import { QRCodeSVG } from 'qrcode.react';
 import OtpInput from 'react-otp-input';
-
+import { Checkbox } from '@/components/ui/checkbox';
 import axios from 'axios';
+
 import { Button } from '@/components/ui/Button';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
@@ -13,7 +14,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useOrgData, useUserData } from './widgetStore'; //import zustand store to store and update org data
 import widgetStyle from './widget.module.css';
-
+import convertToApproxTime from './approxTime';
 const Login = () => {
   //store function to set the org data in the store. It takes two arguments org token and org data.
   const setOrgData = useOrgData(state => state.setOrgData);
@@ -75,14 +76,12 @@ const Login = () => {
   useEffect(() => {
     fetchOrgDetails();
   }, []);
-
+  //
+  //
   //function to set generate QR code
   const generateQr = (mfa: string): void => {
-    console.log('QR generator ran');
-    console.log(mfa);
     const bytes = CryptoJS.AES.decrypt(mfa, 'asjdhkasjdh');
     const decoded = bytes.toString(CryptoJS.enc.Utf8);
-    console.log(decoded);
     setQr(decoded);
   };
 
@@ -91,17 +90,18 @@ const Login = () => {
     if (enableUserMfa) {
       //display the panel for activating MFA which will have QR code to enable the authentication and the 6 didit mfa code input field
       //construct the MFA panel with QR code and input field
+      setButtonAction('mfa-activation-signup');
       setShowMfaActivation(true);
     } else if (!enableUserMfa) {
       //email will be sent to the email id given by the user to verify the email address
+      setShowMsgPanel(true);
       setMessage('Verify your email address to continue');
+      return setShowMsg(true);
     }
   };
   //this fucntion is called when user is signing up and has to create a passeord and then go through further requests
   const handleNewPassword = async () => {
-    setMessage('');
     setErr(false);
-    setErrMsg('');
     setShowMsg(false);
     setLoading2(true);
     if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,20}$/.test(pass)) {
@@ -210,78 +210,135 @@ const Login = () => {
     setErr(false);
     setShowMsg(false);
     setLoading2(true);
-
     try {
-      const response = await axios.put(
-        `https://api.trustauthx.com/user/me/auth`,
+      // const response = await axios.put(
+
+      //   `https://api.trustauthx.com/user/me/auth`,
+      //   {
+      //     totp: otp,
+      //     switch_mfa: true
+      //   },
+      //   {
+      //     params: {
+      //       UserToken: currentUserToken
+      //     }
+      //   }
+      // );
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
         {
-          totp: otp,
-          switch_mfa: true
-        },
-        {
-          params: {
-            UserToken: currentUserToken
-          }
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            totp: otp,
+            switch_mfa: true
+          })
         }
       );
-      const data = response.data;
+      const data = await response.json();
+      setLoading2(false);
+      console.log(data);
       if (response.status === 200) {
         const { user_token } = data;
         setCurrentUserToken(user_token);
-
-        setLoading2(false);
+        //if the the mfa activation is coming from the login loop
         if (login) {
           //send the user data to the login post
-          const response = await axios.post(
-            `https://api.trustauthx.com/user/me/auth`,
-            {
-              totp: otp,
-              password: pass
-            },
-            {
-              params: {
-                UserToken: currentUserToken
-              }
-            }
-          );
-          console.log(response);
+          // const response = await axios.post(
+          //   `https://api.trustauthx.com/user/me/auth`,
+          //   {
+          //     totp: otp,
+          //     password: pass
+          //   },
+          //   {
+          //     params: {
+          //       UserToken: currentUserToken
+          //     }
+          //   }
+          // );
+          // console.log(response);
+          //rest of the logic
         } else {
-          setMessage('MFA Successfully Activated!');
-          setMessage('MFA Successfully Activated!');
+          setMessage('MFA Successfully Activated! Check your Email.');
           setShowMsgPanel(true);
-          setShowMsg(true);
-          setShowMsgPanel(true);
+          return setShowMsg(true);
         }
+      } else if (response.status === 402) {
+        setCurrentUserToken(data.user_token);
+        setErrMsg(data.msg);
+        return setErr(true);
+        //when maximum tries for otp has been reached by the user
+      } else if (response.status === 429) {
+        const timeRegex = /(\d+):(\d+):(\d+\.\d+)/;
+        const matches = data.detail?.match(timeRegex);
+        const time = convertToApproxTime(matches[0]);
+        setErrMsg(
+          `maximum tries reached! Try again after ${time || 'some time'}`
+        );
+        return setErr(true);
       }
     } catch (error) {
-      setLoading2(false);
-
       console.log(error);
+      setLoading2(false);
+      //errors which are not handled
+      setErrMsg(`Some error occured in request`);
+      return setErr(true);
     }
   };
 
   //function to handle submit mfa
   const handleMFA = async () => {
+    setErr(false);
+    setShowMsg(false);
+    setLoading2(true);
+    if (!/^\d{6}$/.test(otp)) {
+      setErrMsg('Please put a valid OTP');
+      setLoading2(false);
+      return setErr(false);
+    }
     try {
-      const response = await axios.post(
-        `https://api.trustauthx.com/user/me/auth`,
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
         {
-          totp: otp
-        },
-        {
-          params: {
-            UserToken: currentUserToken
-          }
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            totp: otp
+          })
         }
       );
       console.log(response);
-      const data = response.data;
+      console.log(otp);
+      const data = await response.json();
+      if (response.status === 203) {
+        setMessage('Email not verified! please check your email to verify');
+        generateQr(data.mfa_code);
+        setShowMsgPanel(true);
+        return setShowMsg(true);
+      } else if (response.status === 200) {
+        setCurrentUserToken(data.user_token);
+        return router.push(data.callback_uri);
+      } else if (response.status == 402) {
+        setCurrentUserToken(data.user_token);
+        setErrMsg(data.msg);
+        return setErr(true);
+      } else if (response.status === 429) {
+        const timeRegex = /(\d+):(\d+):(\d+\.\d+)/;
+        const matches = data.detail?.match(timeRegex);
+        const time = convertToApproxTime(matches[0]);
+        setErrMsg(
+          `maximum tries reached! Try again after ${time || 'some time'}`
+        );
+        return setErr(true);
+      }
       console.log(data);
     } catch (error) {
       console.log(error);
     }
-
-    return;
   };
 
   //to fetch organization detail before widget appears to style the widget based on the styles applied by the org
@@ -309,6 +366,9 @@ const Login = () => {
         setOrgData(org_token, data);
         //set loading to false and display the widget, styled according to the org data for which can be found in the data.widget
         setLoading1(false);
+        if (data.fa2 === true && data.strict_mfa === false) {
+          setShowEnableMfaLink(true);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -352,20 +412,17 @@ const Login = () => {
         setLoading2(false);
         return setErr(true);
       }
-      console.log(response.status);
       //seperating user token and user details from the response data json
       const { user_token, mfa_code, ...rest } = data;
       const userInfo = rest.public;
+
       setCurrentUserToken(user_token);
       //handling the response when the status code is 202, email is not verified that means signup
       //203 code will come only when strict mfa is true from org
       if (response.status === 202 || response.status === 203) {
         if (response.status === 203) {
-          console.log(mfa_code);
           generateQr(mfa_code);
         }
-
-        console.log(userInfo);
         //set user data to the zustand store
         setUserData(userInfo);
         //if the org has enabled passwordless so the user will have passwordless already enabled because this is a signup route
@@ -381,13 +438,12 @@ const Login = () => {
               if (userInfo.fa2 === true) {
                 //login user by putting in mfa
                 //show mfa popup and make a post request by sending the mfa otp
-                setOtp('');
+
                 setButtonAction('mfa-login');
                 setLoading2(false);
                 return setShowMfaPopup(true);
                 //if user has not taken any action or has not enabled fa2
               } else if (userInfo.fa2 === null || userInfo.fa2 === false) {
-                setOtp('');
                 setButtonAction('mfa-activation-signup');
                 setLoading2(false);
                 return setShowMfaActivation(true);
@@ -397,18 +453,50 @@ const Login = () => {
             } else if (!storeOrgData.strict_mfa) {
               //if the user has not enbaled mfa
               if (userInfo.fa2 === null || userInfo.fa2 === false) {
-                //display a text which will ask if the user wants to enable the mfa, clicking on it will set the enableUsermfa to true
-                //if the user clicks on the enable mfa then show the user the otp activation panel
-                //if user does not click on the enable mfa and proceeds to click on the go button, then ask
-                //user to verify the email
-                //the handleUserMfa function will handle later requests
-                setShowEnableMfaLink(true);
-                setButtonAction('verify_email');
+                if (enableUserMfa) {
+                  try {
+                    const res = await fetch(
+                      `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
+                      {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          switch_mfa: true
+                        })
+                      }
+                    );
+
+                    const resData = await res.json();
+                    if (res.status === 203) {
+                      setCurrentUserToken(resData.user_token);
+                      generateQr(resData.mfa_code);
+                      setShowEnableMfaLink(false);
+                      setButtonAction('mfa-activation-signup');
+                      setShowMfaActivation(true);
+                      setLoading2(false);
+                      return;
+                    }
+                  } catch (error) {
+                    setLoading2(false);
+
+                    return console.log(
+                      'some error occured in sending the request for  mfa code',
+                      error
+                    );
+                  }
+                } else if (!enableUserMfa) {
+                  setMessage('Please Check Your Email To Verify!');
+                  setShowMsgPanel(true);
+                  return setShowMsg(true);
+                }
               }
               //if the user has enabled mfa
               else if (userInfo.fa2 === true) {
                 //show mfa popup to send the mfa back to backend and verify
-                return handleMFA();
+                setButtonAction('mfa-login');
+                return setShowMfaPopup(true);
               }
             }
             //if the org has not enabled fa2
@@ -437,12 +525,13 @@ const Login = () => {
                   //if user does not click on the enable mfa and proceeds to click on the go button, then ask
                   //user to verify the email
                   //the handleUserMfa function will handle later requests
-                  setShowEnableMfaLink(true);
-                  setButtonAction('verify_email');
+
+                  setButtonAction('verify-email');
                 }
                 //if the user has enabled mfa
                 else if (userInfo.fa2 === true) {
                   //show mfa popup to send the mfa back to backend and verify
+
                   return handleMFA();
                 }
               }
@@ -489,7 +578,16 @@ const Login = () => {
     }
   };
 
-  //change the action of the button based on what the user is doing
+  // resend email
+  const sendEmailAgain = async () => {
+    // const response = await fetch(
+    //   `https://api.trustauthx.com/user/me/auth?usr=${email}&OrgToken=${storeOrg_token}`,
+    //   {
+    //     method: 'GET'
+    //   }
+    // );
+  };
+  //change the action of the button based on responses
   const handleGo = () => {
     switch (buttonAction) {
       case 'verify_email':
@@ -523,28 +621,41 @@ const Login = () => {
           <div className="border-t-transparent rounded-full border-solid animate-spin border-blue-400 border-8  h-20 w-20"></div>
         </div>
       ) : (
-        <div className="top-1/2 flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 md:w-[350px]  bg-white border-[1px] border-gray-300 rounded-xl shadow-2xl ">
+        <div className="top-1/2 flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] sm:w-[350px]  bg-white border-[1px] border-gray-300 rounded-xl shadow-2xl ">
           <div className="flex flex-col items-center p-[20px] mr-0 !important ">
             <div className="flex flex-col justify-center items-center ">
               <Image
                 width={60}
                 height={60}
                 src={
+                  storeOrgData.widget.logo_url ||
                   'https://flitchcoin.s3.eu-west-2.amazonaws.com/authxlogo.svg'
                 }
                 alt="AuthX logo"
               />
-              {showMsg ? <span className="text-blue-400">{message}</span> : ''}
 
               <div className="mt-1">
                 <span className="text-xl font-semibold">
                   {storeOrgData.widget.name}
                 </span>
               </div>
+              {showMsg ? (
+                <span
+                  className={`text-blue-400 text-center ${
+                    showMsgPanel ? 'my-20' : ''
+                  } `}
+                >
+                  {message}
+                </span>
+              ) : (
+                ''
+              )}
               {!showMsgPanel ? (
                 <div className="mt-4">
                   <span className="text-base text-4md text-slate-900">
-                    {showMfaActivation ? 'Continue to register MFA' : 'Login'}
+                    {showMfaActivation
+                      ? 'Continue to register MFA'
+                      : `Login to ${storeOrgData.widget.name || 'TrustAuthX'}`}
                   </span>
                 </div>
               ) : (
@@ -552,7 +663,14 @@ const Login = () => {
               )}
             </div>
             {showMsgPanel ? (
-              <div></div>
+              <div>
+                <span
+                  className="text-blue-400 hover:text-blue-600 cursor-pointer"
+                  onClick={sendEmailAgain}
+                >
+                  Didn't receive email? Try again.
+                </span>
+              </div>
             ) : (
               <div
                 className={`w-[260px] sm:w-[300px] mt-[30px] flex flex-col items-center`}
@@ -618,17 +736,30 @@ const Login = () => {
                   </div>
                 )}
 
-                {err ? <span className="text-red-500">{errMsg}</span> : ''}
-                {showEnableMfaLink ? (
-                  <span
-                    className="text-blue-400 text-md cursor-pointer hover:text-blue-600 text-center"
-                    onClick={() => setEnablUsereMfa(true)}
-                  >
-                    Do you want to enable MFA? Click here!
-                  </span>
+                {err ? (
+                  <span className="text-red-500 text-center">{errMsg}</span>
                 ) : (
                   ''
                 )}
+                {showEnableMfaLink ? (
+                  <div className="flex justify-start w-full">
+                    <div
+                      className="flex items-center space-x-2  bg-blue-300 mt-2  px-2 py-1 rounded-sm"
+                      onClick={() => setEnablUsereMfa(!enableUserMfa)}
+                    >
+                      <Checkbox id="enable-mfa" />
+                      <label
+                        htmlFor="enable-mfa"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        Enable MFA
+                      </label>
+                    </div>
+                  </div>
+                ) : (
+                  ''
+                )}
+
                 <div className="w-full mt-8">
                   <Button
                     className={`w-full h-12 text-white bg-black hover:bg-gray-800`}
