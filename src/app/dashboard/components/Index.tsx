@@ -1,13 +1,11 @@
-'use client';
-import React, { useState, useEffect, useRef } from 'react';
-import { Minus, Plus, PlusIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus } from 'lucide-react';
+import { DatabaseSvg } from '../../../assets/Svg/Account/Account';
 import { Button } from '../../../components/ui/Button';
 import { useRouter } from 'next/navigation';
 import OrgList from './OrgList';
 import { useAuth } from '@/contexts/AuthContext';
 import useOrgdata from '../orgDataStore';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
-import Image from 'next/image';
 
 function AccountIndex() {
   const [hasOrg, setHasOrg] = useState(true);
@@ -27,7 +25,9 @@ function AccountIndex() {
       .then(data => {
         if (data.detail) {
           setHasOrg(false);
+          console.log(data);
         } else {
+          // console.log(data)
           addData(data);
           setHasOrg(true);
         }
@@ -51,21 +51,19 @@ function AccountIndex() {
           className="max-w-xl m-auto text-center flex items-center justify-center flex-col"
         >
           <div>
-            <div>
-              <Image
-                src="/dashboard-icons/no-org.svg"
-                alt="No Org"
-                width="100"
-                height="100"
-                className="m-auto max-w-[300px] w-full"
-              />
+            <div className="grid grid-cols-2 max-w-[280px] m-auto ">
+              <DatabaseSvg />
+              <DatabaseSvg />
+              <DatabaseSvg />
+              <DatabaseSvg />
             </div>
             <p className="text-center my-5">
               Represent the teams, business customers, and partner companies
               that access your applications as organizations in AuthX.
             </p>
             <div className="hover:text-white">
-              <Button onClick={handleNavigation} variant="authx">
+              <Button onClick={handleNavigation} variant={'authx'}>
+                {' '}
                 <Plus />
                 Create New Organization
               </Button>
