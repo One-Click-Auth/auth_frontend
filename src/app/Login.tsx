@@ -12,6 +12,8 @@ import Link from 'next/link';
 import LoadingModal from '@/components/authForm/LoadingModal';
 import { Button } from '@/components/ui/Button';
 import { Icons } from '@/components/icons';
+import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 type FormValues = {
   username?: string;
@@ -27,23 +29,37 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
   // const [value, setValue] = useState('');
   // const searchParams = useSearchParams();
   const [show, setShow] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     const token = searchParams['tnx'];
     if (token)
-      signIn('credentials', { githubToken: token, callbackUrl: '/dashboard' });
+      signIn('credentials', {
+        githubToken: token,
+        callbackUrl: '/dashboard'
+      });
   }, [searchParams]);
-  useEffect(() => {
-    console.log(fa2);
-  }, [fa2]);
 
   const initiateLogin = async (data: Partial<FormValues>) => {
-    await signIn('credentials', {
+    const signinRes = await signIn('credentials', {
       ...values,
       ...data,
+      redirect: false,
       callbackUrl: '/dashboard'
     });
+    if (signinRes?.error) {
+      setLoading(false);
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Error!',
+        description: 'Email, password mismatch. Please try again!'
+      });
+    }
+    if (signinRes?.url) {
+      router.push('/dashboard');
+    }
   };
 
   // on submit handler
@@ -56,11 +72,11 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
     }
   };
 
-  const handlePasswordSubmit = (data: { password: string }) => {
+  const handlePasswordSubmit = ({ password }: { password: string }) => {
     setLoading(true);
-    setValues(prev => ({ ...prev, password: data.password }));
+    setValues(prev => ({ ...prev, password }));
     setTimeout(() => {
-      onSubmitHandler(data.password);
+      onSubmitHandler(password);
     }, 100);
   };
 
@@ -99,7 +115,7 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
                     Or continue with
                   </span>
                 </div>
-                </div>
+              </div>
               {!values.username ? (
                 <EmailComponent
                   handleEmailSubmit={handleEmailSubmit}
@@ -119,10 +135,7 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
         src={LOGIN_GRAPHIC}
       />
 
-      <Modal
-        show={show}
-        onHide={() => setShow(false)}
-      >
+      <Modal show={show} onHide={() => setShow(false)}>
         <div className="bg-white rounded-3xl p-16 mt-[20vh] w-max self-center">
           <div>
             <div className="">
@@ -146,31 +159,31 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
       <LoadingModal show={loading} />
     </div>
   );
-
 };
 
 function GithubLogin() {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const initiateLogin = () => {
-    setLoading(true)
+    setLoading(true);
     // axios.get(`${API_DOMAIN}/signup/github`, {
     //   headers: {
     //     "X-APP-URI": window.location.origin
     //   }
     // })
-  }
-  return <form method='get' action={`${API_DOMAIN}/signup/github`}>
-    <Button
-      onClick={initiateLogin}
-      className="w-full h-12 mb-6 text-md border-slate-500 hover:bg-black hover:text-white"
-      variant="outline"
-      type='submit'
-    >
-      <Icons.gitHub className="mr-2 h-4 w-4" />
-      Login with Github
-    </Button>
-    <LoadingModal show={loading} />
-
-  </form>
+  };
+  return (
+    <form method="get" action={`${API_DOMAIN}/signup/github`}>
+      <Button
+        onClick={initiateLogin}
+        className="w-full h-12 mb-6 text-md border-slate-500 hover:bg-black hover:text-white"
+        variant="outline"
+        type="submit"
+      >
+        <Icons.gitHub className="mr-2 h-4 w-4" />
+        Login with Github
+      </Button>
+      <LoadingModal show={loading} />
+    </form>
+  );
 }
 export default Login;
