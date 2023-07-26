@@ -5,7 +5,8 @@ const inter = Inter({ subsets: ['latin'] });
 import './globals.css';
 import { Metadata } from 'next';
 import { Toaster } from '@/components/ui/toaster';
-import { ReactQueryProvider } from '@/contexts/ReactQueryProvider';
+import { ReactQueryProvider } from '@/Providers/react-query-provider';
+import { CrispProvider } from '@/Providers/crisp-provider';
 
 export const metadata: Metadata = {
   title: 'TrustAuthX',
@@ -27,6 +28,7 @@ export default async function RootLayout({
       <head />
       <body>
         <ReactQueryProvider>
+          <CrispProvider />
           <Providers>{children}</Providers>
           <Toaster />
         </ReactQueryProvider>

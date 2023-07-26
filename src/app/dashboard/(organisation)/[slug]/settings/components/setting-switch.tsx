@@ -3,7 +3,7 @@
 import { Switch } from '@/components/ui/Switch';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/Providers/AuthContext';
 import { Organization } from '@/app/dashboard/orgDataStore';
 import { useToast } from '@/components/ui/use-toast';
 import { getOrgData } from '@/lib/utils';
@@ -73,16 +73,13 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
       queryClient.setQueryData(['orgData', slug], context?.prevState);
     },
     onSuccess: () => {
-      const stateData = queryClient.getQueryData<PartialOrg>([
-        'orgData',
-        slug
-      ]);
-      console.log(stateData);
+      const stateData = queryClient.getQueryData<PartialOrg>(['orgData', slug]);
       toast({
         title: 'Updated!',
         description: `${name} setting ${
           stateData?.[id] === true ? 'enabled' : 'disabled'
-        }`
+        }`,
+        variant: 'success'
       });
     },
     onSettled: () => {

@@ -1,7 +1,7 @@
 import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
-import { AuthContext } from '@/contexts/AuthContext';
+import { AuthContext } from '@/Providers/AuthContext';
 
 const ServerProtectedPage = async ({
   children

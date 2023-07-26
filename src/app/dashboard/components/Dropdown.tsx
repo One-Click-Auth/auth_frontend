@@ -20,7 +20,7 @@ import {
   SettingsSvg,
   TeamSvg
 } from '@/assets/Svg/Account/DropDown';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/Providers/AuthContext';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 

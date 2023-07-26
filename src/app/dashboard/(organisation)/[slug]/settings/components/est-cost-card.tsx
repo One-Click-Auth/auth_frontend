@@ -2,7 +2,7 @@
 
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/Providers/AuthContext';
 import { getOrgData } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';

@@ -54,7 +54,10 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
       toast({
         variant: 'destructive',
         title: 'Authentication Error!',
-        description: 'Email, password mismatch. Please try again!'
+        description: 'Email, password mismatch. Please try again!',
+        style: {
+          left: 0
+        }
       });
     }
     if (signinRes?.url) {
