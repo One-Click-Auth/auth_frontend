@@ -5,7 +5,7 @@ import { updateStoreWithFetch, useWidgetStore } from '../widgetStore';
 import { useToast } from '@/components/ui/use-toast';
 import { useEffect, useState } from 'react';
 import { Icons } from '@/components/icons';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/Providers/AuthContext';
 import { OrgObject } from '../widgetStore';
 import '@total-typescript/ts-reset';
 import { useParams } from 'next/navigation';
@@ -21,7 +21,7 @@ type FooterProps = {
 // Object to update server state / push
 // Logo string defaults to ""
 export function WidgetFooter({ reset }: FooterProps) {
-  const {slug: ORG_ID} = useParams()
+  const { slug: ORG_ID } = useParams();
   const { token } = useAuth();
   const { toast } = useToast();
   const {

@@ -21,11 +21,14 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeftRightIcon, ChevronsUpDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/Providers/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import useOrgData, { Organization } from '../orgDataStore';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { OrgObject, useWidgetStore } from '../(organisation)/[slug]/widget/widgetStore';
+import {
+  OrgObject,
+  useWidgetStore
+} from '../(organisation)/[slug]/widget/widgetStore';
 import { toColor } from 'react-color-palette';
 import { getOrgData } from '@/lib/utils';
 
@@ -160,7 +163,7 @@ export const SidebarOrg = () => {
               isLoading ? (
                 <Skeleton className="h-2 w-24" />
               ) : (
-                data?.name + " Menu"
+                data?.name + ' Menu'
               )
             ) : (
               ''
