@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Organization } from '@/app/dashboard/orgDataStore';
 import { useToast } from '@/components/ui/use-toast';
+import { getOrgData } from '@/lib/utils';
 
 type PartialOrg = Partial<Organization>;
 type SwitchProps = {
@@ -31,18 +32,7 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
 
   const { data: queryData } = useQuery({
     queryKey: ['settings', slug, id],
-    queryFn: async () => {
-      const res = await fetch(`https://api.trustauthx.com/org/${slug}`, {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      const data = (await res.json()) as PartialOrg;
-      return data;
-    }
+    queryFn: () => getOrgData(slug, token)
   });
 
   const updateHandler = async (status: { [key: string]: boolean }) => {
@@ -83,14 +73,22 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
       queryClient.setQueryData(['settings', slug, id], context?.prevState);
     },
     onSuccess: () => {
-      const stateData = queryClient.getQueryData<PartialOrg>(['settings', slug, id]);
+      const stateData = queryClient.getQueryData<PartialOrg>([
+        'settings',
+        slug,
+        id
+      ]);
       console.log(stateData);
       toast({
-        title: 'Update!',
-        description: `${name} setting ${stateData?.[id] === true ? "enabled" : "disabled"}`
-      })},
+        title: 'Updated!',
+        description: `${name} setting ${
+          stateData?.[id] === true ? 'enabled' : 'disabled'
+        }`
+      });
+    },
     onSettled: () => {
       queryClient.invalidateQueries(['settings', slug, id]);
+      queryClient.invalidateQueries(['est-cost']);
     }
   });
 
