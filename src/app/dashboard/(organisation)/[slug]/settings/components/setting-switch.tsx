@@ -7,14 +7,26 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Organization } from '@/app/dashboard/orgDataStore';
 
 type PartialOrg = Partial<Organization>;
+type SwitchProps = {
+  id:
+    | 'passwordless'
+    | 'DDoS'
+    | 'bot_det'
+    | 'brute_force'
+    | 'breach_pass_det'
+    | 'fa2'
+    | 'consent'
+    | 'callbacks';
+  // | 'rtm';
+};
 
-export function SettingSwitch() {
+export function SettingSwitch({ id }: SwitchProps) {
   const { token } = useAuth();
   const { slug } = useParams();
   const queryClient = useQueryClient();
 
   const { data: queryData, isSuccess } = useQuery({
-    queryKey: ['settings'],
+    queryKey: ['settings', slug, id],
     queryFn: async () => {
       const res = await fetch(`https://api.trustauthx.com/org/${slug}`, {
         method: 'GET',
@@ -29,7 +41,7 @@ export function SettingSwitch() {
     }
   });
 
-  const updateHandler = async ({ passwordless }: { passwordless: boolean }) => {
+  const updateHandler = async (status : { [key: string]: boolean }) => {
     const res = await fetch(`https://api.trustauthx.com/org/${slug}`, {
       method: 'PUT',
       headers: {
@@ -37,10 +49,9 @@ export function SettingSwitch() {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ passwordless })
+      body: JSON.stringify({ ...status })
     });
     const data = await res.json();
-    console.log(JSON.stringify({ passwordless }));
     console.log('Updated', data);
     return data;
   };
@@ -48,40 +59,34 @@ export function SettingSwitch() {
   const mutation = useMutation({
     mutationFn: updateHandler,
     onMutate: async updateState => {
-      await queryClient.cancelQueries({ queryKey: ['settings'] });
+      await queryClient.cancelQueries({ queryKey: ['settings', slug, id] });
       // Prev state snapshot
-      const prevState = queryClient.getQueryData(['settings']);
+      const prevState = queryClient.getQueryData(['settings', slug, id]);
       // Optimistically Update
-      queryClient.setQueryData<PartialOrg>(['settings'], (oldData) => ({
+      queryClient.setQueryData<PartialOrg>(['settings', slug, id], oldData => ({
         ...oldData,
         ...updateState
       }));
+      console.log(queryClient.getQueryData(['settings', slug, id]))
       return { prevState };
     },
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries(['settings']);
-    //   queryClient.setQueryData(['settings'], (oldData: any) => ({
-    //     ...oldData,
-    //     passwordless: !oldData.passwordless
-    //   }));
-    // },
     onError: (err, newState, context) => {
-      queryClient.setQueryData(['settings'], context?.prevState);
+      queryClient.setQueryData(['settings', slug, id], context?.prevState);
     },
     onSettled: () => {
-      queryClient.invalidateQueries(['settings']);
+      queryClient.invalidateQueries(['settings', slug, id]);
     }
   });
 
   if (isSuccess) {
-    console.log('Query', queryData);
+    console.log('Query', queryData[id]);
   }
 
   return (
     <Switch
-      checked={queryData?.passwordless}
+      checked={queryData?.[id]}
       onCheckedChange={() =>
-        mutation.mutate({ passwordless: !queryData?.passwordless })
+        mutation.mutate({ [id]: !queryData?.[id] })
       }
     />
   );

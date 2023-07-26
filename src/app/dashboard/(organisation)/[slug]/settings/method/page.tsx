@@ -60,7 +60,7 @@ const OrganisationDashboard = () => {
               authentication to provide a seamless and secure login experience
               for your users.
             </p>
-            <SettingSwitch />
+            <SettingSwitch id="passwordless"/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
@@ -109,7 +109,7 @@ const OrganisationDashboard = () => {
               platform about specific events or actions, enabling real-time
               updates and triggering custom logic or workflows.
             </p>
-            <Switch />
+            <SettingSwitch id="callbacks"/>
           </CardContent>
         </Card>
         <Card className="shadow-none">

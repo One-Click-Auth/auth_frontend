@@ -25,6 +25,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import useOrgData, { Organization } from '../orgDataStore';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { OrgObject, useWidgetStore } from '../(organisation)/[slug]/widget/widgetStore';
+import { toColor } from 'react-color-palette';
 
 export const SidebarOrg = () => {
   const [open, setOpen] = useState(true);
@@ -46,7 +48,32 @@ export const SidebarOrg = () => {
           Authorization: `Bearer ${token}`
         }
       }).then(res => res.json()),
-    onSuccess: (orgData: Organization) => setManageOrgData(orgData)
+    onSuccess: (orgData: Organization) => {
+      setManageOrgData(orgData);
+      // useWidgetStore.setState(() => ({
+      //   displayName: orgData.widget.name,
+      //   greeting: orgData.widget.greeting,
+      //   logoImage: orgData.widget.logo_url,
+      //   logo: undefined,
+      //   button2Status: orgData.widget.color1 === '#121212' ? false : true,
+      //   button3Status: orgData.widget.color2 === '#121212' ? false : true,
+      //   color: toColor('hex', orgData.widget.color0),
+      //   color2: toColor('hex', orgData.widget.color1),
+      //   color3: toColor('hex', orgData.widget.color2),
+      //   inputBorderColor: toColor('hex', orgData.widget.input_border.color),
+      //   widgetBorderColor: toColor('hex', orgData.widget.widget_border.color),
+      //   widgetColor: toColor('hex', orgData.widget.color6),
+      //   widgetBgColor: toColor('hex', orgData.widget.color3),
+      //   inputBoxRadius: orgData.widget.input_border.radius,
+      //   widgetBoxRadius: orgData.widget.widget_border.radius,
+      //   widgetBorderWidth: orgData.widget.widget_border.width,
+      //   tncURL: orgData.tnc_url ?? '',
+      //   ppURL: orgData.pp_url ?? '',
+      //   hostURL: orgData.host ?? '',
+      //   callbackURL: orgData.callback_url ?? '',
+      //   redirectURL: orgData.redirect_url ?? ''
+      // }));
+    }
   });
 
   useEffect(() => {
