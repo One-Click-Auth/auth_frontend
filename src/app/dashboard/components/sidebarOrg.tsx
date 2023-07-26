@@ -27,6 +27,7 @@ import useOrgData, { Organization } from '../orgDataStore';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { OrgObject, useWidgetStore } from '../(organisation)/[slug]/widget/widgetStore';
 import { toColor } from 'react-color-palette';
+import { getOrgData } from '@/lib/utils';
 
 export const SidebarOrg = () => {
   const [open, setOpen] = useState(true);
@@ -39,15 +40,8 @@ export const SidebarOrg = () => {
 
   // Update Org data
   const { data, isLoading } = useQuery({
-    queryKey: ['orgData'],
-    queryFn: () =>
-      fetch(`https://api.trustauthx.com/org/${slug}`, {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }).then(res => res.json()),
+    queryKey: ['orgData', slug],
+    queryFn: () => getOrgData(slug, token),
     onSuccess: (orgData: Organization) => {
       setManageOrgData(orgData);
       // useWidgetStore.setState(() => ({

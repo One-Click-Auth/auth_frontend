@@ -21,7 +21,7 @@ const OrganisationDashboard = () => {
             authentication to provide a seamless and secure login experience for
             your users.
           </p>
-          <SettingSwitch id="passwordless" name="Password-less" />
+          <SettingSwitch id="passwordless" name="Passwordless" />
         </CardContent>
       </Card>
       <Card className="shadow-none">

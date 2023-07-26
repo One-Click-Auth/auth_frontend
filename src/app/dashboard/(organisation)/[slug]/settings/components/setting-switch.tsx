@@ -31,7 +31,7 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
   const { toast } = useToast();
 
   const { data: queryData } = useQuery({
-    queryKey: ['settings', slug],
+    queryKey: ['orgData', slug],
     queryFn: () => getOrgData(slug, token)
   });
 
@@ -53,15 +53,15 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
   const mutation = useMutation({
     mutationFn: updateHandler,
     onMutate: async updateState => {
-      await queryClient.cancelQueries({ queryKey: ['settings', slug] });
+      await queryClient.cancelQueries({ queryKey: ['orgData', slug] });
       // Prev state snapshot
-      const prevState = queryClient.getQueryData(['settings', slug]);
+      const prevState = queryClient.getQueryData(['orgData', slug]);
       // Optimistically Update
-      queryClient.setQueryData<PartialOrg>(['settings', slug], oldData => ({
+      queryClient.setQueryData<PartialOrg>(['orgData', slug], oldData => ({
         ...oldData,
         ...updateState
       }));
-      console.log(queryClient.getQueryData(['settings', slug]));
+      console.log(queryClient.getQueryData(['orgData', slug]));
       return { prevState };
     },
     onError: (err, newState, context) => {
@@ -70,11 +70,11 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
         title: 'Uh oh! Something went wrong.',
         description: 'There was a problem with your request.'
       });
-      queryClient.setQueryData(['settings', slug], context?.prevState);
+      queryClient.setQueryData(['orgData', slug], context?.prevState);
     },
     onSuccess: () => {
       const stateData = queryClient.getQueryData<PartialOrg>([
-        'settings',
+        'orgData',
         slug
       ]);
       console.log(stateData);
@@ -86,7 +86,7 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
       });
     },
     onSettled: () => {
-      queryClient.invalidateQueries(['settings', slug]);
+      queryClient.invalidateQueries(['orgData', slug]);
     }
   });
 
