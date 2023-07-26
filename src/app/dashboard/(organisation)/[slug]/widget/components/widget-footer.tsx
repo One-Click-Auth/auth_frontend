@@ -112,7 +112,7 @@ export function WidgetFooter({ reset }: FooterProps) {
         toast({
           title: 'Success!',
           description: 'Your settings have been saved successfully',
-          variant: "success"
+          variant: 'success'
         });
       } else {
         setIsLoading(false);
@@ -126,7 +126,6 @@ export function WidgetFooter({ reset }: FooterProps) {
   }
 
   async function uploadImageToS3() {
-    setIsLoading(true);
     // Check filename extension
     try {
       if (logo) {
@@ -185,6 +184,7 @@ export function WidgetFooter({ reset }: FooterProps) {
 
   // Call methods according to active tab
   const handleSave = async () => {
+    setIsLoading(true);
     // Attemp to upload logo only if it has been changed
     if (!checkLogoEquality(logo, prevLogo)) {
       await uploadImageToS3();
