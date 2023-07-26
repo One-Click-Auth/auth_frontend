@@ -26,8 +26,9 @@ const OrganisationDashboard = () => {
       </Card>
       <Card className="shadow-none">
         <CardHeader className="px-10 pb-2">
+          <span className="text-xl text-slate-500">$75.00</span>
           <CardTitle className="text-2xl font-medium">
-            Machine-to-Machine Tokens
+            Real-time Monitoring
           </CardTitle>
         </CardHeader>
         <CardContent className="flex px-10 gap-28">
