@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Organization } from '@/app/dashboard/orgDataStore';
+import { useToast } from '@/components/ui/use-toast';
 
 type PartialOrg = Partial<Organization>;
 type SwitchProps = {
@@ -18,14 +19,17 @@ type SwitchProps = {
     | 'consent'
     | 'callbacks';
   // | 'rtm';
+  disabled?: boolean;
+  name: string;
 };
 
-export function SettingSwitch({ id }: SwitchProps) {
+export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
   const { token } = useAuth();
   const { slug } = useParams();
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
-  const { data: queryData, isSuccess } = useQuery({
+  const { data: queryData } = useQuery({
     queryKey: ['settings', slug, id],
     queryFn: async () => {
       const res = await fetch(`https://api.trustauthx.com/org/${slug}`, {
@@ -41,7 +45,7 @@ export function SettingSwitch({ id }: SwitchProps) {
     }
   });
 
-  const updateHandler = async (status : { [key: string]: boolean }) => {
+  const updateHandler = async (status: { [key: string]: boolean }) => {
     const res = await fetch(`https://api.trustauthx.com/org/${slug}`, {
       method: 'PUT',
       headers: {
@@ -67,27 +71,34 @@ export function SettingSwitch({ id }: SwitchProps) {
         ...oldData,
         ...updateState
       }));
-      console.log(queryClient.getQueryData(['settings', slug, id]))
+      console.log(queryClient.getQueryData(['settings', slug, id]));
       return { prevState };
     },
     onError: (err, newState, context) => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.'
+      });
       queryClient.setQueryData(['settings', slug, id], context?.prevState);
     },
+    onSuccess: () => {
+      const stateData = queryClient.getQueryData<PartialOrg>(['settings', slug, id]);
+      console.log(stateData);
+      toast({
+        title: 'Update!',
+        description: `${name} setting ${stateData?.[id] === true ? "enabled" : "disabled"}`
+      })},
     onSettled: () => {
       queryClient.invalidateQueries(['settings', slug, id]);
     }
   });
 
-  if (isSuccess) {
-    console.log('Query', queryData[id]);
-  }
-
   return (
     <Switch
       checked={queryData?.[id]}
-      onCheckedChange={() =>
-        mutation.mutate({ [id]: !queryData?.[id] })
-      }
+      disabled={disabled}
+      onCheckedChange={() => mutation.mutate({ [id]: !queryData?.[id] })}
     />
   );
 }

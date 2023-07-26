@@ -5,6 +5,7 @@ import {
   AiCloudSpark,
 } from "@/assets/Svg/Account/Account";
 import { Button } from "@/components/ui/Button";
+import { SettingSwitch } from "../components/setting-switch";
 
 const OrganisationDashboard = () => {
   return (
@@ -61,7 +62,7 @@ const OrganisationDashboard = () => {
               addresses, providing a seamless and personalized email experience
               for your users.
             </p>
-            <Switch />
+            <Switch disabled/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
@@ -78,7 +79,7 @@ const OrganisationDashboard = () => {
               registration and login process, enhancing user convenience and
               streamlining the onboarding experience.
             </p>
-            <Switch />
+            <Switch disabled/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
@@ -95,7 +96,7 @@ const OrganisationDashboard = () => {
               of verification by requiring users to provide a time-sensitive,
               one-time password in addition to their regular credentials.
             </p>
-            <Switch />
+            <SettingSwitch id="fa2" name="MFA"/>
           </CardContent>
         </Card>
         <Card className="shadow-none">

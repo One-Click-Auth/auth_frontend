@@ -60,7 +60,7 @@ const OrganisationDashboard = () => {
               authentication to provide a seamless and secure login experience
               for your users.
             </p>
-            <SettingSwitch id="passwordless"/>
+            <SettingSwitch id="passwordless" name='Password-less'/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
@@ -78,7 +78,7 @@ const OrganisationDashboard = () => {
               only authorized machines can access your platform's resources and
               services.
             </p>
-            <Switch />
+            <Switch disabled/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
@@ -94,7 +94,7 @@ const OrganisationDashboard = () => {
               protection regulations and empower users to have control over
               their personal information.
             </p>
-            <Switch />
+            <Switch disabled/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
@@ -109,7 +109,7 @@ const OrganisationDashboard = () => {
               platform about specific events or actions, enabling real-time
               updates and triggering custom logic or workflows.
             </p>
-            <SettingSwitch id="callbacks"/>
+            <SettingSwitch id="callbacks" name='Callbacks'/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
@@ -126,7 +126,7 @@ const OrganisationDashboard = () => {
               accepting invalid or fake email addresses, improving the overall
               quality of user data and communication.
             </p>
-            <Switch />
+            <Switch disabled/>
           </CardContent>
         </Card>
         <Card className="shadow-none">

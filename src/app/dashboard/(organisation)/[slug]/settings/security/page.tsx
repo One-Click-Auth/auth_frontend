@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Switch } from "@/components/ui/Switch";
 import { ShieldSpark, MagnifierZoom, AiNetwork } from "@/assets/Svg/Account/Account";
 import { Button } from "@/components/ui/Button";
+import { SettingSwitch } from "../components/setting-switch";
 
 const OrganisationDashboard = () => {
   return (
@@ -56,7 +57,7 @@ const OrganisationDashboard = () => {
               measures within your Authx-powered platform to safeguard against
               malicious traffic and ensure uninterrupted service availability.
             </p>
-            <Switch />
+            <SettingSwitch id="DDoS" name="DDoS Protection"/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
@@ -72,7 +73,7 @@ const OrganisationDashboard = () => {
               malicious bots, ensuring a secure and reliable user experience for
               legitimate users.
             </p>
-            <Switch />
+            <SettingSwitch id="bot_det" name="Bot Detection"/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
@@ -87,7 +88,7 @@ const OrganisationDashboard = () => {
               your Authx-powered platform to safeguard against unauthorized
               access attempts and protect user accounts from being compromised.
             </p>
-            <Switch />
+            <SettingSwitch id="brute_force" name="Brute Force Attack Protection"/>
           </CardContent>
         </Card>
         <Card className="shadow-none">
