@@ -43,6 +43,7 @@ const OrganisationDashboard = () => {
       </Card>
       <Card className="shadow-none">
         <CardHeader className="px-10 pb-2">
+          <span className="text-xl text-slate-500">$25.00</span>
           <CardTitle className="text-2xl font-medium">
             MFA - TOTP Based
           </CardTitle>

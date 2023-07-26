@@ -63,7 +63,7 @@ export default function EstCostCard() {
         {isLoading ? (
           <Skeleton className="w-full h-8" />
         ) : (
-          <div className="text-2xl font-bold">${price}</div>
+          <div className="text-2xl font-bold">${price.toFixed(2)}</div>
         )}
         <p className="text-xs text-disabled">Total Recurring Cost</p>
       </CardContent>

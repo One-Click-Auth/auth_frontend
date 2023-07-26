@@ -9,6 +9,7 @@ const OrganisationDashboard = () => {
     <div className="grid gap-11">
       <Card className="shadow-none">
         <CardHeader className="px-10 pb-2">
+          <span className="text-xl text-slate-500">$35.00</span>
           <CardTitle className="text-2xl font-medium">Password-less</CardTitle>
         </CardHeader>
         <CardContent className="flex px-10 gap-28">
@@ -59,6 +60,7 @@ const OrganisationDashboard = () => {
       </Card>
       <Card className="shadow-none">
         <CardHeader className="px-10 pb-2">
+          <span className="text-xl text-slate-500">$20.00</span>
           <CardTitle className="text-2xl font-medium">Callbacks</CardTitle>
         </CardHeader>
         <CardContent className="flex px-10 gap-28">
