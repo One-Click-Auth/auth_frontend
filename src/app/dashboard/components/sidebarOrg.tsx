@@ -125,7 +125,7 @@ export const SidebarOrg = () => {
         </div>
       )}
 
-      <div className=" mt-[50px] sm:sticky sm:top-8 sm:mt-1 w-full overflow-y-auto  overscroll-none flex flex-col items-center max-h-[95vh] pb-4 ">
+      <div className=" mt-[50px] sm:sticky sm:top-8 sm:mt-1 w-full overflow-y-auto no-scrollbar overscroll-none flex flex-col items-center max-h-[95vh] pb-4 ">
         {/* <Avatar className="mx-auto py-2 h-[6.25rem]">
           <AvatarImage
             width={open ? 60 : 40}
