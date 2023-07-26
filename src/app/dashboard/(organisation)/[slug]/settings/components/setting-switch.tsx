@@ -74,12 +74,12 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
     },
     onSuccess: () => {
       const stateData = queryClient.getQueryData<PartialOrg>(['orgData', slug]);
-      console.log(stateData);
       toast({
         title: 'Updated!',
         description: `${name} setting ${
           stateData?.[id] === true ? 'enabled' : 'disabled'
-        }`
+        }`,
+        variant: 'success'
       });
     },
     onSettled: () => {

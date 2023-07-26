@@ -111,7 +111,8 @@ export function WidgetFooter({ reset }: FooterProps) {
         setIsLoading(false);
         toast({
           title: 'Success!',
-          description: 'Your settings have been saved successfully'
+          description: 'Your settings have been saved successfully',
+          variant: "success"
         });
       } else {
         setIsLoading(false);
