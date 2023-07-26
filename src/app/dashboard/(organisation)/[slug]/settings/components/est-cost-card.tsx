@@ -12,7 +12,7 @@ export default function EstCostCard() {
   const { token } = useAuth();
   const { slug } = useParams();
   const { data, isLoading } = useQuery({
-    queryKey: ['est-cost'],
+    queryKey: ['settings', slug],
     queryFn: () => getOrgData(slug, token)
   });
 

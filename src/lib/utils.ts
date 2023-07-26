@@ -1,15 +1,13 @@
-import { Organization } from "@/app/dashboard/orgDataStore";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-type PartialOrg = Partial<Organization>;
+import { PartialOrg } from '@/types';
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function getImagePath(imagename: string) {
-  return `/images/${imagename}`
+  return `/images/${imagename}`;
 }
 
 export const getOrgData = async (slug: string, token: string | undefined) => {
@@ -23,4 +21,4 @@ export const getOrgData = async (slug: string, token: string | undefined) => {
   });
   const data = (await res.json()) as PartialOrg;
   return data;
-}
+};

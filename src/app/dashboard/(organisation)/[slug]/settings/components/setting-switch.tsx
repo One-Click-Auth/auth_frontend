@@ -7,8 +7,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Organization } from '@/app/dashboard/orgDataStore';
 import { useToast } from '@/components/ui/use-toast';
 import { getOrgData } from '@/lib/utils';
+import { PartialOrg } from '@/types';
 
-type PartialOrg = Partial<Organization>;
 type SwitchProps = {
   id:
     | 'passwordless'
@@ -31,7 +31,7 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
   const { toast } = useToast();
 
   const { data: queryData } = useQuery({
-    queryKey: ['settings', slug, id],
+    queryKey: ['settings', slug],
     queryFn: () => getOrgData(slug, token)
   });
 
@@ -53,15 +53,15 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
   const mutation = useMutation({
     mutationFn: updateHandler,
     onMutate: async updateState => {
-      await queryClient.cancelQueries({ queryKey: ['settings', slug, id] });
+      await queryClient.cancelQueries({ queryKey: ['settings', slug] });
       // Prev state snapshot
-      const prevState = queryClient.getQueryData(['settings', slug, id]);
+      const prevState = queryClient.getQueryData(['settings', slug]);
       // Optimistically Update
-      queryClient.setQueryData<PartialOrg>(['settings', slug, id], oldData => ({
+      queryClient.setQueryData<PartialOrg>(['settings', slug], oldData => ({
         ...oldData,
         ...updateState
       }));
-      console.log(queryClient.getQueryData(['settings', slug, id]));
+      console.log(queryClient.getQueryData(['settings', slug]));
       return { prevState };
     },
     onError: (err, newState, context) => {
@@ -70,13 +70,12 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
         title: 'Uh oh! Something went wrong.',
         description: 'There was a problem with your request.'
       });
-      queryClient.setQueryData(['settings', slug, id], context?.prevState);
+      queryClient.setQueryData(['settings', slug], context?.prevState);
     },
     onSuccess: () => {
       const stateData = queryClient.getQueryData<PartialOrg>([
         'settings',
-        slug,
-        id
+        slug
       ]);
       console.log(stateData);
       toast({
@@ -87,8 +86,7 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
       });
     },
     onSettled: () => {
-      queryClient.invalidateQueries(['settings', slug, id]);
-      queryClient.invalidateQueries(['est-cost']);
+      queryClient.invalidateQueries(['settings', slug]);
     }
   });
 
