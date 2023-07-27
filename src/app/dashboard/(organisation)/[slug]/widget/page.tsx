@@ -13,7 +13,7 @@ import { DevSettings } from './components/dev-settings';
 import { updateStoreWithFetch, useWidgetStore } from './widgetStore';
 import { WidgetBrandingRef } from './components/widget-branding';
 import { WIDGET_TABS as TABS } from '@/constants';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/Providers/AuthContext';
 import { useParams } from 'next/navigation';
 import { EmailSettings } from './components/email-settings';
 

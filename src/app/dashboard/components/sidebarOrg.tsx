@@ -21,10 +21,16 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeftRightIcon, ChevronsUpDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/Providers/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import useOrgData, { Organization } from '../orgDataStore';
 import { Skeleton } from '@/components/ui/Skeleton';
+import {
+  OrgObject,
+  useWidgetStore
+} from '../(organisation)/[slug]/widget/widgetStore';
+import { toColor } from 'react-color-palette';
+import { getOrgData } from '@/lib/utils';
 
 export const SidebarOrg = () => {
   const [open, setOpen] = useState(true);
@@ -37,16 +43,34 @@ export const SidebarOrg = () => {
 
   // Update Org data
   const { data, isLoading } = useQuery({
-    queryKey: ['orgData'],
-    queryFn: () =>
-      fetch(`https://api.trustauthx.com/org/${slug}`, {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }).then(res => res.json()),
-    onSuccess: (orgData: Organization) => setManageOrgData(orgData)
+    queryKey: ['orgData', slug],
+    queryFn: () => getOrgData(slug, token),
+    onSuccess: (orgData: Organization) => {
+      setManageOrgData(orgData);
+      // useWidgetStore.setState(() => ({
+      //   displayName: orgData.widget.name,
+      //   greeting: orgData.widget.greeting,
+      //   logoImage: orgData.widget.logo_url,
+      //   logo: undefined,
+      //   button2Status: orgData.widget.color1 === '#121212' ? false : true,
+      //   button3Status: orgData.widget.color2 === '#121212' ? false : true,
+      //   color: toColor('hex', orgData.widget.color0),
+      //   color2: toColor('hex', orgData.widget.color1),
+      //   color3: toColor('hex', orgData.widget.color2),
+      //   inputBorderColor: toColor('hex', orgData.widget.input_border.color),
+      //   widgetBorderColor: toColor('hex', orgData.widget.widget_border.color),
+      //   widgetColor: toColor('hex', orgData.widget.color6),
+      //   widgetBgColor: toColor('hex', orgData.widget.color3),
+      //   inputBoxRadius: orgData.widget.input_border.radius,
+      //   widgetBoxRadius: orgData.widget.widget_border.radius,
+      //   widgetBorderWidth: orgData.widget.widget_border.width,
+      //   tncURL: orgData.tnc_url ?? '',
+      //   ppURL: orgData.pp_url ?? '',
+      //   hostURL: orgData.host ?? '',
+      //   callbackURL: orgData.callback_url ?? '',
+      //   redirectURL: orgData.redirect_url ?? ''
+      // }));
+    }
   });
 
   useEffect(() => {
@@ -101,7 +125,7 @@ export const SidebarOrg = () => {
         </div>
       )}
 
-      <div className=" mt-[50px] sm:sticky sm:top-8 sm:mt-1 w-full overflow-y-auto  overscroll-none flex flex-col items-center max-h-[95vh] pb-4 ">
+      <div className=" mt-[50px] sm:sticky sm:top-8 sm:mt-1 w-full overflow-y-auto no-scrollbar overscroll-none flex flex-col items-center max-h-[95vh] pb-4 ">
         {/* <Avatar className="mx-auto py-2 h-[6.25rem]">
           <AvatarImage
             width={open ? 60 : 40}
@@ -139,7 +163,7 @@ export const SidebarOrg = () => {
               isLoading ? (
                 <Skeleton className="h-2 w-24" />
               ) : (
-                data?.name + " Menu"
+                data?.name + ' Menu'
               )
             ) : (
               ''
@@ -162,7 +186,7 @@ export const SidebarOrg = () => {
               {open ? <span>Dashboard</span> : ''}
             </Link>
             <Link
-              href={`/dashboard/${slug}/settings/method`}
+              href="#"
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}

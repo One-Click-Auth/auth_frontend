@@ -5,7 +5,7 @@ import { DatabaseSvg } from '../../../assets/Svg/Account/Account';
 import { Button } from '../../../components/ui/Button';
 import { useRouter } from 'next/navigation';
 import OrgList from './OrgList';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/Providers/AuthContext';
 import useOrgdata, { Organization } from '../orgDataStore';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
 import Image from 'next/image';
@@ -69,7 +69,7 @@ function AccountIndex() {
         return response.json();
       })
       .then(resData => {
-        const data = resData as {url: string};
+        const data = resData as { url: string };
         console.log('data', data);
         router.push(data.url);
       })
@@ -80,7 +80,8 @@ function AccountIndex() {
   const handleNavigation = () => {
     // router.push('/dashboard/add-organization');
     setPaymentPage(true);
-    if (triggerRef.current !== null) (triggerRef.current as HTMLButtonElement).click();
+    if (triggerRef.current !== null)
+      (triggerRef.current as HTMLButtonElement).click();
   };
 
   return (

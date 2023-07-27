@@ -3,33 +3,39 @@
 import { Switch } from '@/components/ui/Switch';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/Providers/AuthContext';
 import { Organization } from '@/app/dashboard/orgDataStore';
+import { useToast } from '@/components/ui/use-toast';
+import { getOrgData } from '@/lib/utils';
+import { PartialOrg } from '@/types';
 
-type PartialOrg = Partial<Organization>;
+type SwitchProps = {
+  id:
+    | 'passwordless'
+    | 'DDoS'
+    | 'bot_det'
+    | 'brute_force'
+    | 'breach_pass_det'
+    | 'fa2'
+    | 'consent'
+    | 'callbacks';
+  // | 'rtm';
+  disabled?: boolean;
+  name: string;
+};
 
-export function SettingSwitch() {
+export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
   const { token } = useAuth();
   const { slug } = useParams();
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
-  const { data: queryData, isSuccess } = useQuery({
-    queryKey: ['settings'],
-    queryFn: async () => {
-      const res = await fetch(`https://api.trustauthx.com/org/${slug}`, {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      const data = (await res.json()) as PartialOrg;
-      return data;
-    }
+  const { data: queryData } = useQuery({
+    queryKey: ['orgData', slug],
+    queryFn: () => getOrgData(slug, token)
   });
 
-  const updateHandler = async ({ passwordless }: { passwordless: boolean }) => {
+  const updateHandler = async (status: { [key: string]: boolean }) => {
     const res = await fetch(`https://api.trustauthx.com/org/${slug}`, {
       method: 'PUT',
       headers: {
@@ -37,10 +43,9 @@ export function SettingSwitch() {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ passwordless })
+      body: JSON.stringify({ ...status })
     });
     const data = await res.json();
-    console.log(JSON.stringify({ passwordless }));
     console.log('Updated', data);
     return data;
   };
@@ -48,41 +53,45 @@ export function SettingSwitch() {
   const mutation = useMutation({
     mutationFn: updateHandler,
     onMutate: async updateState => {
-      await queryClient.cancelQueries({ queryKey: ['settings'] });
+      await queryClient.cancelQueries({ queryKey: ['orgData', slug] });
       // Prev state snapshot
-      const prevState = queryClient.getQueryData(['settings']);
+      const prevState = queryClient.getQueryData(['orgData', slug]);
       // Optimistically Update
-      queryClient.setQueryData<PartialOrg>(['settings'], (oldData) => ({
+      queryClient.setQueryData<PartialOrg>(['orgData', slug], oldData => ({
         ...oldData,
         ...updateState
       }));
+      console.log(queryClient.getQueryData(['orgData', slug]));
       return { prevState };
     },
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries(['settings']);
-    //   queryClient.setQueryData(['settings'], (oldData: any) => ({
-    //     ...oldData,
-    //     passwordless: !oldData.passwordless
-    //   }));
-    // },
     onError: (err, newState, context) => {
-      queryClient.setQueryData(['settings'], context?.prevState);
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.'
+      });
+      queryClient.setQueryData(['orgData', slug], context?.prevState);
+    },
+    onSuccess: () => {
+      const stateData = queryClient.getQueryData<PartialOrg>(['orgData', slug]);
+      toast({
+        title: 'Updated!',
+        description: `${name} setting ${
+          stateData?.[id] === true ? 'enabled' : 'disabled'
+        }`,
+        variant: 'success'
+      });
     },
     onSettled: () => {
-      queryClient.invalidateQueries(['settings']);
+      queryClient.invalidateQueries(['orgData', slug]);
     }
   });
 
-  if (isSuccess) {
-    console.log('Query', queryData);
-  }
-
   return (
     <Switch
-      checked={queryData?.passwordless}
-      onCheckedChange={() =>
-        mutation.mutate({ passwordless: !queryData?.passwordless })
-      }
+      checked={queryData?.[id]}
+      disabled={disabled}
+      onCheckedChange={() => mutation.mutate({ [id]: !queryData?.[id] })}
     />
   );
 }
