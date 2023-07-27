@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import CryptoJS from 'crypto-js';
 import { QRCodeSVG } from 'qrcode.react';
 import OtpInput from 'react-otp-input';
-// import { Checkbox } from '@/components/ui/checkbox';
-// import axios from 'axios';
 
+import { decryptCode, testPass, passMsg, testOTP } from './utils';
 import { Button } from '@/components/ui/Button';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
@@ -81,12 +79,6 @@ const Login = () => {
   }, []);
   //
   //
-  //function to set generate QR code
-  const generateQr = (mfa: string): void => {
-    const bytes = CryptoJS.AES.decrypt(mfa, 'asjdhkasjdh');
-    const decoded = bytes.toString(CryptoJS.enc.Utf8);
-    setQr(decoded);
-  };
 
   //function to handle when the user decides to enable mfa from his side
   const handleUserMfa = () => {
@@ -102,19 +94,58 @@ const Login = () => {
       return setShowMsg(true);
     }
   };
+  //function to create a newpassword while logging in
+  const newPasswordRequest = async () => {
+    setErr(false);
+    setShowMsg(false);
+    setLoading2(true);
+    if (testPass(pass)) {
+      setLoading2(false);
+      setErrMsg(passMsg);
+      return setErr(true);
+    }
+
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            new_user_password: pass
+          })
+        }
+      );
+      console.log(response);
+
+      const data = (await response.json()) as any;
+      if (data.detail) {
+        //show the message of password already set
+        setErrMsg(data.detail);
+        setErr(true);
+        return setErr(true);
+      }
+      const { user_token, msg } = data;
+      if (response.status === 200) {
+        setCurrentUserToken(user_token);
+        console.log(msg);
+        return;
+      }
+      setLoading2(false);
+    } catch (error) {
+      //
+    }
+  };
   //this fucntion is called when user is signing up and has to create a passeord and then go through further requests
   const handleNewPassword = async () => {
     setErr(false);
     setShowMsg(false);
     setLoading2(true);
-    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,20}$/.test(pass)) {
-      //show password error: Password must be between 8 and 20 characters long,
-      //contain at least one letter and one digit, and can
-      //include special characters.
+    if (testPass(pass)) {
       setLoading2(false);
-      setErrMsg(
-        'Password must be between 8 and 20 characters long,contain at least one letter and one digit, and can include special characters'
-      );
+      setErrMsg(passMsg);
       return setErr(true);
     }
     console.log(currentUserToken);
@@ -193,7 +224,7 @@ const Login = () => {
                   const resData = (await res.json()) as any;
                   if (res.status === 203) {
                     setCurrentUserToken(resData.user_token);
-                    generateQr(resData.mfa_code);
+                    setQr(decryptCode(resData.mfa_code));
                     setShowEnableMfaLink(false);
                     setButtonAction('mfa-activation-signup');
                     setShowMfaActivation(true);
@@ -243,27 +274,9 @@ const Login = () => {
       return;
     }
   };
-
-  //fucntion to handle when the user is logging in with password
-  const handlePasswordLogin = async () => {
-    //take the password from the user and proceed to call for logging in
-    try {
-      // const response = await axios.post(
-      //   `/api/user`,
-      //   {
-      //     password: pass
-      //   },
-      //   {
-      //     params: {
-      //       UserToken: currentUserToken
-      //     },
-      //     maxBodyLength: Infinity,
-      //     maxContentLength: Infinity
-      //   }
-      // );
-    } catch (error) {
-      console.log(error);
-    }
+  //function to request for mfa activation while logging in
+  const mfaRequest = async () => {
+    //if
   };
 
   //function to be called when a user has to activate MFA
@@ -272,7 +285,7 @@ const Login = () => {
     setShowMsg(false);
     setLoading2(true);
 
-    if (!/^\d{6}$/.test(otp)) {
+    if (testOTP(otp)) {
       setErrMsg('Please put a valid OTP');
       setLoading2(false);
       return setErr(true);
@@ -299,21 +312,14 @@ const Login = () => {
         setCurrentUserToken(user_token);
         //if the the mfa activation is coming from the login loop
         if (login) {
-          //send the user data to the login post
-          // const response = await axios.post(
-          //   `https://api.trustauthx.com/user/me/auth`,
-          //   {
-          //     totp: otp,
-          //     password: pass
-          //   },
-          //   {
-          //     params: {
-          //       UserToken: currentUserToken
-          //     }
-          //   }
-          // );
-          // console.log(response);
-          //rest of the logic
+          setLoading2(false);
+          setMessage('MFA Successfully Activated!');
+          setShowMsg(true);
+          setShowMfaActivation(false);
+          setTimeout(() => setShowMsg(false), 3000);
+          setShowPassField(true);
+          setButtonAction('showMfaPopup');
+          return;
         } else {
           setMessage('MFA Successfully Activated! Check your Email.');
           setShowMsgPanel(true);
@@ -342,17 +348,13 @@ const Login = () => {
     }
   };
 
-  // if(showMfaActivation || showMfaPopup || showMsgPanel){
-  //   setShowEnableMfaLink(false)
-  // }
-
   //function to handle submit mfa
   const handleMFA = async () => {
     setShowEnableMfaLink(false);
     setErr(false);
     setShowMsg(false);
     setLoading2(true);
-    if (!/^\d{6}$/.test(otp)) {
+    if (testOTP(otp)) {
       setErrMsg('Please put a valid OTP');
       setLoading2(false);
       return setErr(true);
@@ -398,6 +400,56 @@ const Login = () => {
       console.log(data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  //function to log in with password
+  const loginWithPassword = async () => {
+    setErr(false);
+    setShowMsg(false);
+    console.log(otp, pass, email);
+    setLoading2(true);
+    if (testPass(pass)) {
+      setLoading2(false);
+      setErrMsg(passMsg);
+      return setErr(true);
+    }
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            password: pass,
+            mfa_totp: otp ? otp : 0
+          })
+        }
+      );
+      console.log(response);
+      const data = (await response.json()) as any;
+      setLoading2(false);
+
+      const { user_token, callback_uri, msg } = data;
+
+      setCurrentUserToken(user_token);
+      if (response.status === 200) {
+        router.push(callback_uri);
+        console.log(msg);
+        return;
+      } else if (response.status === 401) {
+        setCurrentUserToken(user_token);
+        setErrMsg(msg);
+        setErr(true);
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading2(false);
+      return;
     }
   };
 
@@ -484,7 +536,7 @@ const Login = () => {
       //203 code will come only when strict mfa is true from org
       if (response.status === 202 || response.status === 203) {
         if (response.status === 203) {
-          generateQr(mfa_code);
+          setQr(decryptCode(mfa_code));
         }
         //set user data to the zustand store
         //if the org has enabled passwordless so the user will have passwordless already enabled because this is a signup route
@@ -533,7 +585,7 @@ const Login = () => {
                     const resData = (await res.json()) as any;
                     if (res.status === 203) {
                       setCurrentUserToken(resData.user_token);
-                      generateQr(resData.mfa_code);
+                      setQr(decryptCode(resData.mfa_code));
                       setShowEnableMfaLink(false);
                       setButtonAction('mfa-activation-signup');
                       setShowMfaActivation(true);
@@ -573,9 +625,8 @@ const Login = () => {
             setShowMsgPanel(true);
             return;
           }
-        }
-        //if the org has not enabled passwordless so the user will not have passwordless enabled because this is a signup route
-        else if (userInfo.passwordless === false) {
+        } else if (userInfo.passwordless === false) {
+          //if the org has not enabled passwordless so the user will not have passwordless enabled because this is a signup route
           //if the user has already set a password before
           if (userInfo.is_password_set === true) {
             //if the organization has enabled mfa which is checked by the fa2 key
@@ -622,7 +673,7 @@ const Login = () => {
                       const resData = (await res.json()) as any;
                       if (res.status === 203) {
                         setCurrentUserToken(resData.user_token);
-                        generateQr(resData.mfa_code);
+                        setQr(decryptCode(resData.mfa_code));
                         setShowEnableMfaLink(false);
                         setButtonAction('mfa-activation-signup');
                         setShowMfaActivation(true);
@@ -660,6 +711,7 @@ const Login = () => {
               //show the user a text to verify his email addresss
               setMessage('Please Check Your Email To Verify!');
               setShowMsgPanel(true);
+              setShowMsg(true);
               return;
             }
           } else if (
@@ -674,34 +726,106 @@ const Login = () => {
           }
         }
         setLoading2(false);
-        //handling the response when the status code is 200, email is verified that mean login
+        //handling the response when the status code is 200, email is verified and passwordless is false that means login with password
       } else if (response.status === 200) {
-        //if the org has set passwordless so the user will also have passwordless
-        if (userInfo.passwordless === true) {
-          //if the org has set the mfa
-          if (storeOrgData.fa2) {
-            //show the mfa popup to put in the the mfa code in the field
-            //handle rest of the process in the the handle mfa function
-            return setShowMfaPopup(true);
-          } else if (!storeOrgData.fa2) {
-            //show user the text, check your email for the link
-          }
-          //if the org has not enabled passwordless
-        } else if (userInfo.passwordless === false) {
-          //show  the user the password input field and handle the later request in the password-login function
-          setButtonAction('password-login');
-        }
-        //when organization has set passwordless and user is verified, means passwordless login.
-      } else if (response.status == 205) {
-        //organization has set passwordless
+        setPass('');
+        setOtp('');
+        if (storeOrgData.fa2) {
+          if (storeOrgData.strict_mfa) {
+            //when org has enabled strict mfa
+            if (userInfo.fa2 === null || userInfo.fa2 === false) {
+              //when user has not activated MFA yet, because the org enabled strict mfa after the user signed up
+              //user will have to activate the mfa first and then proceed to login if password is set
+            } else if (userInfo.fa2 === true) {
+              //when user has set up the mfa
+              //show the password input then the mfa popup and send the post request with both pass and mfa totp
+            }
+          } else if (!storeOrgData.strict_mfa) {
+            //when org has disabled strict mfa but fa2 is there, so user may choose fa2
+            if (userInfo.fa2 === true) {
+              //is user has enabled fa2
+              setLoading2(false);
+              setShowPassField(true);
+              setButtonAction('showMfaPopup');
+              return;
+            } else if (userInfo.fa2 === null || userInfo.fa2 === false) {
+              setLoading2(false);
+              setShowPassField(true);
+              //to request for mfa activation after putting in password
+              setButtonAction('mfa-request-password');
+              return;
+              // if (enableUserMfa) {
+              //   try {
+              //     const res = await fetch(
+              //       `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
+              //       {
+              //         method: 'PUT',
+              //         headers: {
+              //           'Content-Type': 'application/json'
+              //         },
+              //         body: JSON.stringify({
+              //           switch_mfa: true
+              //         })
+              //       }
+              //     );
 
+              //     const resData = (await res.json()) as any;
+              //     if (res.status === 203) {
+              //       setCurrentUserToken(resData.user_token);
+              //       setQr(decryptCode(resData.mfa_code));
+              //       setShowEnableMfaLink(false);
+              //       setButtonAction('mfa-activation-login');
+              //       setShowMfaActivation(true);
+              //       setLoading2(false);
+              //       return;
+              //     }
+              //   } catch (error) {
+              //     setLoading2(false);
+
+              //     return console.log(
+              //       'some error occured in sending the request for  mfa code',
+              //       error
+              //     );
+              //   }
+              // } else if (!enableUserMfa) {
+              //   setLoading2(false)
+              //   setButtonAction('loginWithPassword');
+              //   return setShowPassField(true);
+              // }
+            }
+          }
+        } else if (!storeOrgData.fa2) {
+          //when MFA is disabled, just show the password field and make a post request by sending the password
+          setLoading2(false);
+          setButtonAction('loginWithPassword');
+          return setShowPassField(true);
+        }
+      } else if (response.status === 206) {
+        // when a user is verified but has not set a password when passwordless is false maybe because org turned off passwordless
+        // after user signed up
+        setLoading2(false);
+        setMessage(
+          'You have not set a password yet, please set a new password'
+        );
+        setShowMsg(true);
+        setShowPassField(true);
+        setButtonAction('newPasswordRequest');
+        return;
+      } else if (response.status == 205) {
+        //when organization has set passwordless true and user is verified, means passwordless login.
+        //everything is same as 200, just don't take password input and don't redirect user the callbacl_url, instead, show the mesaage
+        //on the msg panel to check the email for the link
         console.log(205);
       }
-      setLoading2(false);
     } catch (error) {
       console.log(error);
       setLoading2(false);
     }
+  };
+  //functions for social login
+  const socialLogin = (social: string) => {
+    const url = `https://api.trustauthx.com/single/social/signup?provider=${social}&OrgToken=${storeOrg_token}`;
+    router.push(url);
   };
 
   // resend email
@@ -716,14 +840,26 @@ const Login = () => {
   //change the action of the button based on responses
   const handleGo = () => {
     switch (buttonAction) {
+      case 'showMfaPopup':
+        () => {
+          setShowMfaPopup(true);
+          setButtonAction('loginWithPassword');
+        };
+        break;
+      case 'mfa-request-password':
+        mfaRequest();
+        break;
+      case 'newPasswordRequest':
+        newPasswordRequest();
+        break;
       case 'verify_email':
         handleUserMfa();
         break;
       case 'first-password':
         handleNewPassword();
         break;
-      case 'password-login':
-        handlePasswordLogin();
+      case 'loginWithPassword':
+        loginWithPassword();
         break;
       case 'mfa-login':
         handleMFA();
@@ -751,10 +887,9 @@ const Login = () => {
           <div className="flex flex-col items-center p-[20px] mr-0 !important ">
             <div className="flex flex-col justify-center items-center ">
               <Image
-                width={80}
-                height={80}
+                width={60}
+                height={60}
                 src={
-                  storeOrgData.widget.logo_url ||
                   'https://flitchcoin.s3.eu-west-2.amazonaws.com/authxlogo.svg'
                 }
                 alt="AuthX logo"
@@ -838,7 +973,6 @@ const Login = () => {
                   </div>
                 ) : showpassField ? (
                   <>
-                    <span className="mb-4 text-md">Create A New Password</span>
                     <div className={`${widgetStyle.materialTextfield} w-full `}>
                       <input
                         className={`${widgetStyle.input}  `}
@@ -911,18 +1045,19 @@ const Login = () => {
                 </div>
               </div>
             )}
-            {/* <div className="flex w-full justify-center mt-[60px]">
-          <div className="mt-4 w-[136px] border-t-2 border-gray-900 "></div>
-          <span className="p-1"> or </span>
-          <div className="mt-4 w-[136px] border-t-2 border-gray-900 "></div>
-        </div>
-        <div className="flex mt-[60px] px-[6] justify-around">
-          <form method="get" action={`${API_DOMAIN}/signup/github`}>
-            <Button type="submit">
-              <Icons.gitHub className=" h-9 w-9" />
-            </Button>
-          </form>
-        </div> */}
+            <div className="flex w-full justify-center mt-2">
+              <div className="mt-2 w-[136px] border-t-2 border-gray-900 "></div>
+              <span className="px-1"> or </span>
+              <div className="mt-2 w-[136px] border-t-2 border-gray-900 "></div>
+            </div>
+            <div className="flex mt-4 justify-around">
+              <button
+                className="bg-black p-2  text-white"
+                onClick={() => socialLogin('github')}
+              >
+                GITHUB
+              </button>
+            </div>
           </div>
         </div>
       )}
