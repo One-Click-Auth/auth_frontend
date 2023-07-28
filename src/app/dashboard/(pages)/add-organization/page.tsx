@@ -1,15 +1,16 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Input } from '../../../../components/ui/Input';
 import { Button } from '../../../../components/ui/Button';
-import { Plus } from 'lucide-react';
+import { Minus, Plus, PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
+import Image from 'next/image';
 
 function AddOrganization() {
   const router = useRouter();
   const [orgName, setOrgName] = useState('');
-  const [err, setErr] = useState(false);
 
   const handleChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -19,36 +20,40 @@ function AddOrganization() {
 
   const { token } = useAuth();
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const [orgCount, setOrgCount] = useState(1);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const handleIncrement = () => {
+    setOrgCount(e => e + 1);
+  };
+  const handleDecrement = () => {
+    setOrgCount(e => e - 1);
+  };
+
+  const checkForPayment = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    fetch('https://api.trustauthx.com/org', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: orgName
+      })
+    })
+      .then(response => {
+        response.status === 412
+          ? triggerRef?.current?.click()
+          : router.push('/dashboard/keys');
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+  };
 
-    //   fetch('https://api.trustauthx.com/org', {
-    //     method: 'POST',
-    //     headers: {
-    //       accept: 'application/json',
-    //       Authorization: `Bearer ${token}`,
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({
-    //       name: orgName
-    //     })
-    //   })
-    //     .then(response => {
-    //       if (response.status === 412) {
-    //         return setErr(true);
-    //       }
-    //       response.json();
-    //       router.push('/dashboard/keys');
-    //     })
-    //     .then(data => {
-    //       console.log('data', data);
-    //     })
-    //     .catch(error => {
-    //       console.log('error', error);
-    //       setErr(error);
-    //     });
-    // };
-
+  const handlePayment = () => {
     fetch('https://api.trustauthx.com/create_checkout_session', {
       method: 'POST',
       headers: {
@@ -57,45 +62,30 @@ function AddOrganization() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        quantity: 0,
+        quantity: orgCount,
         new_org: true
       })
     })
       .then(response => {
-        if (response.status === 412) {
-          return setErr(true);
-        }
-        response.json();
-        router.push('/dashboard/keys');
+        return response.json();
       })
       .then(data => {
+        const fetchedData = data as { url: string };
         console.log('data', data);
+        router.push(fetchedData.url);
       })
       .catch(error => {
         console.log('error', error);
-        setErr(error);
       });
   };
-  // ______________________________________PRICING TABLE ____________________________________________
 
-  // useEffect(() => {
-  //   const script = document.createElement('script');
-  //   script.src = 'https://js.stripe.com/v3/pricing-table.js';
-  //   script.async = true;
-  //   document.body.appendChild(script);
+  useEffect(() => {
+    if (orgCount <= 0) {
+      setOrgCount(1);
+    }
+  }, [orgCount]);
 
-  //   return () => {
-  //     document.body.removeChild(script);
-  //   };
-  // }, []);
-
-  // React.createElement('stripe-pricing-table', {
-  //   'pricing-table-id': 'prctbl_1NU7ryJBzkALt6nUsAwOQyrv',
-  //   'publishable-key':
-  //     'pk_live_51NKb26JBzkALt6nUUuWVM1q3UgNzlg4ERgvMmO2XWqQ8eR2xOrwtaL3M9eFRqcJAQYxgAhxbPJ1QoNvbQLvife9E00w02xIa33'
-  // })
-
-  // ______________________________________PRICING TABLE ____________________________________________
+  // checkforpayment => 412 ? popUp => handlePayment : => orgCreate
 
   return (
     <div className="max-w-4xl h-[calc(100vh-100px)] m-auto text-start flex items-center justify-center flex-col">
@@ -113,7 +103,7 @@ function AddOrganization() {
         </label>
         <form
           className="flex flex-col md:flex-row gap-2"
-          onSubmit={handleSubmit}
+          onSubmit={checkForPayment}
         >
           <Input
             type="text"
@@ -124,13 +114,56 @@ function AddOrganization() {
             required
           />
           <div>
-            <Button type="submit" variant={'authx'}>
+            <Button type="submit" variant={'authx'} onSubmit={checkForPayment}>
               <Plus />
               Create New Organization
             </Button>
           </div>
         </form>
       </div>
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <button ref={triggerRef}></button>
+        </DialogTrigger>
+        <DialogContent>
+          <div className="min-h-[300px] flex items-center justify-center flex-col gap-y-5">
+            <div>
+              <Image
+                src="/logo.svg"
+                alt="AuthX Logo"
+                width="100"
+                height="100"
+                className="m-auto max-w-[80px] max-h-24 w-full"
+              />
+            </div>
+
+            <h3 className="text-xl font-semibold text-center ">
+              Choose the Number of Organization's
+            </h3>
+
+            <div className="px-4 text-center">
+              <p className=" border-2  border-black max-w-max m-auto px-8 py-2 rounded-sm mb-3 ">
+                {orgCount}
+              </p>
+              <Button variant="authx" onClick={handleIncrement}>
+                <PlusIcon />
+              </Button>
+              <Button
+                variant="authx"
+                className="ml-4"
+                onClick={handleDecrement}
+              >
+                <Minus />
+              </Button>
+            </div>
+
+            <Button variant="authx" className="w-full" onClick={handlePayment}>
+              Procced
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
