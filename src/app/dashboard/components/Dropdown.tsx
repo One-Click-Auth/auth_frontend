@@ -4,11 +4,8 @@ import { DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
 import {
   AddItemSvg,
   BillingSvg,
@@ -23,6 +20,7 @@ import {
 import { useAuth } from '@/Providers/AuthContext';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export function AccountDropdown() {
   const { user } = useAuth();
@@ -30,15 +28,29 @@ export function AccountDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger className="active:border-0 active:outline-none">
         <div className="text-xs sm:text-sm flex items-center font-semibold  min-w-max">
-          <span className="hidden sm:block">
-            {user?.full_name !== 'Test User' ? user?.full_name : user?.email}
-          </span>
-          <ChevronDown className="mt-1" />
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 mt-2 mx-7 bg-white cursor-pointer">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+      <DropdownMenuContent className="w-96 mt-2 mx-8 p-12 bg-white cursor-pointer rounded-2xl">
+        <div className="flex items-center gap-1">
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <div className="ml-2">
+            <p className="text-base text-black">
+              {user?.full_name !== 'Test User' ? user?.full_name : user?.email}
+            </p>
+            <p className="text-xs">
+              {user?.full_name !== 'Test User' ? user?.full_name : user?.email}
+              @gmail.com
+            </p>
+          </div>
+        </div>
+
         <MenuItem icon={<ProfileItemSvg />} title="Profile" />
         <MenuItem icon={<BillingSvg />} title="Billing" />
         <MenuItem
@@ -46,7 +58,6 @@ export function AccountDropdown() {
           title="Settings"
           href="/dashboard/settings"
         />
-        <DropdownMenuSeparator />
         <MenuItem icon={<TeamSvg />} title="Team" />
         <MenuItem icon={<InviteSvg />} title="Invite users" />
         <MenuItem icon={<AddItemSvg />} title="New Item" />
@@ -55,7 +66,6 @@ export function AccountDropdown() {
         <div className="opacity-40">
           <MenuItem icon={<CloudSvg />} title="Api" />
         </div>
-        <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer flex items-center p-1 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm"
           onClick={() =>
@@ -67,7 +77,7 @@ export function AccountDropdown() {
           <span className="w-5 h-5 mt-1">
             <LogOutSvg />
           </span>
-          <span className="ml-2"> Sign Out </span>
+          <span className="ml-4"> Sign Out </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -82,10 +92,10 @@ interface MenuItemType {
 
 const MenuItem = ({ icon, title, href = '#' }: MenuItemType) => {
   return (
-    <DropdownMenuItem className="p-1 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm">
+    <DropdownMenuItem className="p-1 my-4 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm">
       <Link href={href} className="flex items-center ">
         <span className="w-5 h-5 mt-1">{icon}</span>
-        <span className="ml-2"> {title} </span>
+        <span className="ml-4"> {title} </span>
       </Link>
     </DropdownMenuItem>
   );
