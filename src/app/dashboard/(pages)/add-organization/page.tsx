@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Input } from '../../../../components/ui/Input';
 import { Button } from '../../../../components/ui/Button';
 import { Minus, Plus, PlusIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
 import Image from 'next/image';
@@ -18,10 +18,15 @@ function AddOrganization() {
     setOrgName(e.target.value);
   };
 
+  const searchParams = useSearchParams();
+  const status = searchParams.get('status');
+
   const { token } = useAuth();
 
   const [orgCount, setOrgCount] = useState(1);
   const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const [queryState, setQueryState] = useState(false);
 
   const handleIncrement = () => {
     setOrgCount(e => e + 1);
@@ -29,6 +34,20 @@ function AddOrganization() {
   const handleDecrement = () => {
     setOrgCount(e => e - 1);
   };
+
+  useEffect(() => {
+    if (orgCount <= 0) {
+      setOrgCount(1);
+    }
+  }, [orgCount]);
+
+  useEffect(() => {
+    if (status === 'true') {
+      setQueryState(true);
+    } else {
+      setQueryState(false);
+    }
+  }, []);
 
   const checkForPayment = (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -44,9 +63,13 @@ function AddOrganization() {
       })
     })
       .then(response => {
-        response.status === 412
-          ? triggerRef?.current?.click()
-          : router.push('/dashboard/keys');
+        if (queryState === false) {
+          if (response.status === 412) {
+            triggerRef?.current?.click();
+          }
+        } else {
+          router.push('/dashboard/keys');
+        }
       })
       .catch(error => {
         console.log('error', error);
@@ -71,19 +94,12 @@ function AddOrganization() {
       })
       .then(data => {
         const fetchedData = data as { url: string };
-        console.log('data', data);
         router.push(fetchedData.url);
       })
       .catch(error => {
         console.log('error', error);
       });
   };
-
-  useEffect(() => {
-    if (orgCount <= 0) {
-      setOrgCount(1);
-    }
-  }, [orgCount]);
 
   // checkforpayment => 412 ? popUp => handlePayment : => orgCreate
 

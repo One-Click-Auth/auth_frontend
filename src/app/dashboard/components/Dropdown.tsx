@@ -41,13 +41,8 @@ export function AccountDropdown() {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="ml-2">
-            <p className="text-base text-black">
-              {user?.full_name !== 'Test User' ? user?.full_name : user?.email}
-            </p>
-            <p className="text-xs">
-              {user?.full_name !== 'Test User' ? user?.full_name : user?.email}
-              @gmail.com
-            </p>
+            <p className="text-base text-black">{user?.full_name}</p>
+            <p className="text-xs">{user?.email}</p>
           </div>
         </div>
 
