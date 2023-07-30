@@ -12,9 +12,4 @@ function convertToApproxTime(time: string): string {
     return seconds === 1 ? `${seconds} second` : `${seconds} seconds`;
   }
 }
-
-// Example usage:
-const time = '0:58:42.917218';
-const approximateTime = convertToApproxTime(time);
-console.log(approximateTime); // Output: "58 minutes"
 export default convertToApproxTime;
