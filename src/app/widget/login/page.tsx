@@ -75,10 +75,12 @@ export default function Widget() {
   useEffect(() => {
     fetchOrgDetails();
   }, []);
+  // useEffect(() => {
+  //   console.log(currentUserToken);
+  // }, [currentUserToken]);
   useEffect(() => {
-    console.log(currentUserToken);
-  }, [currentUserToken]);
-
+    console.log(buttonAction);
+  }, [buttonAction]);
   //function to handle when the user decides to enable mfa from his side
   const handleUserMfa = () => {
     if (enableUserMfa) {
@@ -278,10 +280,6 @@ export default function Widget() {
       return;
     }
   };
-  //function to request for mfa activation while logging in
-  const mfaRequest = async () => {
-    //
-  };
 
   //function to be called when a user has to activate MFA
   const handleMFActivation = async (login: boolean) => {
@@ -331,7 +329,10 @@ export default function Widget() {
         }
       } else if (response.status === 402) {
         setCurrentUserToken(data.user_token);
-        const msg = data.msg + ' ' + data.trials + ' trials remaining';
+        const msg =
+          data.msg +
+          ',  ' +
+          (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
         setErrMsg(msg);
         return setErr(true);
         //when maximum tries for otp has been reached by the user
@@ -391,7 +392,10 @@ export default function Widget() {
         return router.push(data.callback_uri);
       } else if (response.status == 402) {
         setCurrentUserToken(data.user_token);
-        const msg = data.msg + ' ' + data.trials + ' trials remaining';
+        const msg =
+          data.msg +
+          ',  ' +
+          (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
         setErrMsg(msg);
         return setErr(true);
       } else if (response.status === 429) {
@@ -411,16 +415,76 @@ export default function Widget() {
 
   //function to log in with password
   const loginWithPassword = async () => {
+    console.log('login with password runs');
     setErr(false);
     setShowMsg(false);
-    console.log(otp, pass, email);
-    console.log(currentUserToken);
     setLoading2(true);
     if (testPass(pass)) {
       setLoading2(false);
       setErrMsg(passMsg);
       return setErr(true);
     }
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            password: pass,
+            mfa_totp: otp ? otp : 0
+          })
+        }
+      );
+      // console.log(response);
+      const data = (await response.json()) as any;
+      setLoading2(false);
+
+      const { user_token, callback_uri, msg } = data;
+      console.log(response);
+      console.log(currentUserToken);
+      if (response.status === 200) {
+        setCurrentUserToken(user_token);
+        router.push(callback_uri);
+        console.log(msg);
+        return;
+      } else if (
+        response.status === 405 ||
+        response.status === 402 ||
+        response.status === 401
+      ) {
+        setCurrentUserToken(user_token);
+        // console.log('401 or 405 occured');
+        const msg =
+          data.msg +
+          ', ' +
+          (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
+        setErrMsg(msg);
+        setErr(true);
+        return;
+      } else if (response.status === 429) {
+        const timeRegex = /(\d+):(\d+):(\d+\.\d+)/;
+        const matches = data.detail?.match(timeRegex);
+        const time = convertToApproxTime(matches[0]);
+        setErrMsg(
+          `maximum tries reached! Try again after ${time || 'some time'}`
+        );
+        return setErr(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading2(false);
+      return;
+    }
+  };
+  //function to login with password and mfa
+  const loginWithPasswordMFA = async () => {
+    setErr(false);
+    setShowMsg(false);
+    setLoading2(true);
     if (testOTP(otp)) {
       setErrMsg('Please put a valid OTP');
       setLoading2(false);
@@ -447,24 +511,30 @@ export default function Widget() {
       setLoading2(false);
 
       const { user_token, callback_uri, msg } = data;
-      console.log(data);
+      console.log(response);
       console.log(currentUserToken);
       if (response.status === 200) {
         setCurrentUserToken(user_token);
-
         router.push(callback_uri);
         console.log(msg);
         return;
-      } else if (response.status === 405 || response.status === 402) {
+      } else if (response.status === 405 || response.status === 401) {
         setCurrentUserToken(user_token);
         // console.log('401 or 405 occured');
-        const msg = data.msg + ' ' + data.trials + ' trials remaining';
+        const msg =
+          data.msg +
+          ', ' +
+          (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
         setErrMsg(msg);
         setErr(true);
 
         return;
-      } else if (response.status === 401) {
-        const msg = data.msg + ' ' + data.trials + ' trials remaining';
+      } else if (response.status === 402) {
+        const msg =
+          data.msg +
+          ', ' +
+          (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
+
         setErrMsg(msg);
         setErr(true);
         setCurrentUserToken(user_token);
@@ -488,14 +558,74 @@ export default function Widget() {
       return;
     }
   };
-  //function for passwordless login
-  const loginPasswordless = async () => {
+
+  //function for passwordless login without mfa
+  const passwordlessLogin = async () => {
     setErr(false);
     setShowMsg(false);
     setLoading2(true);
-    if (testPass(pass)) {
+    console.log('login passwordless');
+
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            mfa_totp: 0
+          })
+        }
+      );
+      // console.log(response);
+      const data = (await response.json()) as any;
       setLoading2(false);
-      setErrMsg(passMsg);
+
+      const { user_token, msg } = data;
+      console.log('login with password running...');
+
+      setCurrentUserToken(user_token);
+      console.log(currentUserToken);
+      if (response.status === 201) {
+        setMessage(msg);
+        setShowMsgPanel(true);
+        setShowMsg(true);
+        return;
+      } else if (
+        response.status === 401 ||
+        response.status === 405 ||
+        response.status === 402
+      ) {
+        setErrMsg(msg);
+        setErr(true);
+        return;
+      } else if (response.status === 409) {
+        const timeRegex = /(\d+):(\d+):(\d+\.\d+)/;
+        const matches = data.detail?.match(timeRegex);
+        const time = convertToApproxTime(matches[0]);
+        setErrMsg(
+          `maximum tries reached! Try again after ${time || 'some time'}`
+        );
+        return setErr(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading2(false);
+      return;
+    }
+  };
+  //function for passwordless login with mfa
+  const passwordlessLoginMfa = async () => {
+    setErr(false);
+    setShowMsg(false);
+    setLoading2(true);
+    console.log('login passwordless');
+    if (testOTP(otp)) {
+      setErrMsg('Please put a valid OTP');
+      setLoading2(false);
       return setErr(true);
     }
 
@@ -518,7 +648,8 @@ export default function Widget() {
       setLoading2(false);
 
       const { user_token, msg } = data;
-      // console.log(data)
+      console.log('login with password running...');
+
       setCurrentUserToken(user_token);
       console.log(currentUserToken);
       if (response.status === 201) {
@@ -918,15 +1049,17 @@ export default function Widget() {
                 }
               } else if (!enableUserMfa) {
                 setShowEnableMfaLink(false);
-                setButtonAction('loginWithPassword');
+                setButtonAction('login-password');
                 return setShowPassField(true);
               }
             }
           }
         } else if (!storeOrgData.fa2) {
           //when MFA is disabled by thre org, just show the password field and make a post request by sending the password
-          setButtonAction('loginWithPassword');
-          return setShowPassField(true);
+          console.log('no fa loginWithPassword');
+          setButtonAction('login-password');
+          setShowPassField(true);
+          return;
         }
       } else if (response.status === 206) {
         // when a user is verified but has not set a password when passwordless is false maybe because org turned off passwordless
@@ -987,7 +1120,7 @@ export default function Widget() {
               //show the password input then the mfa popup and send the post request with both pass and mfa totp
 
               setShowMfaPopup(true);
-              setButtonAction('loginPasswordless');
+              setButtonAction('passwordless-login-mfa');
               return;
             }
           } else if (!storeOrgData.strict_mfa) {
@@ -995,7 +1128,7 @@ export default function Widget() {
             if (userInfo.fa2 === true) {
               //is user has enabled fa2
               setShowMfaPopup(true);
-              setButtonAction('loginPasswordless');
+              setButtonAction('passwordless-login-mfa');
               return;
             } else if (userInfo.fa2 === null || userInfo.fa2 === false) {
               if (enableUserMfa) {
@@ -1033,8 +1166,9 @@ export default function Widget() {
                 }
               } else if (!enableUserMfa) {
                 setShowEnableMfaLink(false);
-                setButtonAction('loginWithPassword');
-                setShowPassField(true);
+                setMessage('Kindly check your Email for the link.');
+                setShowMsgPanel(true);
+                setShowMsg(true);
                 return;
               }
             }
@@ -1070,6 +1204,7 @@ export default function Widget() {
   const reset = () => {
     location.reload();
   };
+  //function to show mfa popup for login with password and mfa
   const showMfaPopupForLogin = () => {
     setErr(false);
     if (testPass(pass)) {
@@ -1077,7 +1212,7 @@ export default function Widget() {
       return setErr(true);
     }
     setShowMfaPopup(true);
-    setButtonAction('loginWithPassword');
+    setButtonAction('login-password-mfa');
   };
 
   //change the action of the button based on responses
@@ -1085,10 +1220,6 @@ export default function Widget() {
     switch (buttonAction) {
       case 'showMfaPopup':
         showMfaPopupForLogin();
-
-        break;
-      case 'mfa-request-password':
-        mfaRequest();
         break;
       case 'newPasswordRequest':
         newPasswordRequest();
@@ -1099,11 +1230,17 @@ export default function Widget() {
       case 'first-password':
         handleNewPassword();
         break;
-      case 'loginWithPassword':
+      case 'login-password':
         loginWithPassword();
         break;
-      case 'loginPasswordless':
-        loginPasswordless();
+      case 'login-password-mfa':
+        loginWithPasswordMFA();
+        break;
+      case 'passwordless-login':
+        passwordlessLogin();
+        break;
+      case 'passwordless-login-mfa':
+        passwordlessLoginMfa();
         break;
       case 'mfa-login':
         handleMFA();
@@ -1127,7 +1264,7 @@ export default function Widget() {
           <div className="border-t-transparent rounded-full border-solid animate-spin border-blue-400 border-8  h-20 w-20"></div>
         </div>
       ) : (
-        <div className="top-1/2 flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw]   sm:w-[350px]  bg-white border-[1px] border-gray-300 rounded-xl shadow-2xl ">
+        <div className="top-1/2 bg-white flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw]   sm:w-[350px] border-[1px] border-gray-300 rounded-xl shadow-2xl ">
           <div className="flex flex-col items-center p-[20px] mr-0 !important ">
             <div className="flex flex-col justify-center items-center ">
               <Image
@@ -1189,11 +1326,15 @@ export default function Widget() {
                       Scan the code using Google authenticator
                     </span>
 
-                    <QRCodeSVG value={qr} />
+                    <QRCodeSVG
+                      value={qr}
+                      bgColor="transparent"
+                      fgColor="yellow"
+                    />
                     <span className="my-2">Enter OTP to turn on MFA</span>
                     <OtpInput
                       containerStyle="grid grid-cols-2 justify-center gap-1"
-                      inputStyle="!w-8 h-8 md:!w-10 mt-4 border border-blue-400 focus:ring-blue-400 sm:h-8 md:h-10 p-0 text-center rounded-xl"
+                      inputStyle="!w-8 h-8 md:!w-10 mt-4 border bg-transparent border-black sm:h-8 md:h-10 p-0 text-center rounded-xl"
                       value={otp}
                       onChange={setOtp}
                       numInputs={6}
@@ -1207,7 +1348,7 @@ export default function Widget() {
 
                     <OtpInput
                       containerStyle="grid grid-cols-2 justify-center gap-1"
-                      inputStyle="!w-8 h-8 md:!w-10 mt-4 border border-blue-400 focus:ring-blue-400 sm:h-8 md:h-10 p-0 text-center rounded-xl"
+                      inputStyle="!w-8 h-8 md:!w-10 mt-4 border bg-transparent border-blue-400 focus:ring-blue-400 sm:h-8 md:h-10 p-0 text-center rounded-xl"
                       value={otp}
                       onChange={setOtp}
                       numInputs={6}
@@ -1251,11 +1392,12 @@ export default function Widget() {
                 {showEnableMfaLink ? (
                   <div className="flex justify-start w-full">
                     <div
-                      className="flex items-center space-x-2  bg-blue-300 mt-2  px-2 py-1 rounded-sm"
+                      className="flex items-center space-x-2  bg-blue-400 mt-2  px-2 py-1 rounded-md"
                       onClick={() => setChecked(!checked)}
                     >
                       <input
                         type="checkbox"
+                        className="p-4"
                         id="enable-mfa"
                         checked={enableUserMfa}
                         onChange={() => setEnablUsereMfa(!enableUserMfa)}
