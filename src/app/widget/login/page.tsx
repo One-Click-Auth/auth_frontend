@@ -662,6 +662,10 @@ export default function Widget() {
         response.status === 405 ||
         response.status === 402
       ) {
+        const msg =
+          data.msg +
+          ', ' +
+          (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
         setErrMsg(msg);
         setErr(true);
         return;
@@ -747,13 +751,17 @@ export default function Widget() {
       if (response.status === 422) {
         setErrMsg(data.detail[0].msg);
 
-        return setErr(true);
+        setErr(true);
+        location.reload();
+        return;
       }
       //if some problem occur in verifying the org_token
       if (response.status == 401 || response.status == 406) {
         setErrMsg(data.detail);
 
-        return setErr(true);
+        setErr(true);
+        location.reload();
+        return;
       }
       //seperating user token and user details from the response data json
       const { user_token, mfa_code, ...rest } = data;
