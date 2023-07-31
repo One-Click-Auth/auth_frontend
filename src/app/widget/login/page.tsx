@@ -1326,11 +1326,7 @@ export default function Widget() {
                       Scan the code using Google authenticator
                     </span>
 
-                    <QRCodeSVG
-                      value={qr}
-                      bgColor="transparent"
-                      fgColor="yellow"
-                    />
+                    <QRCodeSVG value={qr} bgColor="transparent" />
                     <span className="my-2">Enter OTP to turn on MFA</span>
                     <OtpInput
                       containerStyle="grid grid-cols-2 justify-center gap-1"
