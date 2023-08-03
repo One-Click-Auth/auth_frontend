@@ -7,10 +7,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
 import Image from 'next/image';
+import { useDispatch } from 'react-redux';
+import { updateKeys } from '@/redux/Org/keySlice';
 
 function AddOrganization() {
   const router = useRouter();
   const [orgName, setOrgName] = useState('');
+
+  const dispatch = useDispatch();
 
   const handleChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -29,10 +33,11 @@ function AddOrganization() {
   const [queryState, setQueryState] = useState(false);
 
   const handleIncrement = () => {
-    setOrgCount(e => e + 1);
+    setOrgCount((e: number) => e + 1);
   };
+
   const handleDecrement = () => {
-    setOrgCount(e => e - 1);
+    setOrgCount((e: number) => e - 1);
   };
 
   useEffect(() => {
@@ -48,6 +53,13 @@ function AddOrganization() {
       setQueryState(false);
     }
   }, []);
+
+  interface OrgData {
+    status: boolean;
+    org_id: string;
+    api_key: string;
+    api_secret: string;
+  }
 
   const checkForPayment = (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -68,6 +80,14 @@ function AddOrganization() {
             triggerRef?.current?.click();
           }
         } else {
+          return response.json() as Promise<OrgData>;
+        }
+      })
+      .then(data => {
+        if (data) {
+          dispatch(updateKeys({ type: 'key', value: data.api_key }));
+          dispatch(updateKeys({ type: 'secret', value: data.api_secret }));
+          dispatch(updateKeys({ type: 'id', value: data.org_id }));
           router.push('/dashboard/keys');
         }
       })
@@ -100,8 +120,6 @@ function AddOrganization() {
         console.log('error', error);
       });
   };
-
-  // checkforpayment => 412 ? popUp => handlePayment : => orgCreate
 
   return (
     <div className="max-w-4xl h-[calc(100vh-100px)] m-auto text-start flex items-center justify-center flex-col">
