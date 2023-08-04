@@ -15,4 +15,10 @@ export type UserResponse = {
   detail?: string;
 };
 
+export type OrgKeys = {
+  key: string;
+  secret: string;
+  id: string;
+};
+
 export type PartialOrg = Partial<Organization>;
