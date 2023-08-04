@@ -31,6 +31,7 @@ import {
 } from '../(organisation)/[slug]/widget/widgetStore';
 import { toColor } from 'react-color-palette';
 import { getOrgData } from '@/lib/utils';
+import { FaUsersLine } from 'react-icons/fa6';
 
 export const SidebarOrg = () => {
   const [open, setOpen] = useState(true);
@@ -184,6 +185,17 @@ export const SidebarOrg = () => {
                 <DashboardSVG />
               </span>
               {open ? <span>Dashboard</span> : ''}
+            </Link>
+            <Link
+              href={`/dashboard/${slug}/userbook`}
+              className={`hover:bg-white hover:bg-opacity-40 ${
+                open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
+              } mb-4 rounded-md flex items-center space-x-2`}
+            >
+              <span>
+                <FaUsersLine className="text-3xl w-6 text-accent" />
+              </span>
+              {open ? <span>Manage Users</span> : ''}
             </Link>
             <Link
               href="#"
