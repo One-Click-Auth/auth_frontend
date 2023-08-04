@@ -19,6 +19,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_latest.x | bash - && \
 # and adjust the following lines accordingly.
 
 # Copy the SSH private key to the container
+COPY ./temp_rsa /root/.ssh/id_rsa
 
 # Set the correct permissions for the private key
 RUN chmod 600 /root/.ssh/id_rsa
