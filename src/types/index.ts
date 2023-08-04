@@ -1,4 +1,4 @@
-import { Organization } from "@/app/dashboard/orgDataStore";
+import { Organization } from '@/app/dashboard/orgDataStore';
 
 export type ApiResponse = {
   is_ok: boolean;
@@ -13,6 +13,6 @@ export type UserResponse = {
   status: number;
   msg: string;
   detail?: string;
-}
+};
 
 export type PartialOrg = Partial<Organization>;
