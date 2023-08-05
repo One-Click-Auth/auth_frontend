@@ -1,11 +1,13 @@
 name: Node.js CI
 
 on:
-  merge:
-    branches: ['next-app']
+  pull_request:
+    types:
+      - closed
 
 jobs:
-  build:
+  if_merged:
+    if: github.event.pull_request.merged == true
     runs-on: [self-hosted, example]
 
     strategy:
