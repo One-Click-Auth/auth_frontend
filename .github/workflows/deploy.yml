@@ -1,30 +1,25 @@
-name: Deploy to EC2
+name: Node.js CI
 
 on:
-  push:
-    branches:
-      - next-app
+  merge:
+    branches: ['next-app']
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: [self-hosted, example]
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install ssh-agent and sshpass
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -y -q openssh-client sshpass
-
-      - name: Add SSH private key
-        run: |
-          echo "$SSH_PRIVATE_KEY" > ssh_key.pem
-          chmod 600 ssh_key.pem
-          eval "$(ssh-agent -s)"
-          ssh-add ssh_key.pem
-
-      - name: Deploy to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -tt $EC2_USERNAME@$EC2_HOST 'git clone --branch next-app --depth 1 https://github.com/$GITHUB_REPOSITORY.git auth_frontend && cd ./auth_frontend && npm install && npm run build && pm2 restart all'
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - run: npm run build --if-present
+      - run: pm2 restart example
