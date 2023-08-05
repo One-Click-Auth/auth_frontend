@@ -1,0 +1,30 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - next-app
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install ssh-agent and sshpass
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q openssh-client sshpass
+
+      - name: Add SSH private key
+        run: |
+          echo "$SSH_PRIVATE_KEY" > ssh_key.pem
+          chmod 600 ssh_key.pem
+          eval "$(ssh-agent -s)"
+          ssh-add ssh_key.pem
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -tt $EC2_USERNAME@$EC2_HOST 'git clone --branch next-app --depth 1 https://github.com/$GITHUB_REPOSITORY.git auth_frontend && cd ./auth_frontend && npm install && npm run build && pm2 restart all'
