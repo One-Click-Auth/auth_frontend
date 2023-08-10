@@ -72,7 +72,7 @@ const WidgetSettings = () => {
   };
 
   return (
-    <div className="flex-1 space-y-4 p-10 pt-14 max-w-7xl mx-auto">
+    <div className="flex-1 space-y-4 p-6 pt-14 max-w-7xl mx-auto">
       <Tabs
         defaultValue={TABS.branding}
         className="space-y-4"
@@ -113,7 +113,9 @@ const WidgetSettings = () => {
           </TabsList>
           <LanguageSwitcher />
         </div>
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          {/* Tabs Content */}
           <TabsContent
             value={TABS.branding}
             className="mt-0 space-y-4 col-span1 lg:col-span-4"
@@ -124,6 +126,7 @@ const WidgetSettings = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
           <TabsContent
             value={TABS.customization}
             className="mt-0 space-y-4 col-span1 lg:col-span-4"
@@ -134,6 +137,7 @@ const WidgetSettings = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
           <TabsContent
             value={TABS.consent}
             className="mt-0 space-y-4 col-span1 lg:col-span-4"
@@ -144,6 +148,7 @@ const WidgetSettings = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
           <TabsContent
             value={TABS.dev_settings}
             className="mt-0 space-y-4 col-span1 lg:col-span-4"
@@ -154,6 +159,7 @@ const WidgetSettings = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
           <TabsContent
             value={TABS.email_settings}
             className="mt-0 space-y-4 col-span1 lg:col-span-4"
@@ -164,6 +170,7 @@ const WidgetSettings = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
           {/* Widget Preview */}
           <Card
             style={{

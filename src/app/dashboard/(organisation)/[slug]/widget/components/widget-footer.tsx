@@ -44,7 +44,8 @@ export function WidgetFooter({ reset }: FooterProps) {
     color2,
     color3,
     widgetBgColor,
-    widgetColor
+    widgetColor,
+    nameFontColor
   } = useWidgetStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [s3ImageUrl, setS3ImageUrl] = useState(logoImage);
@@ -76,6 +77,7 @@ export function WidgetFooter({ reset }: FooterProps) {
       color2: color3.hex,
       color3: widgetBgColor.hex,
       color6: widgetColor.hex,
+      color10: nameFontColor.hex,
       social
     }
   };
@@ -205,7 +207,7 @@ export function WidgetFooter({ reset }: FooterProps) {
   };
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-5">
       <span className="basis-3/5 text-slate-400 text-sm border rounded-lg pt-2 px-3">
         Save the new widget Settings for this Organization{' '}
       </span>

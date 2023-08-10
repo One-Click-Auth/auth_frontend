@@ -19,10 +19,12 @@ export function WidgetCustom() {
     widgetBoxRadius,
     setWidgetBoxRadius,
     widgetBorderWidth,
-    setWidgetBorderWidth
+    setWidgetBorderWidth,
+    nameFontColor,
+    setNameFontColor
   } = useWidgetStore();
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4 overflow-y-scroll max-h-[500px]">
       <div>
         <span className="text-sm pl-2 text-zinc-500">
           Input Box Border Colour
@@ -82,12 +84,25 @@ export function WidgetCustom() {
           colorState={{ color: widgetColor, setColor: setWidgetColor }}
         />
       </div>
+
       <div>
         <span className="text-sm pl-2 text-zinc-500">
           Widget Background Colour
         </span>
         <ColourInput
           colorState={{ color: widgetBgColor, setColor: setWidgetBgColor }}
+        />
+      </div>
+
+      <div>
+        <span className="text-sm pl-2 text-zinc-500">
+          Display Name Font Color
+        </span>
+        <ColourInput
+          colorState={{
+            color: nameFontColor,
+            setColor: setNameFontColor
+          }}
         />
       </div>
     </div>
