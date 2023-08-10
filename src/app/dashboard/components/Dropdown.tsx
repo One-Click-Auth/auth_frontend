@@ -22,62 +22,80 @@ import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Dialog, DialogTrigger } from '@/components/ui/Dialog';
+import ProfilePopup from './ProfilePopup';
 
 export function AccountDropdown() {
   const { user } = useAuth();
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="active:border-0  active:outline-none">
-        <div className="text-xs sm:text-sm flex items-center font-semibold  min-w-max">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-96 max-w-[80vw] mt-2 mx-8 py-10 overflow-hidden bg-white cursor-pointer rounded-2xl">
-        <div className="flex sticky top-0 bg-white items-center gap-1 px-12 py-4">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="ml-2">
-            <p className="text-base text-black">{user?.full_name}</p>
-            <p className="text-xs">{user?.email}</p>
+    //dropdown needs to be wrapped in dialog for the trigger to work
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="active:border-0  active:outline-none">
+          <div className="text-xs sm:text-sm flex items-center font-semibold  min-w-max">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
           </div>
-        </div>
-        <ScrollArea className="h-80 max-h-[60vh] overflow-y-scroll overflow-hidden">
-          <MenuItem icon={<ProfileItemSvg />} title="Profile" />
-          <MenuItem icon={<BillingSvg />} title="Billing" />
-          <MenuItem
-            icon={<SettingsSvg />}
-            title="Settings"
-            href="/dashboard/settings"
-          />
-          <MenuItem icon={<TeamSvg />} title="Team" />
-          <MenuItem icon={<InviteSvg />} title="Invite users" />
-          <MenuItem icon={<AddItemSvg />} title="New Item" />
-          <MenuItem icon={<GithubSvg />} title="Github" />
-          <MenuItem icon={<InviteSvg />} title="Support" />
-          <div className="opacity-40">
-            <MenuItem icon={<CloudSvg />} title="Api" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-96 max-w-[80vw] mt-2 mx-8 py-10 overflow-hidden bg-white cursor-pointer rounded-2xl">
+          <div className="flex sticky top-0 bg-white items-center gap-1 px-12 py-4">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <div className="ml-2">
+              <p className="text-base text-black">{user?.full_name}</p>
+              <p className="text-xs">{user?.email}</p>
+            </div>
           </div>
-          <DropdownMenuItem
-            className="cursor-pointer flex items-center px-12 py-4 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm"
-            onClick={() =>
-              signOut({
-                callbackUrl: window.location.origin
-              })
-            }
-          >
-            <span className="w-5 h-5 mt-1">
-              <LogOutSvg />
-            </span>
-            <span className="ml-4"> Sign Out </span>
-          </DropdownMenuItem>
-        </ScrollArea>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <ScrollArea className="h-80 max-h-[60vh] overflow-y-scroll overflow-hidden">
+            {/* The component wasnt used here because of radix/shadcn having to access the ref, and the component being a Link */}
+            <DialogTrigger asChild>
+              <DropdownMenuItem className="p-1 px-12 py-4 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm">
+                <div className="flex items-center ">
+                  <span className="w-5 h-5 mt-1">
+                    <ProfileItemSvg />
+                  </span>
+                  <span className="ml-4"> Profile </span>
+                </div>
+              </DropdownMenuItem>
+            </DialogTrigger>
+
+            <MenuItem icon={<BillingSvg />} title="Billing" />
+            <MenuItem
+              icon={<SettingsSvg />}
+              title="Settings"
+              href="/dashboard/settings"
+            />
+            <MenuItem icon={<TeamSvg />} title="Team" />
+            <MenuItem icon={<InviteSvg />} title="Invite users" />
+            <MenuItem icon={<AddItemSvg />} title="New Item" />
+            <MenuItem icon={<GithubSvg />} title="Github" />
+            <MenuItem icon={<InviteSvg />} title="Support" />
+            <div className="opacity-40">
+              <MenuItem icon={<CloudSvg />} title="Api" />
+            </div>
+            <DropdownMenuItem
+              className="cursor-pointer flex items-center px-12 py-4 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm"
+              onClick={() =>
+                signOut({
+                  callbackUrl: window.location.origin
+                })
+              }
+            >
+              <span className="w-5 h-5 mt-1">
+                <LogOutSvg />
+              </span>
+              <span className="ml-4"> Sign Out </span>
+            </DropdownMenuItem>
+          </ScrollArea>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ProfilePopup />
+    </Dialog>
   );
 }
 

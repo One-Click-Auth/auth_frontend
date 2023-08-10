@@ -154,7 +154,7 @@ const NewPassword: React.FC = () => {
               </form>
               <div className="ats-content mt-8 md:mt-11">
                 <p className="mb-0 text-xl flex items-center flex-wrap">
-                  I remember my AuthX password
+                  I remembered my AuthX password
                   <LinkText to="/">advance to Login</LinkText>
                 </p>
               </div>
