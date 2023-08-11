@@ -148,13 +148,13 @@ export default function Signup() {
       .then(response => response.json())
       .then(jsonData => {
         const data = jsonData as ApiResponse;
-        console.log(data);
         setLoading(false);
-        if (data.status === 200 && data.is_ok === true) {
+        console.log(data);
+        if (data.status === 200) {
           setShow(false);
           router.push('/');
         }
-        if (data.is_ok === false) {
+        if (data.status > 200) {
           setAlertMessage(data.msg);
           setAlert(true);
         }
