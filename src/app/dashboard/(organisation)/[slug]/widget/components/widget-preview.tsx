@@ -30,9 +30,10 @@ export function WidgetPreview() {
     greeting,
     inputBorderColor,
     widgetColor,
-    inputBoxRadius
+    inputBoxRadius,
+    nameFontColor
   } = useWidgetStore();
-  
+
   const socialValues = Object.values(social);
   const show = socialValues.includes(true);
 
@@ -67,13 +68,17 @@ export function WidgetPreview() {
           <AvatarImage src={logoImage} alt="Organisation Logo" />
           <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
         </Avatar>
-        <h1 className="text-lg font-medium text-center break-words w-44 mt-0.5 mb-1.5">
+        <h1
+          className="text-lg font-medium text-center break-words w-44 mt-0.5 mb-1.5"
+          style={{ color: nameFontColor.hex }}
+        >
           {displayName}
         </h1>
         <small className="text-[0.6rem] w-44 break-words text-center">
           {greeting}
         </small>
       </div>
+
       <div className="flex flex-col gap-8 items-center">
         <div className="relative">
           <label
