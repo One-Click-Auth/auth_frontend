@@ -48,7 +48,7 @@ export default function KeysCard() {
               <span className="font-semibold">*Note</span> : The secret key is a
               sensitive piece of information that is only shown once. You will
               not be able to see it again, so it is important to save it in a
-              safe place. In the future, you can only change your API key and
+              safe place. In the future, you will only be able to change your API key and
               secret key.{' '}
             </p>
           </div>
