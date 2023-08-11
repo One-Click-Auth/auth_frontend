@@ -42,17 +42,42 @@ const WidgetSettings = () => {
     widgetColor
   } = useWidgetStore();
 
-  // Set or reset logo
   useEffect(() => {
     if (logo) {
       setLogoImage(URL.createObjectURL(logo));
     }
 
-    // Maintain current logo Image when input is cleared
     if (!logo) {
       setLogoImage(logoImage);
     }
   }, [logo]);
+
+  //Update box shadow as per background color dynamically
+  function calculateDynamicDropShadow(backgroundHex: string) {
+    const shadowOpacity = 0.3;
+    const shadowSpread = '0.2rem';
+
+    const rgb = hexToRgb(backgroundHex);
+
+    const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+    const shadowColor =
+      luminance > 0.5
+        ? `rgba(0, 0, 0, ${shadowOpacity})`
+        : `rgba(255, 255, 255, ${shadowOpacity})`;
+
+    const boxShadow = `0px 0px 20px ${shadowSpread} ${shadowColor}`;
+    return {
+      boxShadow
+    };
+  }
+
+  function hexToRgb(hex: string) {
+    const bigint = parseInt(hex.slice(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return { r, g, b };
+  }
 
   const handleReset = () => {
     switch (tab) {
@@ -68,11 +93,13 @@ const WidgetSettings = () => {
         return resetCustomisation();
       case TABS.dev_settings:
         return resetDevSettings();
+      default:
+        return;
     }
   };
 
   return (
-    <div className="flex-1 space-y-4 p-6 pt-14 max-w-7xl mx-auto">
+    <div className="flex-1 space-y-4 p-6 pt-14 max-w-7xl mx-auto ">
       <Tabs
         defaultValue={TABS.branding}
         className="space-y-4"
@@ -115,10 +142,9 @@ const WidgetSettings = () => {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          {/* Tabs Content */}
           <TabsContent
             value={TABS.branding}
-            className="mt-0 space-y-4 col-span1 lg:col-span-4"
+            className="mt-0 space-y-4 col-span-1 lg:col-span-4"
           >
             <Card className="shadow-none">
               <CardContent className="p-10 space-y-7">
@@ -129,7 +155,7 @@ const WidgetSettings = () => {
 
           <TabsContent
             value={TABS.customization}
-            className="mt-0 space-y-4 col-span1 lg:col-span-4"
+            className="mt-0 space-y-4 col-span-1 lg:col-span-4"
           >
             <Card className="shadow-none">
               <CardContent className="p-10 space-y-7">
@@ -140,7 +166,7 @@ const WidgetSettings = () => {
 
           <TabsContent
             value={TABS.consent}
-            className="mt-0 space-y-4 col-span1 lg:col-span-4"
+            className="mt-0 space-y-4 col-span-1 lg:col-span-4"
           >
             <Card className="shadow-none min-h-[36rem]">
               <CardContent className="p-10">
@@ -151,7 +177,7 @@ const WidgetSettings = () => {
 
           <TabsContent
             value={TABS.dev_settings}
-            className="mt-0 space-y-4 col-span1 lg:col-span-4"
+            className="mt-0 space-y-4 col-span-1 lg:col-span-4"
           >
             <Card className="shadow-none min-h-[36rem]">
               <CardContent className="p-10">
@@ -162,7 +188,7 @@ const WidgetSettings = () => {
 
           <TabsContent
             value={TABS.email_settings}
-            className="mt-0 space-y-4 col-span1 lg:col-span-4"
+            className="mt-0 space-y-4 col-span-1 lg:col-span-4"
           >
             <Card className="shadow-none min-h-[36rem]">
               <CardContent className="p-10">
@@ -171,7 +197,6 @@ const WidgetSettings = () => {
             </Card>
           </TabsContent>
 
-          {/* Widget Preview */}
           <Card
             style={{
               backgroundColor: widgetBgColor.hex
@@ -183,9 +208,10 @@ const WidgetSettings = () => {
                 borderRadius: Number(widgetBoxRadius),
                 borderWidth: Number(widgetBorderWidth),
                 borderColor: widgetBorderColor.hex,
-                backgroundColor: widgetColor.hex
+                backgroundColor: widgetColor.hex,
+                ...calculateDynamicDropShadow(widgetBgColor.hex)
               }}
-              className="p-10 bg-primary m-4 rounded-lg drop-shadow-lg"
+              className="p-10 bg-primary m-4 rounded-lg"
             >
               <WidgetPreview />
             </CardContent>
