@@ -44,6 +44,7 @@ const DialogContent = React.forwardRef<
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
+      onInteractOutside={e => e.preventDefault()}
       ref={ref}
       className={cn(
         'fixed z-50 grid w-full focus:outline-none gap-4 rounded-b-lg border bg-background p-6  animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:max-w-lg rounded-[22px] sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0',
