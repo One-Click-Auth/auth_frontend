@@ -13,6 +13,7 @@ interface Widget {
     style: number;
     radius: number;
     color: string;
+    width: number;
   };
   color0: string;
   color1: string;
@@ -21,6 +22,12 @@ interface Widget {
   color4: string;
   color5: string;
   color6: string;
+  color7: string;
+  color8: string;
+  color9: string;
+  color10: string;
+  color11: string;
+  color12: string;
   social: object; // Update this type to match the actual structure of the "social" property
   tnc: unknown; // Update this type to match the actual structure of the "tnc" property
   pp: unknown; // Update this type to match the actual structure of the "pp" property
@@ -97,7 +104,8 @@ export const useOrgData = create<OrgData>(set => ({
       widget_border: {
         style: 0,
         radius: 0,
-        color: ''
+        color: '',
+        width: 0
       },
       color0: '',
       color1: '',
@@ -106,6 +114,12 @@ export const useOrgData = create<OrgData>(set => ({
       color4: '',
       color5: '',
       color6: '',
+      color7: '',
+      color8: '',
+      color9: '',
+      color10: '',
+      color11: '',
+      color12: '',
       social: {},
       tnc: null,
       pp: null,
