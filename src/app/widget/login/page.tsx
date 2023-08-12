@@ -1195,48 +1195,32 @@ export default function Widget() {
         break;
     }
   };
+  const widget = storeOrgData.widget;
+  const goButtonStyle = {
+    color: widget.color9,
+    background: `linear-gradient(to right, ${widget.color0} 0%,${widget.color1} 50%,${widget.color2} 100% )`,
 
-  //change the action of the button based on responses
-  // const handleGo = () => {
-  //   switch (buttonAction) {
-  //     case 'showMfaPopup':
-  //       showMfaPopupForLogin();
-  //       break;
-  //     case 'newPasswordRequest':
-  //       newPasswordRequest();
-  //       break;
-  //     case 'verify_email':
-  //       handleUserMfa();
-  //       break;
-  //     case 'first-password':
-  //       handleNewPassword();
-  //       break;
-  //     case 'login-password':
-  //       loginWithPassword();
-  //       break;
-  //      case 'login-password-mfa':
-  //       loginWithPasswordMFA();
-  //       break;
-  //     case 'passwordless-login':
-  //       passwordlessLogin();
-  //       break;
-  //     case 'passwordless-login-mfa':
-  //       passwordlessLoginMfa();
-  //       break;
-  //     case 'mfa-login':
-  //       handleMFA();
-  //       break;
-  //     case 'mfa-activation-signup':
-  //       handleMFActivation(false);
-  //       break;
-  //     case 'mfa-activation-login':
-  //       handleMFActivation(true);
-  //       break;
-  //     default:
-  //       handleSubmit();
-  //       break;
-  //   }
-  // };
+    boxShadow: '1px 1px 8px black'
+  };
+  const lineStyle = {
+    borderColor: widget.color12,
+    color: widget.color12
+  };
+  const cardStyle = {
+    background: `linear-gradient(to bottom, ${widget.color6},${widget.color7})`,
+    boxShadow: `1px 1px 30px 2px ${widget.color8}`,
+    border: `2px solid ${widget.widget_border.color}`,
+    borderRadius: `${widget.widget_border.radius}px`
+  };
+  const bgStyle = {
+    background: `linear-gradient(to bottom right,  ${widget.color3} 0%, ${widget.color4} 50%,${widget.color5} 100%)`
+  };
+  const orgNameStyle = {
+    color: `${widget.color10}`
+  };
+  const greetingStyle = {
+    color: `${widget.color11}`
+  };
 
   return (
     <>
@@ -1245,212 +1229,238 @@ export default function Widget() {
           <div className="border-t-transparent rounded-full border-solid animate-spin border-blue-400 border-8  h-20 w-20"></div>
         </div>
       ) : (
-        <div className="top-1/2 bg-white flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw]   sm:w-[350px] border-[1px] border-gray-300 rounded-xl shadow-2xl ">
-          <div className="flex flex-col items-center p-[20px] mr-0 !important ">
-            <div className="flex flex-col justify-center items-center ">
-              <Image
-                width={60}
-                height={60}
-                src={
-                  'https://flitchcoin.s3.eu-west-2.amazonaws.com/authxlogo.svg'
-                }
-                alt="AuthX logo"
-              />
+        <div className="w-[100vw] h-[100vh] min-h-max" style={bgStyle}>
+          <div
+            style={cardStyle}
+            className="top-1/2 flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw]   sm:w-[350px] "
+          >
+            <div className="flex flex-col items-center p-[20px] mr-0 !important ">
+              <div className="flex flex-col justify-center items-center ">
+                <Image
+                  width={60}
+                  height={60}
+                  src={
+                    widget.logo_url ||
+                    'https://flitchcoin.s3.eu-west-2.amazonaws.com/authxlogo.svg'
+                  }
+                  alt="AuthX logo"
+                />
 
-              <div className="mt-1">
-                <span className="text-xl font-semibold">
-                  {storeOrgData.widget.name}
-                </span>
+                <div className="mt-1">
+                  <span className="text-xl font-semibold" style={orgNameStyle}>
+                    {storeOrgData.widget.name}
+                  </span>
+                </div>
+                {showMsg ? (
+                  <span
+                    className={`text-blue-400 text-center ${
+                      showMsgPanel ? 'my-20' : ''
+                    } `}
+                  >
+                    {message}
+                  </span>
+                ) : (
+                  ''
+                )}
+                {!showMsgPanel ? (
+                  <div className="mt-4">
+                    <span className="text-base text-4md" style={greetingStyle}>
+                      {showMfaActivation
+                        ? 'Continue to register MFA'
+                        : `Login to ${
+                            storeOrgData.widget.name || 'TrustAuthX'
+                          }`}
+                    </span>
+                  </div>
+                ) : (
+                  ''
+                )}
               </div>
-              {showMsg ? (
-                <span
-                  className={`text-blue-400 text-center ${
-                    showMsgPanel ? 'my-20' : ''
-                  } `}
-                >
-                  {message}
-                </span>
-              ) : (
-                ''
-              )}
-              {!showMsgPanel ? (
-                <div className="mt-4">
-                  <span className="text-base text-4md text-slate-900">
-                    {showMfaActivation
-                      ? 'Continue to register MFA'
-                      : `Login to ${storeOrgData.widget.name || 'TrustAuthX'}`}
+              {showMsgPanel ? (
+                <div>
+                  {showEnableMfaLink ? (
+                    <div>
+                      <button
+                        className="px-2  py-1 bg-slate-300 border-none outline-none w-max text-blue-400 hover:text-blue-600 transition-colors focus:text-red-600"
+                        onClick={userMfaRequest}
+                      >
+                        Want to Turn on MFA?
+                      </button>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  <span
+                    className="text-blue-400 hover:text-blue-600 cursor-pointer"
+                    // onClick={sendEmailAgain}
+                  >
+                    Did not receive email? Try again.
                   </span>
                 </div>
               ) : (
-                ''
-              )}
-            </div>
-            {showMsgPanel ? (
-              <div>
-                {showEnableMfaLink ? (
-                  <div>
+                <div
+                  className={`w-[260px] sm:w-[300px] mt-[30px] flex flex-col items-center`}
+                >
+                  {showMfaActivation ? (
+                    <div
+                      id="mfaActivationPanel"
+                      className="flex flex-col items-center"
+                    >
+                      <span className="mb-2 text-center">
+                        Scan the code using Google authenticator
+                      </span>
+
+                      <QRCodeSVG value={qr} bgColor="transparent" />
+                      <span className="my-2">Enter OTP to turn on MFA</span>
+                      <OtpInput
+                        containerStyle="grid grid-cols-2 justify-center gap-1"
+                        inputStyle="!w-8 h-8 md:!w-10 mt-4 border bg-transparent border-black sm:h-8 md:h-10 p-0 text-center rounded-xl"
+                        value={otp}
+                        onChange={setOtp}
+                        numInputs={6}
+                        renderSeparator={<span></span>}
+                        renderInput={props => <input {...props} />}
+                      />
+                    </div>
+                  ) : showMfaPopup ? (
+                    <div id="mfaPopup" className="flex flex-col items-center">
+                      <span className="mb-2 text-center">
+                        Enter the MFA code
+                      </span>
+
+                      <OtpInput
+                        containerStyle="grid grid-cols-2 justify-center gap-1"
+                        inputStyle="!w-8 h-8 md:!w-10 mt-4 border bg-transparent border-blue-400 focus:ring-blue-400 sm:h-8 md:h-10 p-0 text-center rounded-xl"
+                        value={otp}
+                        onChange={setOtp}
+                        numInputs={6}
+                        renderSeparator={<span></span>}
+                        renderInput={props => <input {...props} />}
+                      />
+                    </div>
+                  ) : showpassField ? (
+                    <>
+                      <div className="w-full flex flex-col">
+                        <label className={''}>Password</label>
+                        <input
+                          className={`outline-none p-2 rounded-md bg-transparent border-2`}
+                          id="password"
+                          type="password"
+                          value={pass}
+                          placeholder=" "
+                          onChange={e => setPass(e.target.value)}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div className={`w-full flex flex-col `}>
+                      <label className={''}>Email</label>
+                      <input
+                        className="outline-none p-2 rounded-md bg-transparent border-2"
+                        id="email"
+                        type="email"
+                        value={email}
+                        placeholder=" "
+                        onChange={e => setEmail(e.target.value)}
+                      />
+                    </div>
+                  )}
+
+                  {err ? (
+                    <span className="text-red-500 text-center">{errMsg}</span>
+                  ) : (
+                    ''
+                  )}
+                  {showEnableMfaLink ? (
                     <button
-                      className="px-2  py-1 bg-slate-300 border-none outline-none w-max text-blue-400 hover:text-blue-600 transition-colors focus:text-red-600"
+                      className="px-2 py-1 border-none outline-none w-max text-blue-400 hover:text-blue-600 transition-colors focus:text-red-600"
                       onClick={userMfaRequest}
                     >
                       Want to Turn on MFA?
                     </button>
+                  ) : (
+                    ''
+                  )}
+                  {/* onChange={() => setEnablUsereMfa(!enableUserMfa)} */}
+
+                  <div className="w-full mt-8">
+                    <button
+                      style={goButtonStyle}
+                      className={`w-full h-12`}
+                      onClick={loading2 ? undefined : handleGo}
+                    >
+                      <span className="text-xl mx-auto">
+                        {loading2 ? (
+                          <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-blue-400 border-4 h-8 w-8"></div>
+                        ) : (
+                          'Go >'
+                        )}
+                      </span>
+                    </button>
                   </div>
-                ) : (
-                  ''
-                )}
-                <span
-                  className="text-blue-400 hover:text-blue-600 cursor-pointer"
-                  // onClick={sendEmailAgain}
-                >
-                  Did not receive email? Try again.
-                </span>
-              </div>
-            ) : (
+                </div>
+              )}
               <div
-                className={`w-[260px] sm:w-[300px] mt-[30px] flex flex-col items-center`}
+                className="text-sm w-full text-right mt-1 text-blue-400 hover:text-blue-600 cursor-pointer"
+                onClick={reset}
               >
-                {showMfaActivation ? (
-                  <div
-                    id="mfaActivationPanel"
-                    className="flex flex-col items-center"
-                  >
-                    <span className="mb-2 text-center">
-                      Scan the code using Google authenticator
-                    </span>
-
-                    <QRCodeSVG value={qr} bgColor="transparent" />
-                    <span className="my-2">Enter OTP to turn on MFA</span>
-                    <OtpInput
-                      containerStyle="grid grid-cols-2 justify-center gap-1"
-                      inputStyle="!w-8 h-8 md:!w-10 mt-4 border bg-transparent border-black sm:h-8 md:h-10 p-0 text-center rounded-xl"
-                      value={otp}
-                      onChange={setOtp}
-                      numInputs={6}
-                      renderSeparator={<span></span>}
-                      renderInput={props => <input {...props} />}
-                    />
-                  </div>
-                ) : showMfaPopup ? (
-                  <div id="mfaPopup" className="flex flex-col items-center">
-                    <span className="mb-2 text-center">Enter the MFA code</span>
-
-                    <OtpInput
-                      containerStyle="grid grid-cols-2 justify-center gap-1"
-                      inputStyle="!w-8 h-8 md:!w-10 mt-4 border bg-transparent border-blue-400 focus:ring-blue-400 sm:h-8 md:h-10 p-0 text-center rounded-xl"
-                      value={otp}
-                      onChange={setOtp}
-                      numInputs={6}
-                      renderSeparator={<span></span>}
-                      renderInput={props => <input {...props} />}
-                    />
-                  </div>
-                ) : showpassField ? (
-                  <>
-                    <div className={`${widgetStyle.materialTextfield} w-full `}>
-                      <input
-                        className={`${widgetStyle.input}  `}
-                        id="password"
-                        type="password"
-                        value={pass}
-                        placeholder=" "
-                        onChange={e => setPass(e.target.value)}
-                      />
-                      <label className={widgetStyle.label}>Password</label>
-                    </div>
-                  </>
-                ) : (
-                  <div className={`${widgetStyle.materialTextfield} w-full  `}>
-                    <input
-                      className={`${widgetStyle.input}  `}
-                      id="email"
-                      type="email"
-                      value={email}
-                      placeholder=" "
-                      onChange={e => setEmail(e.target.value)}
-                    />
-                    <label className={widgetStyle.label}>Email</label>
-                  </div>
-                )}
-
-                {err ? (
-                  <span className="text-red-500 text-center">{errMsg}</span>
-                ) : (
-                  ''
-                )}
-                {showEnableMfaLink ? (
-                  <button
-                    className="px-2 py-1 border-none outline-none w-max text-blue-400 hover:text-blue-600 transition-colors focus:text-red-600"
-                    onClick={userMfaRequest}
-                  >
-                    Want to Turn on MFA?
-                  </button>
-                ) : (
-                  ''
-                )}
-                {/* onChange={() => setEnablUsereMfa(!enableUserMfa)} */}
-
-                <div className="w-full mt-8">
-                  <button
-                    className={`w-full h-12 text-white bg-black hover:bg-gray-800 rounded-md`}
-                    onClick={loading2 ? undefined : handleGo}
-                  >
-                    <span className="text-xl mx-auto">
-                      {loading2 ? (
-                        <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-blue-400 border-4 h-8 w-8"></div>
-                      ) : (
-                        'Go >'
-                      )}
-                    </span>
-                  </button>
-                </div>
+                Retry with another email
               </div>
-            )}
-            <div
-              className="text-sm w-full text-right mt-1 text-blue-400 hover:text-blue-600 cursor-pointer"
-              onClick={reset}
-            >
-              Retry with another email
+              {showSocial ? (
+                <>
+                  <div className="flex w-full justify-center mt-2">
+                    <div
+                      className="mt-2 w-[136px] border-t-2"
+                      style={lineStyle}
+                    ></div>
+                    <span className="px-1" style={lineStyle}>
+                      {' '}
+                      or{' '}
+                    </span>
+                    <div
+                      className="mt-2 w-[136px] border-t-2"
+                      style={lineStyle}
+                    ></div>
+                  </div>
+                  <div className="flex flex-row flex-wrap mt-4 gap-4">
+                    <div>
+                      <button
+                        type="submit"
+                        onClick={() => socialLogin('github')}
+                      >
+                        <Image src={github} alt="github" width={35} />
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        type="submit"
+                        onClick={() => socialLogin('microsoft')}
+                      >
+                        <Image src={microsoft} alt="microsoft" width={32} />
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        type="submit"
+                        onClick={() => socialLogin('google')}
+                      >
+                        <Image src={google} alt="google" width={35} />
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        type="submit"
+                        onClick={() => socialLogin('discord')}
+                      >
+                        <Image src={discord} alt="discord" width={40} />
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                ''
+              )}
             </div>
-            {showSocial ? (
-              <>
-                <div className="flex w-full justify-center mt-2">
-                  <div className="mt-2 w-[136px] border-t-2 border-gray-900 "></div>
-                  <span className="px-1"> or </span>
-                  <div className="mt-2 w-[136px] border-t-2 border-gray-900 "></div>
-                </div>
-                <div className="flex flex-row flex-wrap mt-4 gap-4">
-                  <div>
-                    <button type="submit" onClick={() => socialLogin('github')}>
-                      <Image src={github} alt="github" width={35} />
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      type="submit"
-                      onClick={() => socialLogin('microsoft')}
-                    >
-                      <Image src={microsoft} alt="microsoft" width={32} />
-                    </button>
-                  </div>
-                  <div>
-                    <button type="submit" onClick={() => socialLogin('google')}>
-                      <Image src={google} alt="google" width={35} />
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      type="submit"
-                      onClick={() => socialLogin('discord')}
-                    >
-                      <Image src={discord} alt="discord" width={40} />
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              ''
-            )}
           </div>
         </div>
       )}
