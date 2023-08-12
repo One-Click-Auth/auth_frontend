@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import { Minus, Plus, PlusIcon } from 'lucide-react';
-import { DatabaseSvg } from '../../../assets/Svg/Account/Account';
+// import { DatabaseSvg } from '../../../assets/Svg/Account/Account';
 import { Button } from '../../../components/ui/Button';
 import { useRouter } from 'next/navigation';
 import OrgList from './OrgList';
@@ -9,8 +9,8 @@ import { useAuth } from '@/Providers/AuthContext';
 import useOrgdata, { Organization } from '../orgDataStore';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
 import Image from 'next/image';
-import { DropdownMenu } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/Input';
+// import { DropdownMenu } from '@/components/ui/dropdown-menu';
+// import { Input } from '@/components/ui/Input';
 
 function AccountIndex() {
   const [hasOrg, setHasOrg] = useState(true);
@@ -19,27 +19,32 @@ function AccountIndex() {
   const addData = useOrgdata(state => state.addData);
 
   useEffect(() => {
-    fetch('https://api.trustauthx.com/org/all', {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(response => response.json())
-      .then(jsonData => {
-        const data = jsonData as Organization[];
-        if (!data) {
-          setHasOrg(false);
-        } else {
-          addData(data);
-          setHasOrg(true);
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    fetchOrgList();
   }, []);
+
+  const fetchOrgList = async () => {
+    try {
+      const response = await fetch('https://api.trustauthx.com/org/all', {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const data = (await response.json()) as Organization[];
+      if (response.status === 406) {
+        setHasOrg(false);
+        return;
+      } else if (response.status === 200) {
+        addData(data);
+        setHasOrg(true);
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
 
   const [paymentPage, setPaymentPage] = useState(true);
   const [orgCount, setOrgCount] = useState(1);
