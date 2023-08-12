@@ -33,6 +33,7 @@ export type OrgObject = {
     color2: string;
     color3: string;
     color6: string;
+    color10: string;
     social: Social;
   };
   callback_url?: string;
@@ -126,6 +127,7 @@ interface CustomisationSlice {
   inputBoxRadius: string;
   widgetBoxRadius: string;
   widgetBorderWidth: string;
+  nameFontColor: Color;
   setInputBorderColor: (inputBorderColor: Color) => void;
   setWidgetBorderColor: (widgetBorderColor: Color) => void;
   setWidgetColor: (widgetColor: Color) => void;
@@ -133,12 +135,14 @@ interface CustomisationSlice {
   setInputBoxRadius: (inputBoxRadius: string) => void;
   setWidgetBoxRadius: (widgetBoxRadius: string) => void;
   setWidgetBorderWidth: (widgetBorderWidth: string) => void;
+  setNameFontColor: (nameFontColor: Color) => void;
   resetCustomisation: () => void;
 }
 
 type CustomisationState = {
   inputBorderColor: Color;
   widgetBorderColor: Color;
+  nameFontColor: Color;
   widgetColor: Color;
   widgetBgColor: Color;
   inputBoxRadius: string;
@@ -153,7 +157,8 @@ let initialCustomisationState: CustomisationState = {
   widgetBgColor: toColor('hex', '#EEF5F1'),
   inputBoxRadius: '6',
   widgetBoxRadius: '8',
-  widgetBorderWidth: '1'
+  widgetBorderWidth: '1',
+  nameFontColor: toColor('hex', '#121212')
 };
 
 const createCustomisationSlice: StateCreator<
@@ -172,6 +177,7 @@ const createCustomisationSlice: StateCreator<
   setWidgetBoxRadius: (widgetBoxRadius: string) => set({ widgetBoxRadius }),
   setWidgetBorderWidth: (widgetBorderWidth: string) =>
     set({ widgetBorderWidth }),
+  setNameFontColor: (nameFontColor: Color) => set({ nameFontColor }),
   resetCustomisation: () => set(initialCustomisationState)
 });
 
@@ -307,6 +313,7 @@ export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
       inputBoxRadius: data.widget.input_border.radius,
       widgetBoxRadius: data.widget.widget_border.radius,
       widgetBorderWidth: data.widget.widget_border.width,
+      nameFontColor: toColor('hex', data.widget.color10),
       tncURL: data.tnc_url ?? '',
       ppURL: data.pp_url ?? '',
       hostURL: data.host ?? '',
@@ -340,6 +347,7 @@ const setInitialState = (data: OrgObject) => {
     widgetBorderColor: toColor('hex', data.widget.widget_border.color),
     widgetColor: toColor('hex', data.widget.color6),
     widgetBgColor: toColor('hex', data.widget.color3),
+    nameFontColor: toColor('hex', data.widget.color10),
     inputBoxRadius: data.widget.input_border.radius,
     widgetBoxRadius: data.widget.widget_border.radius,
     widgetBorderWidth: data.widget.widget_border.width
