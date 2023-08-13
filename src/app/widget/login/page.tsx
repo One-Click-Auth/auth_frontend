@@ -786,6 +786,11 @@ export default function Widget() {
 
         return setErr(true);
       }
+      if (response.status == 403) {
+        setErrMsg('This account has been banned by the organization');
+
+        return setErr(true);
+      }
       setShowSocial(false);
 
       //seperating user token and user details from the response data json

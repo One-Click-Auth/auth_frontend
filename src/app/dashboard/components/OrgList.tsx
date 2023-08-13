@@ -10,7 +10,7 @@ function OrgList() {
   const router = useRouter();
 
   const handleNavigation = () => {
-    router.push('/dashboard/add-organization');
+    router.push('/dashboard/new-organization');
   };
 
   return (

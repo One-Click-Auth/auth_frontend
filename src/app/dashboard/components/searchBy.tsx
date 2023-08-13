@@ -18,17 +18,6 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 
-const frameworks = [
-  {
-    value: 'Id',
-    label: 'Id'
-  },
-  {
-    value: 'Name',
-    label: 'Name'
-  }
-];
-
 export function SearchBy() {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');

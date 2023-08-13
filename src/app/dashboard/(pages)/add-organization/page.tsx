@@ -1,19 +1,47 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
-import { Input } from '../../../../components/ui/Input';
-import { Button } from '../../../../components/ui/Button';
-import { Minus, Plus, PlusIcon } from 'lucide-react';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { LuXCircle } from 'react-icons/lu';
+
+import { Plus } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
-import Image from 'next/image';
+
 import { useDispatch } from 'react-redux';
 import { updateKeys } from '@/redux/Org/keySlice';
+
+// Alert component
+const AlertMessage = ({
+  message,
+  setAlert
+}: {
+  message: string;
+  setAlert: React.Dispatch<boolean>;
+}) => {
+  return (
+    <Alert className="fixed top-6 w-[22rem] left-[calc(50vw_-_11rem)] bg-red-400 z-[1100]">
+      <ExclamationTriangleIcon className="w-4 h-4" />
+      <AlertTitle>Notice!</AlertTitle>
+      <button
+        onClick={() => setAlert(false)}
+        className="absolute right-2 top-2"
+      >
+        <LuXCircle className="w-5 h-5" />
+      </button>
+      <AlertDescription>{message}</AlertDescription>
+    </Alert>
+  );
+};
 
 function AddOrganization() {
   const router = useRouter();
   const [orgName, setOrgName] = useState('');
-
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const dispatch = useDispatch();
 
   const handleChange = (e: {
@@ -28,17 +56,9 @@ function AddOrganization() {
   const { token } = useAuth();
 
   const [orgCount, setOrgCount] = useState(1);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  // const triggerRef = useRef<HTMLButtonElement>(null);
 
   const [queryState, setQueryState] = useState(false);
-
-  const handleIncrement = () => {
-    setOrgCount((e: number) => e + 1);
-  };
-
-  const handleDecrement = () => {
-    setOrgCount((e: number) => e - 1);
-  };
 
   useEffect(() => {
     if (orgCount <= 0) {
@@ -61,144 +81,101 @@ function AddOrganization() {
     api_secret: string;
   }
 
-  const checkForPayment = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    fetch('https://api.trustauthx.com/org', {
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: orgName
-      })
-    })
-      .then(response => {
-        if (queryState === false) {
-          if (response.status === 412) {
-            triggerRef?.current?.click();
-          }
-        } else {
-          return response.json() as Promise<OrgData>;
-        }
-      })
-      .then(data => {
-        if (data) {
-          dispatch(updateKeys({ type: 'key', value: data.api_key }));
-          dispatch(updateKeys({ type: 'secret', value: data.api_secret }));
-          dispatch(updateKeys({ type: 'id', value: data.org_id }));
-          router.push('/dashboard/keys');
-        }
-      })
-      .catch(error => {
-        console.log('error', error);
+  const checkForPayment = async () => {
+    setLoading(true);
+    if (queryState === false) {
+      router.push('/dashboard/new-organization');
+      return;
+    }
+    try {
+      const response = await fetch('https://api.trustauthx.com/org', {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: orgName
+        })
       });
-  };
+      if (response.status === 412) {
+        const data = (await response.json()) as { detail: string };
+        console.log(data.detail);
+        router.push('/dashboard/new-organization');
+        return;
+      } else if (response.status === 200) {
+        const data = (await response.json()) as OrgData;
+        dispatch(updateKeys({ type: 'key', value: data.api_key }));
+        dispatch(updateKeys({ type: 'secret', value: data.api_secret }));
+        dispatch(updateKeys({ type: 'id', value: data.org_id }));
 
-  const handlePayment = () => {
-    fetch('https://api.trustauthx.com/create_checkout_session', {
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        quantity: orgCount,
-        new_org: true
-      })
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        const fetchedData = data as { url: string };
-        router.push(fetchedData.url);
-      })
-      .catch(error => {
-        console.log('error', error);
-      });
+        router.push('/dashboard/keys');
+        return;
+      }
+      setAlertMessage('Some error occured in fetching details');
+      setAlert(true);
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log(error);
+      setAlertMessage('Some error occured in fetching details');
+      setAlert(true);
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="max-w-4xl h-[calc(100vh-100px)] m-auto text-start flex items-center justify-center flex-col">
-      <div className="max-w-6xl m-auto border-[1.5px] border-slate-300 p-8 sm:p-12 rounded-md">
-        <h3 className="text-xl sm:text-3xl font-bold sm:mb-8 text-[#0f172a]">
-          Create A New Organization
-        </h3>
-        <p className="mb-12 max-w-2xl text-slate-700 text-sm sm:text-base">
-          <span className="font-semibold text-[#0f172a]">*Name: </span> This is
-          the name that will be displayed to end-users for this orgnaization in
-          any intractioin with them.{' '}
-        </p>
-        <label className="font-semibold mb-2 text-[#0f172a]">
-          *Name your orgnaization
-        </label>
-        <form
-          className="flex flex-col md:flex-row gap-2"
-          onSubmit={checkForPayment}
-        >
-          <Input
-            type="text"
-            className="bg-transparent appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:border-black"
-            placeholder="Your Organization Name"
-            value={orgName}
-            onChange={handleChange}
-            required
-          />
-          <div>
-            <Button type="submit" variant={'authx'} onSubmit={checkForPayment}>
-              <Plus />
-              Create New Organization
-            </Button>
-          </div>
-        </form>
-      </div>
-
-      <Dialog>
-        <DialogTrigger asChild>
-          <button ref={triggerRef}></button>
-        </DialogTrigger>
-        <DialogContent>
-          <div className="min-h-[300px] flex items-center justify-center flex-col gap-y-5">
+    <>
+      <div className="max-w-4xl h-[calc(100vh-100px)] m-auto text-start flex items-center justify-center flex-col">
+        <div className="max-w-6xl m-auto border-[1.5px] border-slate-300 p-8 sm:p-12 rounded-md">
+          <h3 className="text-xl sm:text-3xl font-bold sm:mb-8 text-[#0f172a]">
+            Create A New Organization
+          </h3>
+          <p className="mb-12 max-w-2xl text-slate-700 text-sm sm:text-base">
+            <span className="font-semibold text-[#0f172a]">*Name: </span> This
+            is the name that will be displayed to end-users for this
+            orgnaization in any intractioin with them.{' '}
+          </p>
+          <label className="font-semibold mb-2 text-[#0f172a]">
+            *Name your orgnaization
+          </label>
+          <div className="flex flex-col md:flex-row gap-2">
+            <Input
+              type="text"
+              className="bg-transparent appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:border-black"
+              placeholder="Your Organization Name"
+              value={orgName}
+              onChange={handleChange}
+              required
+            />
             <div>
-              <Image
-                src="/logo.svg"
-                alt="AuthX Logo"
-                width="100"
-                height="100"
-                className="m-auto max-w-[80px] max-h-24 w-full"
-              />
-            </div>
-
-            <h3 className="text-xl font-semibold text-center ">
-              Choose the Number of Organization's
-            </h3>
-
-            <div className="px-4 text-center">
-              <p className=" border-2  border-black max-w-max m-auto px-8 py-2 rounded-sm mb-3 ">
-                {orgCount}
-              </p>
-              <Button variant="authx" onClick={handleIncrement}>
-                <PlusIcon />
-              </Button>
               <Button
-                variant="authx"
-                className="ml-4"
-                onClick={handleDecrement}
+                type="submit"
+                variant={'authx'}
+                className="min-w-[160px]"
+                onClick={() => {
+                  loading ? console.log('loading...') : checkForPayment();
+                }}
               >
-                <Minus />
+                {loading ? (
+                  <>
+                    <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-[3px] h-4 w-4"></div>
+                    <span>checking...</span>
+                  </>
+                ) : (
+                  <>
+                    <Plus />
+                    Create New Organization
+                  </>
+                )}
               </Button>
             </div>
-
-            <Button variant="authx" className="w-full" onClick={handlePayment}>
-              Procced
-            </Button>
           </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+        </div>
+      </div>
+      {alert && <AlertMessage message={alertMessage} setAlert={setAlert} />}
+    </>
   );
 }
 
