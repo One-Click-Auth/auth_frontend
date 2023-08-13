@@ -21,6 +21,8 @@ export interface Organization {
   key_m: boolean;
   card_m: boolean;
   fa2: boolean;
+  rtm?: boolean;
+  ipat?: boolean;
   consent: boolean;
   booking: boolean;
   ref: boolean;

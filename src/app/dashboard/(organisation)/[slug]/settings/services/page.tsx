@@ -23,7 +23,7 @@ const OrganisationDashboard = () => {
             providing a seamless and personalized email experience for your
             users.
           </p>
-          <Switch disabled />
+          <SettingSwitch id="custom_email" name="Custom Email Address" />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -38,7 +38,7 @@ const OrganisationDashboard = () => {
             registration and login process, enhancing user convenience and
             streamlining the onboarding experience.
           </p>
-          <Switch disabled />
+          <SettingSwitch id="social_sign" name="Social Sign-On" />
         </CardContent>
       </Card>
       <Card className="shadow-none">

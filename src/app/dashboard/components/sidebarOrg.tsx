@@ -275,7 +275,7 @@ export const SidebarOrg = () => {
               </span>
               {open ? <span>Manage API keys</span> : ''}
             </Link>
-            <Link
+            {/* <Link
               href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
@@ -285,7 +285,7 @@ export const SidebarOrg = () => {
                 <TeamAndMembersSVG />
               </span>
               {open ? <span>Team & Members</span> : ''}
-            </Link>
+            </Link> */}
             <Link
               href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
