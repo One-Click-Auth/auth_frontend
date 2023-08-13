@@ -18,8 +18,12 @@ type SwitchProps = {
     | 'breach_pass_det'
     | 'fa2'
     | 'consent'
-    | 'callbacks';
-  // | 'rtm';
+    | 'callbacks'
+    | 'email_val'
+    | 'ipat'
+    | 'social_sign'
+    | 'custom_email'
+    | 'rtm';
   disabled?: boolean;
   name: string;
 };

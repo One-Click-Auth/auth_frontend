@@ -63,20 +63,20 @@ export function AccountDropdown() {
               </DropdownMenuItem>
             </DialogTrigger>
 
-            <MenuItem icon={<BillingSvg />} title="Billing" />
-            <MenuItem
+            {/* <MenuItem icon={<BillingSvg />} title="Billing" /> */}
+            {/* <MenuItem
               icon={<SettingsSvg />}
               title="Settings"
               href="/dashboard/settings"
-            />
-            <MenuItem icon={<TeamSvg />} title="Team" />
+            /> */}
+            {/* <MenuItem icon={<TeamSvg />} title="Team" />
             <MenuItem icon={<InviteSvg />} title="Invite users" />
             <MenuItem icon={<AddItemSvg />} title="New Item" />
             <MenuItem icon={<GithubSvg />} title="Github" />
-            <MenuItem icon={<InviteSvg />} title="Support" />
-            <div className="opacity-40">
-              <MenuItem icon={<CloudSvg />} title="Api" />
-            </div>
+            <MenuItem icon={<InviteSvg />} title="Support" /> */}
+
+            <MenuItem icon={<CloudSvg />} title="Api" />
+
             <DropdownMenuItem
               className="cursor-pointer flex items-center px-12 py-4 hover:border-0 hover:outline-none hover:bg-gray-100 rounded-sm"
               onClick={() =>

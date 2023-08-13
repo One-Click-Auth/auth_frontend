@@ -40,11 +40,12 @@ const OrganisationDashboard = () => {
             authorized machines can access your platform's resources and
             services.
           </p>
-          <Switch disabled />
+          <SettingSwitch id="rtm" name="Real-time Monitoring" />
         </CardContent>
       </Card>
       <Card className="shadow-none">
         <CardHeader className="px-10 pb-2">
+          <span className="text-xl text-slate-500">$5.00</span>
           <CardTitle className="text-2xl font-medium">
             User Consent Management{' '}
           </CardTitle>
@@ -56,7 +57,7 @@ const OrganisationDashboard = () => {
             protection regulations and empower users to have control over their
             personal information.
           </p>
-          <Switch disabled />
+          <SettingSwitch id="consent" name="User Consent Management" />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -89,7 +90,7 @@ const OrganisationDashboard = () => {
             invalid or fake email addresses, improving the overall quality of
             user data and communication.
           </p>
-          <Switch disabled />
+          <SettingSwitch id="email_val" name="Email Validation" />
         </CardContent>
       </Card>
       <Card className="shadow-none">

@@ -14,7 +14,7 @@ const OrganisationDashboard = () => {
     <div className="grid gap-11">
       <Card className="shadow-none">
         <CardHeader className="px-10 pb-2">
-          <span className="text-xl text-slate-500">$10.00</span>
+          <span className="text-xl text-slate-500">$5.00</span>
           <CardTitle className="text-2xl font-medium">
             DDoS Protection
           </CardTitle>
@@ -44,7 +44,7 @@ const OrganisationDashboard = () => {
       </Card>
       <Card className="shadow-none">
         <CardHeader className="px-10 pb-2">
-          <span className="text-xl text-slate-500">$5.00</span>
+          <span className="text-xl text-slate-500">$10.00</span>
           <CardTitle className="text-2xl font-medium">
             Brute Force Attack Protection
           </CardTitle>
@@ -61,6 +61,27 @@ const OrganisationDashboard = () => {
           />
         </CardContent>
       </Card>
+
+      <Card className="shadow-none">
+        <CardHeader className="px-10 pb-2">
+          <MagnifierZoom />
+          <span className="text-xl text-slate-500">$125.00</span>
+          <CardTitle className="text-2xl !mt-2 font-medium">
+            IP Address Throttling
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex px-10 gap-8">
+          <p className="leading-tight text-slate-500 font-normal">
+            Implement suspicious IP throttling within your Authx-powered
+            platform to mitigate the risks posed by suspicious or malicious IP
+            addresses. By detecting and limiting the activities of such IPs, you
+            can protect your platform from various types of attacks and ensure a
+            secure environment for legitimate users.
+          </p>
+          <SettingSwitch id="ipat" name="IP Address Throttling" />
+        </CardContent>
+      </Card>
+
       <Card className="shadow-none">
         <CardHeader className="px-10 pb-2">
           <AiNetwork />
@@ -95,26 +116,6 @@ const OrganisationDashboard = () => {
             cybersecurity capabilities. By leveraging artificial intelligence
             and machine learning algorithms, you can bolster your platform's
             security defenses and adapt to evolving threats effectively.
-          </p>
-          <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
-            Upgrade to Enterprise
-          </Button>
-        </CardContent>
-      </Card>
-      <Card className="shadow-none">
-        <CardHeader className="px-10 pb-2">
-          <MagnifierZoom />
-          <CardTitle className="text-2xl !mt-2 font-medium">
-            Suspicious IP Throttling
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex px-10 gap-8">
-          <p className="leading-tight text-slate-500 font-normal">
-            Implement suspicious IP throttling within your Authx-powered
-            platform to mitigate the risks posed by suspicious or malicious IP
-            addresses. By detecting and limiting the activities of such IPs, you
-            can protect your platform from various types of attacks and ensure a
-            secure environment for legitimate users.
           </p>
           <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
             Upgrade to Enterprise
