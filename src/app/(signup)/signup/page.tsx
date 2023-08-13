@@ -96,13 +96,22 @@ export default function Signup() {
     resolver: yupResolver(registerSchema),
     mode: 'onSubmit'
   });
-
+  const testOTP = (otp: string): boolean => {
+    //OTP should be 8 digits long and all the digits should not be zero
+    return /^(?!.*00000000)\d{8}$/.test(otp);
+  };
   // OTP action
   useEffect(() => {
     if (otp.length === 8) {
-      console.log('verifying OTP', otp);
-      setLoading(true);
-      handleOTPValidation();
+      if (testOTP(otp)) {
+        console.log('verifying OTP', otp);
+        setLoading(true);
+        handleOTPValidation();
+      } else {
+        setAlertMessage('Please put a valid OTP');
+        setAlert(true);
+        return;
+      }
     }
   }, [otp]);
 
@@ -132,38 +141,43 @@ export default function Signup() {
   }, [requestObject]);
 
   //handle OTP Validation
-  const handleOTPValidation = () => {
-    fetch('https://api.trustauthx.com/verify_email/false', {
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        otp,
-        add: messageToken,
-        types: 'email'
-      })
-    })
-      .then(response => response.json())
-      .then(jsonData => {
-        const data = jsonData as ApiResponse;
-        setLoading(false);
-        console.log(data);
-        if (data.status === 200) {
-          setShow(false);
-          router.push('/');
+  const handleOTPValidation = async () => {
+    try {
+      const response = await fetch(
+        'https://api.trustauthx.com/verify_email/false',
+        {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            otp,
+            add: messageToken,
+            types: 'email'
+          })
         }
-        if (data.status > 200) {
-          setAlertMessage(data.msg);
-          setAlert(true);
-        }
+      );
+      const data = (await response.json()) as ApiResponse;
+      setLoading(false);
+      if (response.status === 200) {
+        setShow(false);
+        router.push('/');
+        return;
+      }
+      if (response.status === 406 || response.status === 429) {
+        // console.log(data)
         if (data.detail) {
           setAlertMessage(data.detail);
           setAlert(true);
+          return;
         }
-      })
-      .catch(err => console.log(err));
+      }
+      return;
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   };
 
   // Handle resend OTP email
