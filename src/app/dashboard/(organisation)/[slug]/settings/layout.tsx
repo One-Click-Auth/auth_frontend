@@ -6,7 +6,26 @@ import EstCostCard from './components/est-cost-card';
 export default function SettingLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex-1 space-y-8 p-10 pt-4 lg:p-16">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"></div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="shadow-none">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total API calls
+            </CardTitle>
+            <Image
+              src="/dashboard-icons/dollar-coin.svg"
+              alt="dollar icon"
+              width={24}
+              height={24}
+            />
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="text-2xl font-bold">45,000</div>
+            <p className="text-xs text-disabled">Last month's API calls</p>
+          </CardContent>
+        </Card>
+        <EstCostCard />
+      </div>
       {children}
     </div>
   );
