@@ -27,14 +27,14 @@ function SocialSignInPopup() {
   return (
     <DialogContent
       className={cn(
-        ' w-[1047px]  h-[666px] p-16 !max-w-[90vw] flex rounded-lg  overflow-hidden px-10       '
+        ' w-[1047px]  md:h-[666px] max-h-[85vh] md:p-16 !max-w-[90vw]  flex-col md:flex-row flex rounded-lg  overflow-hidden px-10 gap-12 md:gap-0       '
       )}
     >
-      <div className=" flex-col gap-2 flex-1 border-r-2 md:flex no-scrollbar overflow-auto    pr-12 ">
+      <div className=" flex-col  gap-2 flex-1 md:border-r-2 md:flex no-scrollbar overflow-auto    md:pr-12 ">
         <ConfigText />
       </div>
 
-      <div className=" flex flex-col overflow-auto subtle-scrollbar justify-between    flex-1   ml-12 ">
+      <div className=" flex flex-col  subtle-scrollbar justify-between    flex-1   md:ml-12 ">
         <DialogHeader className="">
           <DialogTitle className="text-3xl text-muted-foreground font-medium">
             Parameter config{' '}
@@ -66,7 +66,7 @@ function SocialSignInPopup() {
           </div>
         </div>
 
-        <div className="flex gap-2  ">
+        <div className="flex gap-2 md:mt-0 mt-8 ">
           <div className="flex-col flex">
             <Button
               variant={'outline'}

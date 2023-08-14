@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogTrigger } from '@/components/ui/Dialog';
 import ProfilePopup from './ProfilePopup';
+import { ChevronDown } from 'lucide-react';
 
 export function AccountDropdown() {
   const { user } = useAuth();
@@ -31,7 +32,13 @@ export function AccountDropdown() {
     //dropdown needs to be wrapped in dialog for the trigger to work
     <Dialog>
       <DropdownMenu>
-        <DropdownMenuTrigger className="active:border-0  active:outline-none">
+        <DropdownMenuTrigger className="active:border-0 gap-2 [data-state]: flex items-center  active:outline-none">
+          <div className="flex items-center gap-2">
+            <p className="font-medium">{user?.full_name}</p>
+
+            <ChevronDown className="text-muted-foreground" />
+          </div>
+
           <div className="text-xs sm:text-sm flex items-center font-semibold  min-w-max">
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
@@ -39,6 +46,7 @@ export function AccountDropdown() {
             </Avatar>
           </div>
         </DropdownMenuTrigger>
+
         <DropdownMenuContent className="w-96 max-w-[80vw] mt-2 mx-8 py-10 overflow-hidden bg-white cursor-pointer rounded-2xl">
           <div className="flex sticky top-0 bg-white items-center gap-1 px-12 py-4">
             <Avatar>
