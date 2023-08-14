@@ -6,6 +6,7 @@ import OrgList from './OrgList';
 import { useAuth } from '@/Providers/AuthContext';
 import useOrgdata, { Organization } from '../orgDataStore';
 import { PricingCard } from './pricingCard';
+import PricingPage from './PricingPage';
 // import { DropdownMenu } from '@/components/ui/dropdown-menu';
 // import { Input } from '@/components/ui/Input';
 
@@ -46,21 +47,7 @@ function AccountIndex() {
 
   return (
     <section className="oveflow-x-auto flex-1">
-      {hasOrg ? (
-        <OrgList />
-      ) : (
-        <div
-          style={{ height: 'calc(100vh - 100px)' }}
-          className="max-w-xl  flex mx-auto flex-col"
-        >
-          <h1 className="text-4xl font-bold my-6">
-            Pricing plans for all use cases
-          </h1>
-          <div className="flex flex-col items-center justify-start sm:flex-row gap-8">
-            <PricingCard />
-          </div>
-        </div>
-      )}
+      {hasOrg ? <OrgList /> : <PricingPage />}
     </section>
   );
 }

@@ -29,7 +29,14 @@ import {
 } from '@/components/ui/popover';
 import { useAuth } from '@/Providers/AuthContext';
 
-export function PricingCard({ ...props }) {
+export function PricingCard({
+  blurStudent,
+  blurBoth,
+  ...props
+}: {
+  blurStudent: boolean;
+  blurBoth: boolean;
+}) {
   const { token } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -69,24 +76,64 @@ export function PricingCard({ ...props }) {
   };
 
   return (
-    <Card className="w-[300px] border-2 border-gray-500 shadow-lg">
-      <CardHeader>
-        <CardTitle>Pricing</CardTitle>
-        <CardDescription>Start your free trial</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className=" flex items-center space-x-4 rounded-md border-2 p-4">
-          **Some pricing details** $$
+    <Card className=" px-12 py-8 rounded-xl  border-2 ">
+      <div className="flex ">
+        <div
+          className={`${
+            blurStudent ? 'blur-md' : ''
+          } flex-col flex-1  flex border-r pr-12 mr-12  items-center  px-3 py-2 `}
+        >
+          <span className="bg-black  text-sm rounded-full items-center text-white uppercase py-1 px-3">
+            students & freelancers
+          </span>
+
+          <p className="text-center mt-1 ">
+            Best for simple projects or
+            <br /> applications.
+          </p>
+
+          <p className="text-4xl font-bold text-center my-5">$20/mo</p>
+
+          <div className="flex-col gap-3 flex items-center  text-muted-foreground">
+            <p>Unlimited MAU</p>
+            <p>Unlimited Social Connections</p>
+            <p>Pro MFA</p>
+            <p>**Add-ons</p>
+            <p>Consolidated User Stores</p>
+          </div>
         </div>
-        <div>**some more details pricing or services related**</div>
-      </CardContent>
-      <CardFooter>
+
+        <div className="flex-col flex  flex-1  items-center justify-center px-3 py-2 ">
+          <span className="bg-accent  text-sm rounded-full items-center text-black uppercase py-1 px-3">
+            B2C & b2b - Professional
+          </span>
+
+          <p className="text-center mt-1 ">
+            Best for teams and projects that need added security.
+          </p>
+
+          <p className="text-4xl font-bold text-center my-5">$40/mo</p>
+
+          <div className="flex-col gap-3 flex items-center  text-muted-foreground">
+            <p>Unlimited MAU</p>
+            <p>Unlimited Social Connections</p>
+            <p>Pro MFA</p>
+            <p>**Add-ons</p>
+            <p>Consolidated User Stores</p>
+            <p className="text-sm text-muted-foreground">
+              **Higher resource allocation, Faster response time
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full flex mt-20 justify-center">
         <PreferenceDialog
           triggerText="Start for Free"
           handlePayment={handlePayment}
           loading={loading}
         />
-      </CardFooter>
+      </div>
     </Card>
   );
 }
@@ -107,7 +154,9 @@ export function PreferenceDialog({
   return (
     <Dialog>
       <DialogTrigger>
-        <Button variant={'authx'}>{triggerText}</Button>
+        <Button variant={'authx'} className="w-56 h-11 text-lg">
+          {triggerText}
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <div className="flex flex-col items-center py-4 sm:px-10 gap-y-5">
