@@ -9,8 +9,8 @@
 //   res.status(200).json(org);
 // };
 
-import { NextResponse } from 'next/server'
+// import { NextResponse } from 'next/server'
  
-export async function GET(request: Request) {
-  return NextResponse.json( { name: "Apple" }, { status: 200 })
-}
+// export async function GET(request: Request) {
+//   return NextResponse.json( { name: "Apple" }, { status: 200 })
+// }
