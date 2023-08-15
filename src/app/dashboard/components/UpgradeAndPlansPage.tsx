@@ -26,7 +26,7 @@ function UpgradeAndPlansPage() {
               Pay Upcoming Invoices Immediately
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex  px-10 gap-8">
+          <CardContent className="flex flex-col md:flex-row  px-10 gap-8">
             <p className="leading-tight text-slate-500 font-normal">
               Implement suspicious IP throttling within your Authx-powered
               platform to mitigate the risks posed by suspicious or malicious IP
@@ -48,7 +48,7 @@ function UpgradeAndPlansPage() {
               Check Billing Details & Invoices
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex  px-10 gap-8">
+          <CardContent className="flex flex-col md:flex-row  px-10 gap-8">
             <p className="leading-tight text-slate-500 font-normal">
               Implement an AI-based security system within your Authx-powered
               platform to enhance threat detection, response, and overall
@@ -69,7 +69,7 @@ function UpgradeAndPlansPage() {
               Change Plan & Upgrade to Enterprise
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex  px-10 gap-8">
+          <CardContent className="flex flex-col md:flex-row  px-10 gap-8">
             <p className="leading-tight text-slate-500 font-normal">
               Implement an AI-based security system within your Authx-powered
               platform to enhance threat detection, response, and overall
@@ -89,7 +89,7 @@ function UpgradeAndPlansPage() {
               Cancel Subscription & Pause Organization
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex  px-10 gap-8">
+          <CardContent className="flex flex-col md:flex-row  px-10 gap-8">
             <p className="leading-tight text-slate-500 font-normal">
               Implement suspicious IP throttling within your Authx-powered
               platform to mitigate the risks posed by suspicious or malicious IP
