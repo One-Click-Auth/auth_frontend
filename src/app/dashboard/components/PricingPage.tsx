@@ -8,6 +8,7 @@ import { OrgTable } from './orgTable';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PreferenceDialog, PricingCard } from './pricingCard';
+import UpgradeAndPlansPage from './UpgradeAndPlansPage';
 
 function PricingPage() {
   const [blurStudents, setBlurStudents] = useState(false);
