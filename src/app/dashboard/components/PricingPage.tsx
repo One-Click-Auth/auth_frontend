@@ -18,7 +18,7 @@ function PricingPage() {
         One pricing <br /> for everyone, everywhere
       </p>
 
-      <div className="bg-gradient-to-r text-white flex  items-center flex-col justify-center   from-black p-8   to-[#9EFF00] w-full mt-9 rounded-xl">
+      <div className="bg-gradient-to-r text-white flex  items-center flex-col justify-center   from-black p-8   to-[#9EFF00] w-full mt-12 rounded-xl">
         <p className="text-3xl font-bold ">Have a complex use case?</p>
 
         <p className="text-center mt-4 mb-6">
@@ -30,7 +30,7 @@ function PricingPage() {
         <Button className="text-black ">Talk with an Expert →</Button>
       </div>
 
-      <div className="flex mt-20 gap-32   w-full items-center px-16  justify-between">
+      <div className="flex flex-col md:flex-row mt-20 gap-32   w-full items-center px-16  justify-between">
         <div className=" flex-1 relative ">
           <p className="text-2xl text-center">How many monthly API Calls?</p>
           <p className="text-muted-foreground text-center">
