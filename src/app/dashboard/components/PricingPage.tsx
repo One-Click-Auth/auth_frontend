@@ -12,6 +12,18 @@ import UpgradeAndPlansPage from './UpgradeAndPlansPage';
 
 function PricingPage() {
   const [blurStudents, setBlurStudents] = useState(false);
+  const [blurBoth, setBlurBoth] = useState(false);
+
+  function editValue(e: any) {
+    //if slider is max then hide both plans
+    if (e[0] === 2000000) {
+      setBlurBoth(true);
+
+      return;
+    }
+
+    setBlurBoth(false);
+  }
 
   return (
     <div className="mt-16  [&>div]:max-w-screen-xl  flex  items-center flex-col justify-center w-full">
@@ -38,7 +50,12 @@ function PricingPage() {
             MAU*8 (8 times of MAU)
           </p>
 
-          <Slider className="mt-4" max={2000000} step={20000} />
+          <Slider
+            onValueChange={e => editValue(e)}
+            className="mt-4"
+            max={2000000}
+            step={20000}
+          />
 
           <p className="absolute font-bold right-0 -bottom-8 ">2M+</p>
           <p className="absolute font-bold left-0 -bottom-8 ">0</p>
@@ -104,7 +121,7 @@ function PricingPage() {
           </p>
         </div>
 
-        <PricingCard blurStudent={blurStudents} blurBoth={false} />
+        <PricingCard blurStudent={blurStudents} blurBoth={blurBoth} />
       </div>
     </div>
   );
