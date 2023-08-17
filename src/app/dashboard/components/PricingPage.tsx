@@ -1,19 +1,19 @@
-import React, { useRef, useState } from 'react';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import { Plus } from 'lucide-react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { SearchBy } from './searchBy';
-import { OrgTable } from './orgTable';
+
+import { Button } from '@/components/ui/Button';
+
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PreferenceDialog, PricingCard } from './pricingCard';
-import UpgradeAndPlansPage from './UpgradeAndPlansPage';
+import { useAuth } from '@/Providers/AuthContext';
 
 function PricingPage() {
   const [blurStudents, setBlurStudents] = useState(false);
   const [blurBoth, setBlurBoth] = useState(false);
-
+  const { token } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   function editValue(e: any) {
     //if slider is max then hide both plans
     if (e[0] === 2000000) {
@@ -24,6 +24,39 @@ function PricingPage() {
 
     setBlurBoth(false);
   }
+
+  const handlePayment = async (freelance_discount: boolean) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/create_checkout_session?freelance_discount=${freelance_discount}`,
+        {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            quantity: 1,
+            new_org: true,
+            tp: 7
+          })
+        }
+      );
+
+      const data = (await response.json()) as { url: string };
+      if (response.status === 200) {
+        router.push(data.url);
+        return;
+      }
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="mt-16  [&>div]:max-w-screen-xl  flex  items-center flex-col justify-center w-full">
@@ -38,7 +71,17 @@ function PricingPage() {
           <br />
           success from day one.
         </p>
-        <Button className="text-black ">Talk with an Expert →</Button>
+        <div className="flex gap-6">
+          <Button variant={'authx'} className="text-black p-2 bg-slate-300">
+            Talk with an Expert →
+          </Button>
+          <PreferenceDialog
+            disableButton={false}
+            triggerText="Start for Free"
+            handlePayment={handlePayment}
+            loading={loading}
+          />
+        </div>
       </div>
       <div className="flex flex-col md:flex-row mt-20 gap-32   w-full items-center px-16  justify-between">
         <div className=" flex-1 relative ">

@@ -159,10 +159,10 @@ function AddOrganization() {
                 }}
               >
                 {loading ? (
-                  <>
+                  <div className="flex flex-row gap-2">
                     <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-[3px] h-4 w-4"></div>
-                    <span>checking...</span>
-                  </>
+                    <span>Checking...</span>
+                  </div>
                 ) : (
                   <>
                     <Plus />
