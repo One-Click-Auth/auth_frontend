@@ -33,37 +33,30 @@ function PricingPage() {
 
       <div className="bg-gradient-to-r text-white flex  items-center flex-col justify-center   from-black p-8   to-[#9EFF00] w-full mt-12 rounded-xl">
         <p className="text-3xl font-bold ">Have a complex use case?</p>
-
         <p className="text-center mt-4 mb-6">
           We’ll ensure your company is set up for
           <br />
           success from day one.
         </p>
-
         <Button className="text-black ">Talk with an Expert →</Button>
       </div>
-
       <div className="flex flex-col md:flex-row mt-20 gap-32   w-full items-center px-16  justify-between">
         <div className=" flex-1 relative ">
           <p className="text-2xl text-center">How many monthly API Calls?</p>
           <p className="text-muted-foreground text-center">
             MAU*8 (8 times of MAU)
           </p>
-
           <Slider
             onValueChange={e => editValue(e)}
             className="mt-4"
             max={2000000}
             step={20000}
           />
-
           <p className="absolute font-bold right-0 -bottom-8 ">2M+</p>
           <p className="absolute font-bold left-0 -bottom-8 ">0</p>
         </div>
-
         <div>
           <p className="text-2xl text-center mb-3">What is your use case?</p>
-
           <Tabs defaultValue="hobby" className="space-y-4 ">
             <TabsList className="bg-gray-100 py-6 [&>*]:py-2">
               <TabsTrigger

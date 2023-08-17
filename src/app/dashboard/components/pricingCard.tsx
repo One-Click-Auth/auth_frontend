@@ -76,7 +76,7 @@ export function PricingCard({
   };
 
   return (
-    <Card className={` px-12 py-8 rounded-xl  border-2 `}>
+    <Card className=" px-12 py-8 rounded-xl  border-2 ">
       <div className={`flex ${blurBoth ? 'blur-md' : ''} `}>
         <div
           className={`${
@@ -127,7 +127,7 @@ export function PricingCard({
         </div>
       </div>
 
-      <div className={`w-full  flex mt-20 justify-center`}>
+      <div className="w-full flex mt-20 justify-center">
         <PreferenceDialog
           disableButton={blurBoth}
           triggerText="Start for Free"
@@ -148,8 +148,8 @@ type PreferenceDialogProps = {
 
 export function PreferenceDialog({
   triggerText,
-  handlePayment,
   disableButton,
+  handlePayment,
   loading
 }: PreferenceDialogProps) {
   const [freelance, setFreelance] = useState(false);
