@@ -28,7 +28,7 @@ function PricingPage() {
   return (
     <div className="mt-16  [&>div]:max-w-screen-xl  flex  items-center flex-col justify-center w-full">
       <p className="text-5xl text-center font-semibold">
-        One pricing <br /> for everyone, everywhere
+        One pricing <br /> for everyone, everywhere{' '}
       </p>
 
       <div className="bg-gradient-to-r text-white flex  items-center flex-col justify-center   from-black p-8   to-[#9EFF00] w-full mt-12 rounded-xl">
