@@ -1,37 +1,21 @@
-# Use a Linux distribution that supports glibc (e.g., Ubuntu)
-FROM debian:latest
-
-# Install required dependencies (cURL, Git, OpenSSH, Node.js, and NPM)
-RUN apt-get update && \
-    apt-get install -y curl git openssh-client nodejs npm
-
-# Set the working directory
-WORKDIR /app
-
-# Optionally, you can download and install the latest Node.js and NPM versions manually.
-# If you want to use a specific version, replace 'latest' with the desired version, e.g., '14.x'
-
-# Install Node.js and NPM
-RUN curl -fsSL https://deb.nodesource.com/setup_latest.x | bash - && \
-    apt-get install -y nodejs
-
-# Optionally, you can set up the SSH key for Git here. Make sure to add the private key
-# and adjust the following lines accordingly.
-
-# Copy the SSH private key to the container
-COPY ./temp_rsa /root/.ssh/id_rsa
-
-# Set the correct permissions for the private key
-RUN chmod 600 /root/.ssh/id_rsa
-
-# Add your Git host to the list of known hosts
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
-
-# Optionally, you can download your build runner here. Replace the following line with the
-# appropriate download command for your build runner.
-
-# Or, if you just want to use this container for building, you can use /bin/bash or any other shell:
-# ENTRYPOINT ["/bin/bash"]
-
-# Start the container
-CMD ["bash"]
+# Use an official Node.js runtime as the base image
+FROM node:18-alpine
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
+# Install dependencies
+RUN npm install
+# Copy the rest of the application code to the container
+COPY . .
+ENV PORT=3000
+ENV NEXTAUTH_SECRET=99716a89356ebac0ad2b30d90d9df10b51fccb765f243d39f338725f2f8afdf1
+ENV NEXTAUTH_URL=https://app.trustauthx.com/
+ENV _ACCESS_KEY_ID=AKIA2UWUTT7W5HXUYIVJ
+ENV _S3_BUCKET=openauthx
+ENV _S3_REGION=ap-south-1
+ENV _SECRET_ACCESS_KEY=BPqAxqwZVO7bgQd5+A8JAB74JFgaGJDPcD5B1LFu
+RUN npm run build
+EXPOSE 3000
+# Start the Next.js application using npm start
+CMD ["npm", "start"]
