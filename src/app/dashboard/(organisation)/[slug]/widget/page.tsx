@@ -65,7 +65,7 @@ const WidgetSettings = () => {
         ? `rgba(0, 0, 0, ${shadowOpacity})`
         : `rgba(255, 255, 255, ${shadowOpacity})`;
 
-    const boxShadow = `0px 0px 20px ${shadowSpread} ${shadowColor}`;
+    const boxShadow = `0px 0px 50px ${shadowSpread} ${shadowColor}`;
     return {
       boxShadow
     };

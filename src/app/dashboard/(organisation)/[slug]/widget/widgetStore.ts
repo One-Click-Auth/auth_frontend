@@ -301,6 +301,8 @@ export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
       greeting: data.widget.greeting,
       logoImage: data.widget.logo_url,
       logo: undefined,
+      // button2Status: (data.widget.color1 === data.widget.color0 || data.widget.color1 === data.widget.color2 ) ? false : true,
+      // button3Status: (data.widget.color2 === data.widget.color0 || data.widget.color3 === data.widget.color2 ) ? false : true,
       button2Status: data.widget.color1 === '#121212' ? false : true,
       button3Status: data.widget.color2 === '#121212' ? false : true,
       color: toColor('hex', data.widget.color0),

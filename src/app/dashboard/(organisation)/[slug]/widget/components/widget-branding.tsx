@@ -5,7 +5,7 @@ import { Plus } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { LogoUpload } from './logo-upload';
 import { useWidgetStore } from '../widgetStore';
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 export interface WidgetBrandingRef {
   clearDisplayNameAndGreetings: () => void;
 }
@@ -43,14 +43,34 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
     }),
     []
   );
+  useEffect(() => {
+    // console.log(button2Status)
+    if (!button3Status && !button2Status) {
+      return setColor2(color), setColor3(color);
+    }
+    if (!button3Status && button2Status) {
+      return setColor3(color2);
+    }
+    if (!button2Status && button3Status) {
+      return setColor2(color3);
+    }
+  }, [color, color2, color3, button2Status, button3Status]);
+
+  // useEffect(()=>{
+  //   console.log("button2:",button2Status)
+  //   console.log("button3:",button3Status)
+  // },[button2Status,button3Status])
 
   const handleShowButton = () => {
     if (!button2Status) {
-      return setButton2Status(true);
+      setButton2Status(true);
+
+      return;
     }
 
     if (!button3Status) {
-      return setButton3Status(true);
+      setButton3Status(true);
+      return;
     }
   };
 

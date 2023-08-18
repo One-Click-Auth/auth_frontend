@@ -14,7 +14,7 @@ type ColorProps = {
     setColor: (color: Color) => void;
   };
   removable?: boolean;
-  setButtonStatus?: (buttonStatus: boolean) => void
+  setButtonStatus?: (buttonStatus: boolean) => void;
 };
 
 export function ColourInput({
@@ -25,9 +25,9 @@ export function ColourInput({
   const handleButtonStatus = () => {
     if (setButtonStatus) {
       setButtonStatus(false);
-      setColor(toColor("hex", "#121212"));
+      setColor(toColor('hex', String(color)));
     }
-  }
+  };
   return (
     <div className="border py-1.5 px-2 rounded-lg flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -55,7 +55,12 @@ export function ColourInput({
         </Popover>
         <span className="text-xl text-zinc-500">{color.hex}</span>
       </div>
-      {removable && <Trash2 onClick={handleButtonStatus} className="hover:stroke-red-500 cursor-pointer mr-1" />}
+      {removable && (
+        <Trash2
+          onClick={handleButtonStatus}
+          className="hover:stroke-red-500 cursor-pointer mr-1"
+        />
+      )}
     </div>
   );
 }
