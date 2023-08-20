@@ -1,10 +1,53 @@
+'use client';
 import { AiCloudSpark } from '@/assets/Svg/Account/Account';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 import React from 'react';
+import { useAuth } from '@/Providers/AuthContext';
+import useOrgData, { Organization } from '../../../orgDataStore';
+import { Subscript } from 'lucide-react';
+import { useParams } from 'next/navigation';
 
 function UpgradeAndPlansPage() {
+  //sups_id
+  const { token } = useAuth();
+  const { slug } = useParams();
+  const orgId = slug;
+
+  //   const getOrgData = async ()=>{
+  //     const response = await fetch(`https://api.trustauthx.com/org/${orgId}`, {
+  //       method: 'GET',
+  //       headers: {
+  //         accept: 'application/json',
+  //         Authorization: `Bearer ${token}`
+  //       }
+  //   })
+  //   const data = await response.json() as Organization;
+  //   return data.subs_id;
+
+  // }
+
+  const managePlan = async () => {
+    const response = await fetch(`https://api.trustauthx.com/org/${orgId}`, {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const data = (await response.json()) as Organization;
+    const subscription_id = data.subs_id;
+    console.log(subscription_id);
+    const url = `https://api.trustauthx.com/create-customer-portal-session?subscription_id=${subscription_id}&redirect_url=${encodeURIComponent(
+      window.location.href
+    )}`;
+
+    window.location.href = url;
+    // console.log(url)
+    // next router was creating a problem in routing back that's why window object is being used
+  };
+
   return (
     <div className="mt-16  [&>div]:max-w-screen-xl flex items-center   flex-col justify-center w-full">
       <div className="mb-12 pl-12  max-w-screen-xl w-full">
@@ -15,7 +58,7 @@ function UpgradeAndPlansPage() {
           </p>
         </div>
 
-        <p className="text-4xl">User Book</p>
+        <p className="text-4xl">Manage Subscription</p>
       </div>
 
       <div className="flex-col  flex gap-8">
@@ -45,7 +88,7 @@ function UpgradeAndPlansPage() {
             <Image alt="dollar" src="/credit-card.svg" width={35} height={35} />
 
             <CardTitle className="text-2xl !mt-2 font-medium">
-              Check Billing Details & Invoices
+              Manage Payment Method & Invoices
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col md:flex-row  px-10 gap-8">
@@ -56,8 +99,8 @@ function UpgradeAndPlansPage() {
               and machine learning algorithms, you can bolster your platform's
               security defenses and adapt to evolving threats effectively.
             </p>
-            <Button variant={'authx'} className="w-48 ">
-              Upgrade to Enterprise
+            <Button variant={'authx'} className="w-48" onClick={managePlan}>
+              Manage Plan
             </Button>
           </CardContent>
         </Card>

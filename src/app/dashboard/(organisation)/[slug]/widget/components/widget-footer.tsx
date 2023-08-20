@@ -41,11 +41,17 @@ export function WidgetFooter({ reset }: FooterProps) {
     redirectURL,
     logoImage,
     color,
+    color1,
     color2,
-    color3,
+    color9,
     widgetBgColor,
+    widgetBgColor2,
+    widgetBgColor3,
+    shadowColor,
     widgetColor,
-    nameFontColor
+    widgetColor2,
+    nameFontColor,
+    greetingFontColor
   } = useWidgetStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [s3ImageUrl, setS3ImageUrl] = useState(logoImage);
@@ -73,11 +79,17 @@ export function WidgetFooter({ reset }: FooterProps) {
         width: widgetBorderWidth
       },
       color0: color.hex,
-      color1: color2.hex,
-      color2: color3.hex,
+      color1: color1.hex,
+      color2: color2.hex,
       color3: widgetBgColor.hex,
+      color4: widgetBgColor2.hex,
+      color5: widgetBgColor3.hex,
       color6: widgetColor.hex,
+      color7: widgetColor2.hex,
+      color8: shadowColor.hex,
+      color9: color9.hex,
       color10: nameFontColor.hex,
+      color11: greetingFontColor.hex,
       social
     }
   };

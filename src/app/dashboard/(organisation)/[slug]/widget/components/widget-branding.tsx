@@ -24,11 +24,13 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
     button3Status,
     setButton3Status,
     color,
+    color1,
     color2,
-    color3,
+    color9,
     setColor,
+    setColor1,
     setColor2,
-    setColor3
+    setColor9
   } = useWidgetStore();
 
   useImperativeHandle(
@@ -46,15 +48,15 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
   useEffect(() => {
     // console.log(button2Status)
     if (!button3Status && !button2Status) {
-      return setColor2(color), setColor3(color);
-    }
-    if (!button3Status && button2Status) {
-      return setColor3(color2);
+      return setColor1(color), setColor2(color);
     }
     if (!button2Status && button3Status) {
-      return setColor2(color3);
+      return setColor1(color2);
     }
-  }, [color, color2, color3, button2Status, button3Status]);
+    if (!button3Status && button2Status) {
+      return setColor2(color1);
+    }
+  }, [color, color1, color2, button2Status, button3Status]);
 
   // useEffect(()=>{
   //   console.log("button2:",button2Status)
@@ -84,7 +86,7 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
         <div className={`${!button2Status && 'hidden'}`}>
           <span className="text-sm pl-2 text-zinc-500">Button Colour 2</span>
           <ColourInput
-            colorState={{ color: color2, setColor: setColor2 }}
+            colorState={{ color: color1, setColor: setColor1 }}
             setButtonStatus={setButton2Status}
             removable
           />
@@ -92,7 +94,7 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
         <div className={`${!button3Status && 'hidden'}`}>
           <span className="text-sm pl-2 text-zinc-500">Button Colour 3</span>
           <ColourInput
-            colorState={{ color: color3, setColor: setColor3 }}
+            colorState={{ color: color2, setColor: setColor2 }}
             setButtonStatus={setButton3Status}
             removable
           />
@@ -106,6 +108,10 @@ const WidgetBranding = forwardRef<WidgetBrandingRef>((_, ref) => {
           <Plus className="w-3.5 h-3.5 mr-2" />
           Add Linear-gradient
         </Button>
+        <div>
+          <span className="text-sm pl-2 text-zinc-500">Button Text Colour</span>
+          <ColourInput colorState={{ color: color9, setColor: setColor9 }} />
+        </div>
       </div>
       <div>
         <span className="text-sm pl-2 text-zinc-500">Add Logo</span>

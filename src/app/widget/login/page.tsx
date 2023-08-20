@@ -1204,8 +1204,7 @@ export default function Widget() {
   const goButtonStyle = {
     color: widget.color9,
     background: `linear-gradient(to right, ${widget.color0} 0%,${widget.color1} 50%,${widget.color2} 100% )`,
-
-    boxShadow: '1px 1px 8px black'
+    borderRadius: `${widget.input_border.radius}px`
   };
   const lineStyle = {
     borderColor: widget.color12,
@@ -1213,8 +1212,8 @@ export default function Widget() {
   };
   const cardStyle = {
     background: `linear-gradient(to bottom, ${widget.color6},${widget.color7})`,
-    boxShadow: `1px 1px 30px 2px ${widget.color8}`,
-    border: `2px solid ${widget.widget_border.color}`,
+    boxShadow: `0 10px 15px -3px ${widget.color8}, 0 4px 6px -4px ${widget.color8}`,
+    border: `${widget.widget_border.width}px solid ${widget.widget_border.color}`,
     borderRadius: `${widget.widget_border.radius}px`
   };
   const bgStyle = {
@@ -1225,6 +1224,13 @@ export default function Widget() {
   };
   const greetingStyle = {
     color: `${widget.color11}`
+  };
+  const inputStyle = {
+    borderColor: ` ${widget.input_border.color}`,
+    borderRadius: `${widget.input_border.radius}px`
+  };
+  const labelStyle = {
+    color: ` ${widget.input_border.color}`
   };
 
   return (
@@ -1237,7 +1243,7 @@ export default function Widget() {
         <div className="w-[100vw] h-[100vh] min-h-max" style={bgStyle}>
           <div
             style={cardStyle}
-            className="top-1/2 flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw]   sm:w-[350px] "
+            className="top-1/2 flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw]  px-[11%] sm:w-[310px] "
           >
             <div className="flex flex-col items-center p-[20px] mr-0 !important ">
               <div className="flex flex-col justify-center items-center ">
@@ -1346,8 +1352,11 @@ export default function Widget() {
                   ) : showpassField ? (
                     <>
                       <div className="w-full flex flex-col">
-                        <label className={''}>Password</label>
+                        <label className={''} style={labelStyle}>
+                          Password
+                        </label>
                         <input
+                          style={inputStyle}
                           className={`outline-none p-2 rounded-md bg-transparent border-2`}
                           id="password"
                           type="password"
@@ -1359,9 +1368,12 @@ export default function Widget() {
                     </>
                   ) : (
                     <div className={`w-full flex flex-col `}>
-                      <label className={''}>Email</label>
+                      <label className={''} style={labelStyle}>
+                        Your Email
+                      </label>
                       <input
-                        className="outline-none p-2 rounded-md bg-transparent border-2"
+                        style={inputStyle}
+                        className="outline-none p-2  bg-transparent border-[1.4px]"
                         id="email"
                         type="email"
                         value={email}
@@ -1391,7 +1403,7 @@ export default function Widget() {
                   <div className="w-full mt-8">
                     <button
                       style={goButtonStyle}
-                      className={`w-full h-12`}
+                      className={`w-full h-12 shadow-md hover:shadow-xl`}
                       onClick={loading2 ? undefined : handleGo}
                     >
                       <span className="text-xl mx-auto">
@@ -1405,29 +1417,24 @@ export default function Widget() {
                   </div>
                 </div>
               )}
-              <div
-                className="text-sm w-full text-right mt-1 text-blue-400 hover:text-blue-600 cursor-pointer"
-                onClick={reset}
-              >
-                Retry with another email
+              <div className="w-full">
+                <span
+                  className="text-sm  text-right w-fit mt-1 text-blue-400 hover:text-blue-600 cursor-pointer"
+                  onClick={reset}
+                >
+                  Retry with another email
+                </span>
               </div>
               {showSocial ? (
-                <>
-                  <div className="flex w-full justify-center mt-2">
-                    <div
-                      className="mt-2 w-[136px] border-t-2"
-                      style={lineStyle}
-                    ></div>
-                    <span className="px-1" style={lineStyle}>
-                      {' '}
-                      or{' '}
-                    </span>
-                    <div
-                      className="mt-2 w-[136px] border-t-2"
-                      style={lineStyle}
-                    ></div>
+                <div className="flex flex-col gap-14 w-full mt-6">
+                  <div className="flex w-full justify-center mt-2 relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-black border-t" />
+                      <span className="px-2">or</span>
+                      <span className="w-full border-black border-t" />
+                    </div>
                   </div>
-                  <div className="flex flex-row flex-wrap mt-4 gap-4">
+                  <div className="flex flex-row flex-wrap justify-evenly">
                     <div>
                       <button
                         type="submit"
@@ -1449,7 +1456,12 @@ export default function Widget() {
                         type="submit"
                         onClick={() => socialLogin('google')}
                       >
-                        <Image src={google} alt="google" width={35} />
+                        <Image
+                          src={google}
+                          alt="google"
+                          className="hover:shadow-md"
+                          width={35}
+                        />
                       </button>
                     </div>
                     <div>
@@ -1461,7 +1473,7 @@ export default function Widget() {
                       </button>
                     </div>
                   </div>
-                </>
+                </div>
               ) : (
                 ''
               )}
