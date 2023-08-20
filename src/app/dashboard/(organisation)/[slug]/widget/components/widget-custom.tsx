@@ -65,7 +65,7 @@ export function WidgetCustom() {
   };
 
   return (
-    <div className="flex flex-col pr-4 space-y-4 overflow-y-scroll max-h-[500px]">
+    <div className="flex flex-col px-2 space-y-4 overflow-y-scroll max-h-[500px]">
       <div>
         <span className="text-sm pl-2 text-zinc-500">
           Input Box Border Colour

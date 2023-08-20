@@ -235,8 +235,14 @@ export function WidgetFooter({ reset }: FooterProps) {
         className="bg-accent hover:bg-accent/80 basis-1/5"
         disabled={isLoading}
       >
-        {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-        Save
+        {isLoading ? (
+          <div className="flex flex-row gap-1 items-center">
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            <span>Saving...</span>
+          </div>
+        ) : (
+          'Save'
+        )}
       </Button>
     </div>
   );
