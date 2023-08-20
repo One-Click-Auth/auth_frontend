@@ -6,7 +6,7 @@ import './globals.css';
 import { Metadata } from 'next';
 import { Toaster } from '@/components/ui/toaster';
 import { ReactQueryProvider } from '@/Providers/react-query-provider';
-import { CrispProvider } from '@/Providers/crisp-provider';
+// import { CrispProvider } from '@/Providers/crisp-provider';
 
 export const metadata: Metadata = {
   title: 'TrustAuthX',
@@ -28,7 +28,7 @@ export default async function RootLayout({
       <head />
       <body>
         <ReactQueryProvider>
-          <CrispProvider />
+          {/* <CrispProvider /> */}
           <Providers>{children}</Providers>
           <Toaster />
         </ReactQueryProvider>
