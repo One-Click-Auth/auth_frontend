@@ -747,7 +747,7 @@ export default function Widget() {
     }
   };
 
-  //first action by the user, when the user clicks on the go button after putting in the email
+  //first action by the user, when the user clicks on the go button after putting in the email id
   const handleSubmit = async () => {
     setErrMsg('');
     setErr(false);
