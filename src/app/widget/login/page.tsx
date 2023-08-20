@@ -859,6 +859,7 @@ export default function Widget() {
             //show the user a text to verify his email addresss
             setMessage('Please Check Your Email To Verify!');
             setShowMsgPanel(true);
+            setShowMsg(true);
             return;
           }
         } else if (userInfo.passwordless === false) {
