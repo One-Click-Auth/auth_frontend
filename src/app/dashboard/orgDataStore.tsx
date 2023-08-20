@@ -12,6 +12,7 @@ export interface Organization {
   api_key: string;
   api_secret: string;
   name: string;
+  subs_id: string;
   host: null | string;
   state: boolean;
   breach_pass_det: boolean;

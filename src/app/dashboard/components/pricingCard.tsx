@@ -60,9 +60,9 @@ export function PricingCard({
           })
         }
       );
-      console.log(response);
+
       const data = (await response.json()) as { url: string };
-      console.log('data', data);
+
       if (response.status === 200) {
         router.push(data.url);
         return;
@@ -158,11 +158,11 @@ export function PreferenceDialog({
     <Dialog>
       <DialogTrigger
         disabled={disableButton}
-        className={disableButton ? 'blur-md' : ''}
+        className={`py-2 px-4 rounded-md bg-accent text-black shadow hover:text-white hover:bg-black w-max inline-flex items-center justify-center transition-colors disabled:pointer-events-none disabled:opacity-50  ${
+          disableButton ? 'blur-md' : ''
+        }`}
       >
-        <Button variant={'authx'} className="w-56 h-11 text-lg">
-          {triggerText}
-        </Button>
+        {triggerText}
       </DialogTrigger>
       <DialogContent>
         <div className="flex flex-col items-center py-4 sm:px-10 gap-y-5">
@@ -187,7 +187,10 @@ export function PreferenceDialog({
             }}
           >
             {loading ? (
-              <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-[3px] h-6 w-6"></div>
+              <div className="flex flex-row gap-2">
+                <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-[3px] h-4 w-4"></div>
+                <span>Processing...</span>
+              </div>
             ) : (
               'Proceed'
             )}
