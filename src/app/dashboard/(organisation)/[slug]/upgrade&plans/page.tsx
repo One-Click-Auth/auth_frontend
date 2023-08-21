@@ -9,7 +9,7 @@ import useOrgData, { Organization } from '../../../orgDataStore';
 import { Subscript } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-
+import Spinner from '@/components/spinner';
 function UpgradeAndPlansPage() {
   //sups_id
   const { token } = useAuth();
@@ -119,7 +119,8 @@ function UpgradeAndPlansPage() {
             <Button variant={'authx'} className="w-48" onClick={managePlan}>
               {loading1 ? (
                 <div className="flex flex-row gap-2 items-center">
-                  <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-2 h-4 w-4"></div>
+                  {/* <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-2 h-4 w-4"></div> */}
+                  <Spinner size={16} color="green" />
                   <span>redirecting...</span>
                 </div>
               ) : (

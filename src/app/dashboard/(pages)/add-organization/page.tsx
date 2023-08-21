@@ -12,6 +12,7 @@ import { useAuth } from '@/Providers/AuthContext';
 
 import { useDispatch } from 'react-redux';
 import { updateKeys } from '@/redux/Org/keySlice';
+import Spinner from '@/components/spinner';
 
 // Alert component
 const AlertMessage = ({
@@ -160,7 +161,7 @@ function AddOrganization() {
               >
                 {loading ? (
                   <div className="flex flex-row gap-2 items-center">
-                    <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-2 h-4 w-4"></div>
+                    <Spinner size={16} color="green" />
                     <span>Checking...</span>
                   </div>
                 ) : (

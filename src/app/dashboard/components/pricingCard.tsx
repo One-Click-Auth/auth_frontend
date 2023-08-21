@@ -28,6 +28,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { useAuth } from '@/Providers/AuthContext';
+import Spinner from '@/components/spinner';
 
 export function PricingCard({
   blurStudent,
@@ -188,7 +189,7 @@ export function PreferenceDialog({
           >
             {loading ? (
               <div className="flex flex-row gap-2 items-center">
-                <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-2 h-4 w-4"></div>
+                <Spinner size={16} color="green" />
                 <span>Processing...</span>
               </div>
             ) : (
