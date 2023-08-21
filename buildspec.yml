@@ -17,3 +17,5 @@ phases:
     commands:
       # Push the Docker image to Amazon ECR
       - docker push 731664064493.dkr.ecr.ap-south-1.amazonaws.com/trustauthx:latest
+  artifacts:
+  files: '**/*'
