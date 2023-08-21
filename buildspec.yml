@@ -3,19 +3,21 @@ version: 0.2
 phases:
   pre_build:
     commands:
-     
       - pip install --upgrade awscli
       # Log in to Amazon ECR
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 731664064493.dkr.ecr.ap-south-1.amazonaws.com
+
   build:
     commands:
       # Build the Docker image
       - docker build -t trustauthx .
       # Tag the Docker image with the ECR repository URI
       - docker tag trustauthx:latest 731664064493.dkr.ecr.ap-south-1.amazonaws.com/trustauthx:latest
+
   post_build:
     commands:
       # Push the Docker image to Amazon ECR
       - docker push 731664064493.dkr.ecr.ap-south-1.amazonaws.com/trustauthx:latest
-  artifacts:
+
+artifacts:
   files: '**/*'
