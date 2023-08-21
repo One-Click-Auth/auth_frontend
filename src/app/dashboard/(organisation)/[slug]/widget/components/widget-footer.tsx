@@ -9,6 +9,8 @@ import { useAuth } from '@/Providers/AuthContext';
 import { OrgObject } from '../widgetStore';
 import '@total-typescript/ts-reset';
 import { useParams } from 'next/navigation';
+import { Spinnaker } from 'next/font/google';
+import Spinner from '@/components/spinner';
 
 type FooterProps = {
   reset: () => void;
@@ -95,7 +97,7 @@ export function WidgetFooter({ reset }: FooterProps) {
   };
 
   if (callbackURL) widgetObj.callback_url = callbackURL;
-  if (redirectURL) widgetObj.redirect_url = redirectURL;
+  if (redirectURL) widgetObj.widget.redirect_url = redirectURL;
   if (tncURL) widgetObj.tnc_url = tncURL;
   if (ppURL) widgetObj.pp_url = ppURL;
 
@@ -110,7 +112,7 @@ export function WidgetFooter({ reset }: FooterProps) {
   // Save methods
   async function putObject() {
     try {
-      console.log(JSON.stringify(widgetObj));
+      // console.log(JSON.stringify(widgetObj));
       const res = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
         method: 'PUT',
         headers: {
@@ -198,6 +200,7 @@ export function WidgetFooter({ reset }: FooterProps) {
 
   // Call methods according to active tab
   const handleSave = async () => {
+    if (isLoading) return;
     setIsLoading(true);
     // Attemp to upload logo only if it has been changed
     if (!checkLogoEquality(logo, prevLogo)) {
@@ -235,8 +238,15 @@ export function WidgetFooter({ reset }: FooterProps) {
         className="bg-accent hover:bg-accent/80 basis-1/5"
         disabled={isLoading}
       >
-        {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-        Save
+        {isLoading ? (
+          <div className="flex flex-row gap-1 items-center">
+            <Spinner size={16} color="green" />
+
+            <span>Saving...</span>
+          </div>
+        ) : (
+          'Save'
+        )}
       </Button>
     </div>
   );

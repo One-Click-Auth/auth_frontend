@@ -8,12 +8,14 @@ import { useAuth } from '@/Providers/AuthContext';
 import useOrgData, { Organization } from '../../../orgDataStore';
 import { Subscript } from 'lucide-react';
 import { useParams } from 'next/navigation';
-
+import { useState } from 'react';
+import Spinner from '@/components/spinner';
 function UpgradeAndPlansPage() {
   //sups_id
   const { token } = useAuth();
   const { slug } = useParams();
   const orgId = slug;
+  const [loading1, setLoading1] = useState(false);
 
   //   const getOrgData = async ()=>{
   //     const response = await fetch(`https://api.trustauthx.com/org/${orgId}`, {
@@ -29,23 +31,38 @@ function UpgradeAndPlansPage() {
   // }
 
   const managePlan = async () => {
-    const response = await fetch(`https://api.trustauthx.com/org/${orgId}`, {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    });
-    const data = (await response.json()) as Organization;
-    const subscription_id = data.subs_id;
-    console.log(subscription_id);
-    const url = `https://api.trustauthx.com/create-customer-portal-session?subscription_id=${subscription_id}&redirect_url=${encodeURIComponent(
-      window.location.href
-    )}`;
+    if (loading1) return;
+    setLoading1(true);
+    try {
+      const response = await fetch(`https://api.trustauthx.com/org/${orgId}`, {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const data = (await response.json()) as Organization;
+      if (response.status === 200) {
+        const subscription_id = data.subs_id;
+        // console.log(subscription_id);
+        const url = `https://api.trustauthx.com/create-customer-portal-session?subscription_id=${subscription_id}&redirect_url=${encodeURIComponent(
+          window.location.href
+        )}`;
 
-    window.location.href = url;
-    // console.log(url)
-    // next router was creating a problem in routing back that's why window object is being used
+        window.location.href = url;
+        // setLoading1(false);
+        return;
+      }
+
+      setLoading1(false);
+      return;
+
+      // console.log(url)
+      // next router was creating a problem in routing back that's why window object is being used
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   };
 
   return (
@@ -100,7 +117,15 @@ function UpgradeAndPlansPage() {
               security defenses and adapt to evolving threats effectively.
             </p>
             <Button variant={'authx'} className="w-48" onClick={managePlan}>
-              Manage Plan
+              {loading1 ? (
+                <div className="flex flex-row gap-2 items-center">
+                  {/* <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-2 h-4 w-4"></div> */}
+                  <Spinner size={16} color="green" />
+                  <span>redirecting...</span>
+                </div>
+              ) : (
+                'Manage Plan'
+              )}
             </Button>
           </CardContent>
         </Card>

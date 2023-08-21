@@ -42,9 +42,10 @@ export type OrgObject = {
     color11: string;
     // color12:string;
     social: Social;
+    redirect_url?: string;
   };
   callback_url?: string;
-  redirect_url?: string;
+
   tnc_url?: string;
   pp_url?: string;
 };
@@ -399,7 +400,7 @@ export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
       ppURL: data.pp_url ?? '',
       hostURL: data.host ?? '',
       callbackURL: data.callback_url ?? '',
-      redirectURL: data.redirect_url ?? ''
+      redirectURL: data.widget.redirect_url ?? ''
     }));
 
     setInitialState(data);
@@ -469,7 +470,7 @@ const setInitialState = (data: OrgObject) => {
   initialDevSettingState = {
     hostURL: data.host ?? '',
     callbackURL: data.callback_url ?? '',
-    redirectURL: data.redirect_url ?? '',
+    redirectURL: data.widget.redirect_url ?? '',
     social: socialDefaults ?? {}
   };
 
