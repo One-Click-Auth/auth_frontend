@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useOrgData, useUserData } from './widgetStore'; //import zustand store to store and update org data
-import widgetStyle from './widget.module.css';
+// import widgetStyle from './widget.module.css';
 import convertToApproxTime from './approxTime';
 import github from './github-mark.svg';
 import microsoft from './microsoft.svg';
@@ -1205,7 +1205,8 @@ export default function Widget() {
   const goButtonStyle = {
     color: widget.color9,
     background: `linear-gradient(to right, ${widget.color0} 0%,${widget.color1} 50%,${widget.color2} 100% )`,
-    borderRadius: `${widget.input_border.radius}px`
+    borderRadius: `${widget.button.radius}px`,
+    borderColor: widget.button.bc
   };
   const lineStyle = {
     borderColor: widget.color12,
@@ -1279,9 +1280,7 @@ export default function Widget() {
                     <span className="text-base text-4md" style={greetingStyle}>
                       {showMfaActivation
                         ? 'Continue to register MFA'
-                        : `Login to ${
-                            storeOrgData.widget.name || 'TrustAuthX'
-                          }`}
+                        : storeOrgData.widget.greeting}
                     </span>
                   </div>
                 ) : (
@@ -1404,7 +1403,7 @@ export default function Widget() {
                   <div className="w-full mt-8">
                     <button
                       style={goButtonStyle}
-                      className={`w-full h-12 shadow-md hover:shadow-xl`}
+                      className={`w-full h-12 shadow-md border hover:opacity-75`}
                       onClick={loading2 ? undefined : handleGo}
                     >
                       <span className="text-xl mx-auto">
@@ -1418,14 +1417,18 @@ export default function Widget() {
                   </div>
                 </div>
               )}
-              <div className="w-full">
-                <span
-                  className="text-sm  text-right w-fit mt-1 text-blue-400 hover:text-blue-600 cursor-pointer"
-                  onClick={reset}
-                >
-                  Retry with another email
-                </span>
-              </div>
+              {!showSocial ? (
+                <div className="w-full">
+                  <span
+                    className="text-sm  text-right w-fit mt-1 text-blue-400 hover:text-blue-600 cursor-pointer"
+                    onClick={reset}
+                  >
+                    Try with another email
+                  </span>
+                </div>
+              ) : (
+                ''
+              )}
               {showSocial ? (
                 <div className="flex flex-col gap-14 w-full mt-6">
                   <div className="flex w-full justify-center mt-2 relative">

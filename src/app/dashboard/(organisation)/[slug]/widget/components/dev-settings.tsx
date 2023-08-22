@@ -20,8 +20,10 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { useWidgetStore } from '../widgetStore';
-
+import { useWidgetStore, Social } from '../widgetStore';
+import SocialSignInPopup from './SocialSignInPopup';
+import { Dialog, DialogTrigger } from '@/components/ui/Dialog';
+import { useEffect } from 'react';
 type SocialList = {
   [key: string]: {
     name: string;
@@ -43,65 +45,68 @@ export function DevSettings() {
     setRedirectURL
   } = useWidgetStore();
 
+  useEffect(() => {
+    console.log(social);
+  }, [social]);
+
   const socialsList: SocialList = {
     github: {
       name: 'Github',
       icon: <GithubIcon className="w-6" />,
       disabled: false,
-      active: social.github
+      active: social.github ? true : false
     },
     microsoft: {
       name: 'Microsoft',
       icon: <MicrosoftIcon className="w-6" />,
-      disabled: true,
-      active: social.microsoft
+      disabled: false,
+      active: social.microsoft ? true : false
     },
     google: {
       name: 'Google',
       icon: <GoogleIcon className="w-5" />,
-      disabled: true,
-      active: social.google
+      disabled: false,
+      active: social.google ? true : false
     },
     apple: {
       name: 'Apple',
       icon: <AppleIcon className="w-6" />,
       disabled: true,
-      active: social.apple
+      active: social.apple ? true : false
     },
     whatsapp: {
       name: 'WhatsApp',
       icon: <WhatsappIcon className="w-7 h-7" />,
       disabled: true,
-      active: social.whatsapp
+      active: social.whatsapp ? true : false
     },
     tiktok: {
       name: 'Tiktok',
       icon: <TiktokIcon2 className="h-7" />,
       disabled: true,
-      active: social.tiktok
+      active: social.tiktok ? true : false
     },
     facebook: {
       name: 'Facebook',
       icon: <FacebookIcon className="w-6" />,
       disabled: true,
-      active: social.facebook
+      active: social.faceboo ? true : false
     },
     linkedin: {
       name: 'Linkedin',
       icon: <LinkedinIcon className="w-6" />,
       disabled: true,
-      active: social.facebook
+      active: social.facebook ? true : false
     },
     twitter: {
       name: 'Twitter',
       icon: <TwitterIcon className="w-6" />,
       disabled: true,
-      active: social.twitter
+      active: social.twitter ? true : false
     }
   };
 
-  const handleButtonToggle = (key: string, value: boolean) => {
-    const newSocial = { [key]: !value };
+  const handleButtonToggle = (newSocial: Social) => {
     setSocial(newSocial);
   };
 
@@ -135,25 +140,31 @@ export function DevSettings() {
             <TooltipProvider key={social.name + key} delayDuration={400}>
               <Tooltip>
                 <TooltipTrigger>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleButtonToggle(key, social.active)}
-                    className={cn(
-                      'w-full flex items-center justify-evenly rounded-lg h-14 py-4 px-1 hover:bg-blue-50',
-                      social.active && 'border-slate-700 bg-blue-50'
-                    )}
-                    disabled={social.disabled}
-                  >
-                    {social.icon}
-                    <span className="text-base font-normal">{social.name}</span>
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild={true}>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          'w-full flex items-center justify-evenly rounded-lg h-14 py-4 px-1 hover:bg-blue-50',
+                          social.active && 'border-slate-700 bg-blue-50'
+                        )}
+                        disabled={social.disabled}
+                      >
+                        {social.icon}
+                        <span className="text-base font-normal">
+                          {social.name}
+                        </span>
+                      </Button>
+                    </DialogTrigger>
+                    <SocialSignInPopup socialName={social.name} />
+                  </Dialog>
                 </TooltipTrigger>
                 <TooltipContent>
                   {social.disabled ? (
                     <p>Coming soon</p>
                   ) : (
                     <p>
-                      {social.active ? 'Remove' : 'Add'} {social.name} Sign-in
+                      {social.active ? '' : 'Add'} {social.name} Sign-in
                     </p>
                   )}
                 </TooltipContent>

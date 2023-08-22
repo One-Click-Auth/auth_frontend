@@ -8,7 +8,10 @@ type WidgetStore = BrandingSlice &
   EmailSettingSlice;
 
 export type Social = {
-  [key: string]: boolean;
+  [name: string]: {
+    CLIENT_ID: string | null;
+    CLIENT_SECRET: string | null;
+  };
 };
 
 export type OrgObject = {
@@ -28,6 +31,10 @@ export type OrgObject = {
       color: string;
       width: string;
     };
+    button: {
+      radius: string;
+      bc: string;
+    };
     color0: string;
     color1: string;
     color2: string;
@@ -40,26 +47,59 @@ export type OrgObject = {
     color9: string;
     color10: string;
     color11: string;
-    // color12:string;
-    social: Social;
     redirect_url?: string;
   };
   callback_url?: string;
-
+  social: Social;
   tnc_url?: string;
   pp_url?: string;
 };
 
 const socialDefaults: Social = {
-  github: false,
-  microsoft: false,
-  google: false,
-  apple: false,
-  whatsapp: false,
-  tiktok: false,
-  facebook: false,
-  linkedin: false,
-  twitter: false
+  github: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  google: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  discord: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  microsoft: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  facebook: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  figma: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  tiktok: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  linkedin: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  twitter: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  whatsapp: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  apple: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  }
 };
 
 interface BrandingSlice {
@@ -102,7 +142,8 @@ type BrandingState = {
 let initialBrandingState: BrandingState = {
   displayName: 'Flitchcoin',
   greeting: 'Continue to Log in to Flitchcoin',
-  logoImage: '/flitchcoin-logo.svg',
+  logoImage:
+    'https://openauthx.s3.ap-south-1.amazonaws.com/Group+119+(4)+1.svg',
   logo: undefined,
   button2Status: false,
   button3Status: false,
@@ -134,6 +175,7 @@ const createBrandingSlice: StateCreator<
 
 interface CustomisationSlice {
   inputBorderColor: Color;
+  buttonBorderColor: Color;
   widgetBorderColor: Color;
   widgetColor: Color;
   widgetColor2: Color;
@@ -145,11 +187,13 @@ interface CustomisationSlice {
   widgetBg3Status: boolean;
   shadowColor: Color;
   inputBoxRadius: string;
+  buttonRadius: string;
   widgetBoxRadius: string;
   widgetBorderWidth: string;
   nameFontColor: Color;
   greetingFontColor: Color;
   setInputBorderColor: (inputBorderColor: Color) => void;
+  setButtonBorderColor: (buttonBorderColor: Color) => void;
   setWidgetBorderColor: (widgetBorderColor: Color) => void;
   setWidgetColor: (widgetColor: Color) => void;
   setWidgetColor2: (widgetColor2: Color) => void;
@@ -161,6 +205,7 @@ interface CustomisationSlice {
   setWidgetBg3Status: (widgetBg3Status: boolean) => void;
   setShadowColor: (shadowColor: Color) => void;
   setInputBoxRadius: (inputBoxRadius: string) => void;
+  setButtonRadius: (buttonRadius: string) => void;
   setWidgetBoxRadius: (widgetBoxRadius: string) => void;
   setWidgetBorderWidth: (widgetBorderWidth: string) => void;
   setNameFontColor: (nameFontColor: Color) => void;
@@ -170,6 +215,7 @@ interface CustomisationSlice {
 
 type CustomisationState = {
   inputBorderColor: Color;
+  buttonBorderColor: Color;
   widgetBorderColor: Color;
   nameFontColor: Color;
   greetingFontColor: Color;
@@ -183,12 +229,14 @@ type CustomisationState = {
   widgetBg3Status: boolean;
   shadowColor: Color;
   inputBoxRadius: string;
+  buttonRadius: string;
   widgetBoxRadius: string;
   widgetBorderWidth: string;
 };
 
 let initialCustomisationState: CustomisationState = {
   inputBorderColor: toColor('hex', '#121212'),
+  buttonBorderColor: toColor('hex', '#121212'),
   widgetBorderColor: toColor('hex', '#FFFFFF'),
   widgetColor: toColor('hex', '#FFFFFF'),
   widgetColor2: toColor('hex', '#FFFFFF'),
@@ -200,6 +248,7 @@ let initialCustomisationState: CustomisationState = {
   widgetBg3Status: false,
   shadowColor: toColor('hex', '#121212'),
   inputBoxRadius: '6',
+  buttonRadius: '6',
   widgetBoxRadius: '8',
   widgetBorderWidth: '1',
   nameFontColor: toColor('hex', '#121212'),
@@ -214,6 +263,8 @@ const createCustomisationSlice: StateCreator<
 > = set => ({
   ...initialCustomisationState,
   setInputBorderColor: (inputBorderColor: Color) => set({ inputBorderColor }),
+  setButtonBorderColor: (buttonBorderColor: Color) =>
+    set({ buttonBorderColor }),
   setWidgetBorderColor: (widgetBorderColor: Color) =>
     set({ widgetBorderColor }),
   setWidgetColor: (widgetColor: Color) => set({ widgetColor }),
@@ -227,6 +278,7 @@ const createCustomisationSlice: StateCreator<
   setWidgetBg3Status: (widgetBg3Status: boolean) => set({ widgetBg3Status }),
   setShadowColor: (shadowColor: Color) => set({ shadowColor }),
   setInputBoxRadius: (inputBoxRadius: string) => set({ inputBoxRadius }),
+  setButtonRadius: (buttonRadius: string) => set({ buttonRadius }),
   setWidgetBoxRadius: (widgetBoxRadius: string) => set({ widgetBoxRadius }),
   setWidgetBorderWidth: (widgetBorderWidth: string) =>
     set({ widgetBorderWidth }),
@@ -248,7 +300,7 @@ interface ConsentAndDevSettingsSlice {
   setHostURL: (hostURL: string) => void;
   setCallbackURL: (callbackURL: string) => void;
   setRedirectURL: (redirectURL: string) => void;
-  setSocial: (newSocial: { [x: string]: boolean }) => void;
+  setSocial: (newSocial: Social) => void;
   resetConsent: () => void;
   resetDevSettings: () => void;
 }
@@ -290,13 +342,14 @@ const createConsentAndDevSettingsSlice: StateCreator<
   setHostURL: (hostURL: string) => set({ hostURL }),
   setCallbackURL: (callbackURL: string) => set({ callbackURL }),
   setRedirectURL: (redirectURL: string) => set({ redirectURL }),
-  setSocial: (newSocial: { [x: string]: boolean }) =>
+  setSocial: (newSocial: Social) =>
     set(state => ({
       social: {
         ...state.social,
         ...newSocial
       }
     })),
+
   resetConsent: () => set(initialConsentState),
   resetDevSettings: () => set(initialDevSettingState)
 });
@@ -384,6 +437,7 @@ export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
       color2: toColor('hex', data.widget.color2),
       color9: toColor('hex', data.widget.color9),
       inputBorderColor: toColor('hex', data.widget.input_border.color),
+      buttonBorderColor: toColor('hex', data.widget.button.bc),
       widgetBorderColor: toColor('hex', data.widget.widget_border.color),
       widgetColor: toColor('hex', data.widget.color6),
       widgetColor2: toColor('hex', data.widget.color7),
@@ -392,10 +446,12 @@ export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
       widgetBgColor3: toColor('hex', data.widget.color5),
       shadowColor: toColor('hex', data.widget.color8),
       inputBoxRadius: data.widget.input_border.radius,
+      buttonRadius: data.widget.button.radius,
       widgetBoxRadius: data.widget.widget_border.radius,
       widgetBorderWidth: data.widget.widget_border.width,
       nameFontColor: toColor('hex', data.widget.color10),
       greetingFontColor: toColor('hex', data.widget.color11),
+      social: data.social,
       tncURL: data.tnc_url ?? '',
       ppURL: data.pp_url ?? '',
       hostURL: data.host ?? '',
@@ -437,6 +493,7 @@ const setInitialState = (data: OrgObject) => {
 
   initialCustomisationState = {
     inputBorderColor: toColor('hex', data.widget.input_border.color),
+    buttonBorderColor: toColor('hex', data.widget.button.bc),
     widgetBorderColor: toColor('hex', data.widget.widget_border.color),
     widgetColor: toColor('hex', data.widget.color6),
     widgetColor2: toColor('hex', data.widget.color7),
@@ -458,6 +515,7 @@ const setInitialState = (data: OrgObject) => {
     nameFontColor: toColor('hex', data.widget.color10),
     greetingFontColor: toColor('hex', data.widget.color11),
     inputBoxRadius: data.widget.input_border.radius,
+    buttonRadius: data.widget.button.radius,
     widgetBoxRadius: data.widget.widget_border.radius,
     widgetBorderWidth: data.widget.widget_border.width
   };
@@ -471,7 +529,7 @@ const setInitialState = (data: OrgObject) => {
     hostURL: data.host ?? '',
     callbackURL: data.callback_url ?? '',
     redirectURL: data.widget.redirect_url ?? '',
-    social: socialDefaults ?? {}
+    social: data.social ?? socialDefaults
   };
 
   initialEmailSettingState = {

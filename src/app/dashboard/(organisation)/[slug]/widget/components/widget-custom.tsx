@@ -11,6 +11,8 @@ export function WidgetCustom() {
   const {
     inputBorderColor,
     setInputBorderColor,
+    buttonBorderColor,
+    setButtonBorderColor,
     widgetBorderColor,
     setWidgetBorderColor,
     widgetColor,
@@ -33,6 +35,8 @@ export function WidgetCustom() {
     setShadowColor,
     inputBoxRadius,
     setInputBoxRadius,
+    buttonRadius,
+    setButtonRadius,
     widgetBoxRadius,
     setWidgetBoxRadius,
     widgetBorderWidth,
@@ -86,6 +90,26 @@ export function WidgetCustom() {
           max={100}
           value={inputBoxRadius}
           onChange={e => setInputBoxRadius(e.target.value)}
+        />
+      </div>
+      <div>
+        <span className="text-sm pl-2 text-zinc-500">Button Border Colour</span>
+        <ColourInput
+          colorState={{
+            color: buttonBorderColor,
+            setColor: setButtonBorderColor
+          }}
+        />
+      </div>
+      <div>
+        <span className="text-sm pl-2 text-zinc-500">Button Radius</span>
+        <Input
+          className="h-11 shadow-none"
+          type="number"
+          min={0}
+          max={100}
+          value={buttonRadius}
+          onChange={e => setButtonRadius(e.target.value)}
         />
       </div>
       <div>

@@ -1,17 +1,19 @@
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+// import { Button } from '@/components/ui/Button';
+// import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import * as React from 'react';
 import WebhookForm from '../components/webhookForm';
 import ShowWebhookUrl from '../components/showWebhookUrl';
-import LogViewer from '../components/logViewer';
+// import LogViewer from '../components/logViewer';
 const OrganisationDashboard = () => {
+  const date = new Date().toDateString();
+
   return (
     <div className="grid gap-11">
       <Container>
         <div className="flex items-center justify-start w-full text-xl font-normal gap-2 text-slate-500">
           <GreenTick />
-          <span>Updated at May 4, 2022</span>
+          <span>Updated on {`${date}`}</span>
         </div>
         <h1 className="text-3xl font-bold">Monitoring & Webhooks</h1>
       </Container>
@@ -27,7 +29,7 @@ const OrganisationDashboard = () => {
         <ShowWebhookUrl />
         <hr />
       </Container>
-      <Container>
+      {/* <Container>
         <div className=" flex bg-slate-200 gap-4  items-center rounded-md">
           <Button variant={'outline'} className="px-10 border border-black">
             Logs
@@ -37,7 +39,7 @@ const OrganisationDashboard = () => {
           </p>
         </div>
         <LogViewer />
-      </Container>
+      </Container> */}
     </div>
   );
 };
