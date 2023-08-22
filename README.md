@@ -12,7 +12,7 @@ Make sure you have the following installed in your system:
 - Make a fork of the repo
 - Clone your forked repo locally `git clone <repo_link>`
 - `cd` into the cloned directory
-- Run `npm install` to install all the dependencies
+- Run `npm install` to install all the dependency.
 - Create an upstream to the main repo `git remote add upstream https://github.com/One-Click-Auth/auth_frontend`
 - To update your fork with the main repo run `git pull upstream next-app`. Make sure you update your repo regularly to keep up with the main repo.
 - Create a new branch `git checkout -b <branch_name>`
