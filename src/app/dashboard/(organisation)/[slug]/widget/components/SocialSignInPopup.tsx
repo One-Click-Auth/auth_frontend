@@ -22,8 +22,109 @@ import { ArrowLeft, Plus } from 'lucide-react';
 import { IconBase } from 'react-icons/lib';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/Input';
+import { useParams } from 'next/navigation';
+import Spinner from '@/components/spinner';
+import { updateStoreWithFetch, useWidgetStore } from '../widgetStore';
 
-function SocialSignInPopup() {
+function SocialSignInPopup({ socialName }: { socialName: string }) {
+  const { toast } = useToast();
+  const { slug: ORG_ID } = useParams();
+  const { token } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
+  const [client_id, setClient_id] = useState('');
+  const [client_secret, setClient_secret] = useState('');
+
+  const social = socialName.toLocaleLowerCase();
+
+  // useEffect(()=>{
+  //   console.log(client_id)
+
+  // },[client_id])
+
+  const destructiveToast = () => {
+    toast({
+      variant: 'destructive',
+      title: 'Uh oh! Something went wrong.',
+      description: 'There was a problem with your request.'
+    });
+  };
+
+  async function addSocial() {
+    setLoading(true);
+    try {
+      const response = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
+        method: 'PUT',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          social: {
+            [social]: {
+              CLIENT_ID: client_id,
+              CLIENT_SECRET: client_secret
+            }
+          }
+        })
+      });
+      if (response.status === 200) {
+        setLoading(false);
+        if (token) await updateStoreWithFetch(token, ORG_ID);
+        toast({
+          title: 'Success!',
+          description: `${social} has been added successfully`,
+          variant: 'success'
+        });
+      } else {
+        setLoading(false);
+        destructiveToast();
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      destructiveToast();
+    }
+  }
+  async function addSocialGeneric() {
+    setLoading2(true);
+    try {
+      const response = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
+        method: 'PUT',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          social: {
+            [social]: {
+              CLIENT_ID: null,
+              CLIENT_SECRET: null
+            }
+          }
+        })
+      });
+      if (response.status === 200) {
+        setLoading2(false);
+        if (token) await updateStoreWithFetch(token, ORG_ID);
+        toast({
+          title: 'Success!',
+          description: `${social} has been added successfully`,
+          variant: 'success'
+        });
+      } else {
+        setLoading2(false);
+        destructiveToast();
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading2(false);
+      destructiveToast();
+    }
+  }
+
   return (
     <DialogContent
       className={cn(
@@ -50,19 +151,27 @@ function SocialSignInPopup() {
               **Callback URI
             </p>
             <Input
-              className="p-5"
+              className="p-5 "
               placeholder="https://api.trustauthx.com/api/single/social/callback"
             />
           </div>
           <div>
             <p className="text-muted-foreground mb-1 text-left">**Client ID</p>
-            <Input className="p-5" />
+            <Input
+              className="p-5"
+              value={client_id ? client_id : ''}
+              onChange={e => setClient_id(e.target.value)}
+            />
           </div>
           <div>
             <p className="text-muted-foreground mb-1 text-left">
               **Client Secret
             </p>
-            <Input className="p-5" />
+            <Input
+              className="p-5"
+              value={client_secret ? client_secret : ''}
+              onChange={e => setClient_secret(e.target.value)}
+            />
           </div>
         </div>
 
@@ -71,17 +180,36 @@ function SocialSignInPopup() {
             <Button
               variant={'outline'}
               className="bg-slate-900 hover:text-black text-white"
+              onClick={addSocialGeneric}
             >
-              <Plus />
-              Use Generic by TrustAuthX
+              {loading2 ? (
+                <div className="flex flex-row gap-1 items-center">
+                  <Spinner size={16} color="green" />
+
+                  <span>Adding...</span>
+                </div>
+              ) : (
+                <>
+                  <Plus />
+                  Use Generic by TrustAuthX
+                </>
+              )}
             </Button>
             <p className="text-sm text-right text-muted-foreground">
               **Not Recommended
             </p>
           </div>
 
-          <Button className="w-40" variant={'authx'}>
-            Save
+          <Button className="w-40" variant={'authx'} onClick={addSocial}>
+            {loading ? (
+              <div className="flex flex-row gap-1 items-center">
+                <Spinner size={16} color="green" />
+
+                <span>Adding...</span>
+              </div>
+            ) : (
+              `Add ${social}`
+            )}
           </Button>
         </div>
       </div>

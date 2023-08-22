@@ -10,10 +10,13 @@ interface Widget {
     color: string;
   };
   widget_border: {
-    style: number;
     radius: number;
     color: string;
     width: number;
+  };
+  button: {
+    radius: number;
+    bc: string;
   };
   color0: string;
   color1: string;
@@ -102,10 +105,13 @@ export const useOrgData = create<OrgData>(set => ({
         color: ''
       },
       widget_border: {
-        style: 0,
         radius: 0,
         color: '',
         width: 0
+      },
+      button: {
+        radius: 0,
+        bc: ''
       },
       color0: '',
       color1: '',

@@ -16,7 +16,6 @@ import {
 } from '@/assets/Svg/Account/Account';
 import { cn } from '@/lib/utils';
 import { useWidgetStore } from '../widgetStore';
-
 export function WidgetPreview() {
   const {
     button2Status,
@@ -31,15 +30,17 @@ export function WidgetPreview() {
     displayName,
     greeting,
     inputBorderColor,
+    buttonBorderColor,
     widgetColor,
     widgetColor2,
     inputBoxRadius,
+    buttonRadius,
     nameFontColor,
     greetingFontColor
   } = useWidgetStore();
 
   const socialValues = Object.values(social);
-  const show = socialValues.includes(true);
+  const show = socialValues.length > 0;
 
   // Method to determine if button color is solid or gradient
   const updateButtonBg = () => {
@@ -64,15 +65,15 @@ export function WidgetPreview() {
   // }
 
   const [buttonBackground, setButtonBackground] = useState(updateButtonBg());
-  const [buttonTextColor, setButtonTextColor] = useState(`${color9.hex}`);
+  // const [buttonTextColor, setButtonTextColor] = useState(`${color9.hex}`);
 
   useEffect(() => {
     setButtonBackground(updateButtonBg());
   }, [color, color1, color2, button2Status, button3Status]);
 
-  useEffect(() => {
-    setButtonTextColor(`${color9.hex}`);
-  }, [color9]);
+  // useEffect(() => {
+  //   setButtonTextColor(`${color9.hex}`);
+  // }, [color9]);
 
   return (
     <div className="space-y-10">
@@ -121,8 +122,13 @@ export function WidgetPreview() {
           />
         </div>
         <Button
-          style={{ background: buttonBackground, color: buttonTextColor }}
-          className={cn('w-44 h-8', !show && 'mb-3')}
+          style={{
+            background: buttonBackground,
+            color: color9.hex,
+            borderRadius: Number(buttonRadius),
+            borderColor: buttonBorderColor.hex
+          }}
+          className={cn('w-44 h-8 border-[1px]', !show && 'mb-3')}
         >
           <span className="ml-6">Go !!</span>
           <ChevronRightIcon className="ml-3" />

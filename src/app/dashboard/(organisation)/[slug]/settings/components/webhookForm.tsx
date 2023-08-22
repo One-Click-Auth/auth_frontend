@@ -71,8 +71,8 @@ const WebhookForm = () => {
   return (
     <div className="flex flex-col md:flex-row gap-2">
       <Input
+        className="w-full md:w-1/2 py-5 font-semibold text-xl placeholder:text-gray-300 "
         placeholder="https://www.example.me/now"
-        className="w-full md:w-1/2 py-5 font-bold text-xl "
         onChange={e => setInputUrl(e.target.value)}
       />
       <div className="flex items-center justify-start w-full md:w-fit">

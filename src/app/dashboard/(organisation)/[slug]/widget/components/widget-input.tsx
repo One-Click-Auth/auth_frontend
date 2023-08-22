@@ -19,7 +19,7 @@ export function WidgetInput({
     <div>
       <span className="text-sm pl-2 text-gray-600">{heading}</span>
       <Input
-        className="h-11 shadow-none"
+        className="h-11 shadow-none placeholder:text-slate-300 "
         type={type}
         placeholder={placeholder}
         onChange={e => changeHandler(e.target.value)}

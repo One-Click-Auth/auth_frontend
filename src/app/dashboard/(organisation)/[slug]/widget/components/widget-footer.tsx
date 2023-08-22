@@ -32,14 +32,16 @@ export function WidgetFooter({ reset }: FooterProps) {
     greeting,
     inputBorderColor,
     inputBoxRadius,
+    buttonBorderColor,
+    buttonRadius,
     widgetBorderWidth,
     widgetBoxRadius,
     widgetBorderColor,
-    social,
     ppURL,
     tncURL,
     hostURL,
     callbackURL,
+    social,
     redirectURL,
     logoImage,
     color,
@@ -66,6 +68,7 @@ export function WidgetFooter({ reset }: FooterProps) {
   const widgetObj: OrgObject = {
     name: displayName,
     host: hostURL,
+    social: social,
     widget: {
       name: displayName,
       logo_url: s3ImageUrl,
@@ -80,6 +83,10 @@ export function WidgetFooter({ reset }: FooterProps) {
         color: widgetBorderColor.hex,
         width: widgetBorderWidth
       },
+      button: {
+        radius: buttonRadius,
+        bc: buttonBorderColor.hex
+      },
       color0: color.hex,
       color1: color1.hex,
       color2: color2.hex,
@@ -91,8 +98,7 @@ export function WidgetFooter({ reset }: FooterProps) {
       color8: shadowColor.hex,
       color9: color9.hex,
       color10: nameFontColor.hex,
-      color11: greetingFontColor.hex,
-      social
+      color11: greetingFontColor.hex
     }
   };
 
