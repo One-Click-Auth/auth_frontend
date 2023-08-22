@@ -1,27 +1,33 @@
-name: Node.js CI
+name: Build and Deploy Docker Image to dev_EC2
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
+    branches:
+      - dev-branch
 
 jobs:
-  if_merged:
-    if: github.event.pull_request.merged == true
-    runs-on: [self-hosted, example]
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+  deploy_dev:
+    name: Build and Deploy to Dev
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
-      - run: npm run build --if-present
-      - run: pm2 restart example
+      - name: Deploy to Dev using SSH
+        env:
+          AWS_EC2_PEM: ${{ secrets.AWS_EC2_DEV_PEM }}
+          AWS_EC2_PUBLIC_IP: ${{ secrets.AWS_EC2_DEV_PUBLIC_IP }}
+          AWS_EC2_USERNAME: ${{ secrets.AWS_EC2_DEV_USERNAME }}
+        run: |
+          echo "$AWS_EC2_PEM" > private.pem && chmod 600 private.pem
+
+          cat << 'EOF' > deploy_script.sh
+           #!/bin/bash
+           cd /home/ubuntu/auth_frontend
+           sudo git pull
+           sudo docker build -t auth:latest .
+           sudo docker stop nextjs || true
+           sudo docker rm nextjs || true
+           sudo docker run -d --name nextjs -p 3000:3000 auth:latest
+          EOF
+
+          scp -o StrictHostKeyChecking=no -i private.pem deploy_script.sh ${AWS_EC2_USERNAME}@${AWS_EC2_PUBLIC_IP}:~/deploy_script.sh
+          ssh -o StrictHostKeyChecking=no -i private.pem ${AWS_EC2_USERNAME}@${AWS_EC2_PUBLIC_IP} 'chmod +x ~/deploy_script.sh && ~/deploy_script.sh'
