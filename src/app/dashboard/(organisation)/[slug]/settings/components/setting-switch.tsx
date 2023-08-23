@@ -6,6 +6,17 @@ import { useParams } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
 import { Organization } from '@/app/dashboard/orgDataStore';
 import { useToast } from '@/components/ui/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import { getOrgData } from '@/lib/utils';
 import { PartialOrg } from '@/types';
 
@@ -26,9 +37,15 @@ type SwitchProps = {
     | 'rtm';
   disabled?: boolean;
   name: string;
+  price: string | null;
 };
 
-export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
+export function SettingSwitch({
+  id,
+  disabled = false,
+  name,
+  price
+}: SwitchProps) {
   const { token } = useAuth();
   const { slug } = useParams();
   const queryClient = useQueryClient();
@@ -49,8 +66,13 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
       },
       body: JSON.stringify({ ...status })
     });
+
+    // console.log('Updated', data);
+    if (res.status === 405) {
+      const data = (await res.json()) as { detail: string };
+      throw new Error(data.detail);
+    }
     const data = await res.json();
-    console.log('Updated', data);
     return data;
   };
 
@@ -65,14 +87,14 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
         ...oldData,
         ...updateState
       }));
-      console.log(queryClient.getQueryData(['orgData', slug]));
+      // console.log(queryClient.getQueryData(['orgData', slug]));
       return { prevState };
     },
-    onError: (err, newState, context) => {
+    onError: (err: Error, newState, context) => {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.'
+        description: err.message
       });
       queryClient.setQueryData(['orgData', slug], context?.prevState);
     },
@@ -91,11 +113,58 @@ export function SettingSwitch({ id, disabled = false, name }: SwitchProps) {
     }
   });
 
+  // return (
+  //   <Switch
+  //     checked={queryData?.[id]}
+  //     disabled={disabled}
+  //     onCheckedChange={() => mutation.mutate({ [id]: !queryData?.[id] })}
+  //   />
+  // );
   return (
-    <Switch
-      checked={queryData?.[id]}
-      disabled={disabled}
-      onCheckedChange={() => mutation.mutate({ [id]: !queryData?.[id] })}
-    />
+    <AlertDialog>
+      <AlertDialogTrigger className="bg-transparent" asChild>
+        <Switch
+          className={`${queryData?.[id] ? 'bg-black' : 'bg-slate-300'}`}
+          checked={queryData?.[id]}
+          disabled={disabled}
+        />
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          {/* <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle> */}
+          <AlertDialogDescription className="leading-relaxed">
+            {queryData?.[id] ? (
+              `Are you sure you want to disable ${name}?`
+            ) : (
+              <div>
+                {`Are you sure you want enable ${name}? `}
+                <p>
+                  {price ? (
+                    <>
+                      {' '}
+                      <p>{`This charges ${price}`}</p> <b>Note:</b>
+                      {` Once enabled, you will not be able to disable this for 14 days.`}
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </p>
+              </div>
+            )}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel className="bg-red-300  hover:bg-black hover:text-white">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            className="bg-accent hover:bg-black hover:text-white"
+            onClick={() => mutation.mutate({ [id]: !queryData?.[id] })}
+          >
+            {queryData?.[id] ? `Disable` : `Enable`}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
