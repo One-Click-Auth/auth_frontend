@@ -25,7 +25,7 @@ const OrganisationDashboard = () => {
             measures within your Authx-powered platform to safeguard against
             malicious traffic and ensure uninterrupted service availability.
           </p>
-          <SettingSwitch id="DDoS" name="DDoS Protection" />
+          <SettingSwitch id="DDoS" name="DDoS Protection" price="$5.00" />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -39,7 +39,7 @@ const OrganisationDashboard = () => {
             platform to identify and mitigate the activities of malicious bots,
             ensuring a secure and reliable user experience for legitimate users.
           </p>
-          <SettingSwitch id="bot_det" name="Bot Detection" />
+          <SettingSwitch id="bot_det" name="Bot Detection" price="$15.00" />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -58,6 +58,7 @@ const OrganisationDashboard = () => {
           <SettingSwitch
             id="brute_force"
             name="Brute Force Attack Protection"
+            price="$10.00"
           />
         </CardContent>
       </Card>
@@ -78,7 +79,11 @@ const OrganisationDashboard = () => {
             can protect your platform from various types of attacks and ensure a
             secure environment for legitimate users.
           </p>
-          <SettingSwitch id="ipat" name="IP Address Throttling" />
+          <SettingSwitch
+            id="ipat"
+            name="IP Address Throttling"
+            price="$125.00"
+          />
         </CardContent>
       </Card>
 
