@@ -4,16 +4,24 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
 import { CheckSquareValid } from '@/assets/Svg/Account/Account';
-
 import { ClipboardCopy } from 'lucide-react';
-function InputWithButtons() {
+import { useParams } from 'next/navigation';
+import { useAuth } from '@/Providers/AuthContext';
+import { useToast } from '@/components/ui/use-toast';
+import Spinner from '@/components/spinner';
+
+type Key = { keyValue: string };
+function InputWithButtons({ keyValue }: Key) {
+  const handleCopy = () => {
+    navigator.clipboard.writeText(keyValue);
+  };
+
   const [show, setShow] = useState(false);
   return (
     <div className="flex w-full items-center space-x-2 tracking-wide">
       <Input
         type={show ? 'text' : 'password'}
-        disabled
-        value="ac55aad0b6e748d9a2e154e25da79997JTBJRXSFRGKMTDZDUFXY"
+        value={keyValue}
         className="bg-transparent appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:border-black"
       />
       <Button
@@ -24,7 +32,7 @@ function InputWithButtons() {
       >
         {show ? 'Hide' : 'Reveal'}
       </Button>
-      <Button variant={'authx'} type="button">
+      <Button variant={'authx'} type="button" onClick={handleCopy}>
         <ClipboardCopy size={18} />
 
         <span className="ml-2">Copy</span>
@@ -34,7 +42,64 @@ function InputWithButtons() {
 }
 
 export default function KeysCard() {
+  type Keys = {
+    api_key: string;
+    api_secret: string;
+  };
+  const { token } = useAuth();
+  const { slug } = useParams();
+  const { toast } = useToast();
   const [generated, setGenerated] = useState(false);
+  const [pass, setPass] = useState('');
+  const [keys, setKeys] = useState<Keys>({ api_key: '', api_secret: '' });
+
+  const [loading, setLoading] = useState(false);
+  async function generateKeys() {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/org/${slug}?change_keys=true`,
+        {
+          method: 'PUT',
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            password: pass
+          })
+        }
+      );
+      if (response.status === 401) {
+        setLoading(false);
+        toast({
+          title: 'Incorrect Password',
+          description: 'Please enter the correct password',
+          variant: 'destructive'
+        });
+        return;
+      }
+      if (response.status === 200) {
+        const data = (await response.json()) as Keys;
+        setKeys({ api_key: data.api_key, api_secret: data.api_secret });
+        setGenerated(true);
+        setLoading(false);
+        setPass('');
+        return;
+      }
+      setLoading(false);
+      return;
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong with your request',
+        description: error.message
+      });
+      setLoading(false);
+      return;
+    }
+  }
 
   return (
     <>
@@ -54,19 +119,21 @@ export default function KeysCard() {
           </div>
           <div>
             <small className="font-semibold">*Your Organization API Key </small>
-            <InputWithButtons />
+            <InputWithButtons keyValue={keys.api_key} />
           </div>
           <div>
             <small className="font-semibold">
               *Your Organization Secret Key{' '}
             </small>
-            <InputWithButtons />
+            <InputWithButtons keyValue={keys.api_secret} />
           </div>
           <Button
             className="mx-auto"
             variant={'authx'}
             type="button"
-            onClick={() => setGenerated(false)}
+            onClick={() => {
+              setGenerated(false), setKeys({ api_key: '', api_secret: '' });
+            }}
           >
             <CheckSquareValid />
             <span className="ml-3">
@@ -82,18 +149,36 @@ export default function KeysCard() {
             </h2>
             <p className="text-lg font-extralight tracking-wide">
               <span className="font-semibold">*Note</span> : This will
-              invalidate the existing set of API keys and Secret Key and create
-              a new pair of API keys and Secret Key.{' '}
+              invalidate the existing set of{' '}
+              <b className="font-semibold">API</b> and{' '}
+              <b className="font-semibold">Secret</b> Keys and create a new pair
+              of Keys.{' '}
             </p>
           </div>
-
+          <div>
+            <label className="mb-2" htmlFor="password">
+              Please enter your password before proceeding
+            </label>
+            <Input
+              id="password"
+              placeholder="Password"
+              onChange={e => setPass(e.target.value)}
+            />
+          </div>
           <Button
-            className="mx-auto"
+            className="mx-auto min-w-[200px]"
             variant={'authx'}
             type="button"
-            onClick={() => setGenerated(true)}
+            onClick={generateKeys}
           >
-            Delete existing & generate a new pair
+            {loading ? (
+              <div className="flex flex-row gap-2 items-center">
+                <Spinner size={16} color="green" />
+                <span>requesting...</span>
+              </div>
+            ) : (
+              ' Delete existing & generate a new pair'
+            )}
           </Button>
         </div>
       )}

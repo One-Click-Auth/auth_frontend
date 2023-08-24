@@ -132,17 +132,18 @@ export function SettingSwitch({
       <AlertDialogContent>
         <AlertDialogHeader>
           {/* <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle> */}
-          <AlertDialogDescription className="leading-relaxed">
+          <AlertDialogDescription className="leading-relaxed text-md">
             {queryData?.[id] ? (
               `Are you sure you want to disable ${name}?`
             ) : (
               <div>
-                {`Are you sure you want enable ${name}? `}
+                {`Are you sure you want to enable ${name}? `}
                 <p>
                   {price ? (
                     <>
                       {' '}
-                      <p>{`This charges ${price}`}</p> <b>Note:</b>
+                      <p>{`This charges ${price}`}</p>{' '}
+                      <b className="text-red-300">Note:</b>
                       {` Once enabled, you will not be able to disable this for 14 days.`}
                     </>
                   ) : (
