@@ -64,15 +64,14 @@ function UpgradeAndPlansPage() {
       return;
     }
   };
-
+  const date = new Date().toDateString();
   return (
     <div className="mt-16  [&>div]:max-w-screen-xl flex items-center   flex-col justify-center w-full">
       <div className="mb-12 pl-12  max-w-screen-xl w-full">
         <div className="flex items-center gap-1">
           <CheckMarkSvg />
-          <p className="text-muted-foreground text-sm">
-            Updated at May 4, 2022
-          </p>
+
+          <span>Updated on {`${date}`}</span>
         </div>
 
         <p className="text-4xl">Manage Subscription</p>
@@ -119,7 +118,6 @@ function UpgradeAndPlansPage() {
             <Button variant={'authx'} className="w-48" onClick={managePlan}>
               {loading1 ? (
                 <div className="flex flex-row gap-2 items-center">
-                  {/* <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-yellow-700  border-2 h-4 w-4"></div> */}
                   <Spinner size={16} color="green" />
                   <span>redirecting...</span>
                 </div>
