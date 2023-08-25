@@ -14,16 +14,22 @@ function PricingPage() {
   const { token } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [price, setPrice] = useState(20);
   function editValue(e: any) {
     //if slider is max then hide both plans
-    if (e[0] === 2000000) {
+    const api_calls = e[0];
+    if (api_calls === 2000000) {
       setBlurBoth(true);
 
       return;
     }
 
+    setPrice(api_calls * 0.00025);
+
     setBlurBoth(false);
   }
+
+  console.log(price);
 
   const handlePayment = async (freelance_discount: boolean) => {
     setLoading(true);
@@ -93,7 +99,7 @@ function PricingPage() {
             onValueChange={e => editValue(e)}
             className="mt-4"
             max={2000000}
-            step={20000}
+            step={10000}
           />
           <p className="absolute font-bold right-0 -bottom-8 ">2M+</p>
           <p className="absolute font-bold left-0 -bottom-8 ">0</p>
@@ -157,7 +163,11 @@ function PricingPage() {
           </p>
         </div>
 
-        <PricingCard blurStudent={blurStudents} blurBoth={blurBoth} />
+        <PricingCard
+          blurStudent={blurStudents}
+          price={price}
+          blurBoth={blurBoth}
+        />
       </div>
     </div>
   );
