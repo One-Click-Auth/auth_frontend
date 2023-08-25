@@ -1,7 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/Switch';
-import { AiGenerate } from '@/assets/Svg/Account/Account';
 import { Button } from '@/components/ui/Button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
+import { AiGenerate } from '@/assets/Svg/Account/Account';
 import { SettingSwitch } from '../components/setting-switch';
 
 const OrganisationDashboard = () => {
@@ -21,7 +32,8 @@ const OrganisationDashboard = () => {
             authentication to provide a seamless and secure login experience for
             your users.
           </p>
-          <SettingSwitch id="passwordless" name="Passwordless" />
+
+          <SettingSwitch id="passwordless" name="Passwordless" price="$35.00" />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -40,7 +52,7 @@ const OrganisationDashboard = () => {
             authorized machines can access your platform's resources and
             services.
           </p>
-          <SettingSwitch id="rtm" name="Real-time Monitoring" />
+          <SettingSwitch id="rtm" name="Real-time Monitoring" price="$75.00" />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -57,7 +69,11 @@ const OrganisationDashboard = () => {
             protection regulations and empower users to have control over their
             personal information.
           </p>
-          <SettingSwitch id="consent" name="User Consent Management" />
+          <SettingSwitch
+            id="consent"
+            name="User Consent Management"
+            price="$5.00"
+          />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -73,7 +89,7 @@ const OrganisationDashboard = () => {
             about specific events or actions, enabling real-time updates and
             triggering custom logic or workflows.
           </p>
-          <SettingSwitch id="callbacks" name="Callbacks" />
+          <SettingSwitch id="callbacks" name="Callbacks" price="$20.00" />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -90,7 +106,7 @@ const OrganisationDashboard = () => {
             invalid or fake email addresses, improving the overall quality of
             user data and communication.
           </p>
-          <SettingSwitch id="email_val" name="Email Validation" />
+          <SettingSwitch id="email_val" name="Email Validation" price={null} />
         </CardContent>
       </Card>
       <Card className="shadow-none">
