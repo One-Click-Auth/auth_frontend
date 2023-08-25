@@ -32,10 +32,12 @@ import Spinner from '@/components/spinner';
 
 export function PricingCard({
   blurStudent,
+  price,
   blurBoth,
   ...props
 }: {
   blurStudent: boolean;
+  price: number;
   blurBoth: boolean;
 }) {
   const { token } = useAuth();
@@ -93,7 +95,9 @@ export function PricingCard({
             <br /> applications.
           </p>
 
-          <p className="text-4xl font-bold text-center my-5">$20/mo</p>
+          <p className="text-4xl font-bold text-center my-5">
+            ${price > 20 ? price : '20'}/mo
+          </p>
 
           <div className="flex-col gap-3 flex items-center  text-muted-foreground">
             <p>Unlimited MAU</p>
@@ -113,7 +117,9 @@ export function PricingCard({
             Best for teams and projects that need added security.
           </p>
 
-          <p className="text-4xl font-bold text-center my-5">$40/mo</p>
+          <p className="text-4xl font-bold text-center my-5">
+            ${price > 20 ? price : '40'}/mo
+          </p>
 
           <div className="flex-col gap-3 flex items-center  text-muted-foreground">
             <p>Unlimited MAU</p>
