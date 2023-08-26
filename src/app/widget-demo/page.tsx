@@ -72,7 +72,7 @@ function Page() {
         className={`p-10 h-[670px]   w-[397px] max-w-[90vw] max-h-[90vh]   m-4`}
       >
         <div className="space-y-10 flex-1 h-full justify-center flex flex-col  ">
-          <EmailSent />
+          <WidgetLogin />
         </div>
       </CardContent>
     </Card>
@@ -511,9 +511,9 @@ function WidgetLogin() {
 
         {show && (
           <>
-            <div className="relative w-full py-4">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-black border-t" />
+            <div className="relative w-full py-4 ">
+              <div className="absolute w-full lg:px-4 inset-0 flex items-center">
+                <span className="w-full  border-black border-t" />
                 <span className="px-2">or</span>
                 <span className="w-full border-black border-t" />
               </div>

@@ -18,25 +18,28 @@ function InputWithButtons({ keyValue }: Key) {
 
   const [show, setShow] = useState(false);
   return (
-    <div className="flex w-full items-center space-x-2 tracking-wide">
+    <div className="flex justify-center flex-wrap w-full items-center space-x-2 tracking-wide">
       <Input
         type={show ? 'text' : 'password'}
+        disabled
         value={keyValue}
-        className="bg-transparent appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:border-black"
+        className="bg-transparent appearance-none border-2 border-gray-200 rounded max-w-[80%] sm:max-w-[65%] w-full min-w-fit py-2 px-3 text-black leading-tight focus:outline-none focus:border-black"
       />
-      <Button
-        variant={'authx'}
-        className="w-20"
-        type="button"
-        onClick={() => setShow(!show)}
-      >
-        {show ? 'Hide' : 'Reveal'}
-      </Button>
-      <Button variant={'authx'} type="button" onClick={handleCopy}>
-        <ClipboardCopy size={18} />
+      <div className="flex justify-center items-center gap-2">
+        <Button
+          variant={'authx'}
+          className="w-20"
+          type="button"
+          onClick={() => setShow(!show)}
+        >
+          {show ? 'Hide' : 'Reveal'}
+        </Button>
+        <Button variant={'authx'} type="button" onClick={handleCopy}>
+          <ClipboardCopy size={18} />
 
-        <span className="ml-2">Copy</span>
-      </Button>
+          <span className="ml-2">Copy</span>
+        </Button>
+      </div>
     </div>
   );
 }
@@ -104,7 +107,7 @@ export default function KeysCard() {
   return (
     <>
       {generated ? (
-        <div className="flex flex-col gap-8 max-w-3xl mt-14 p-14 border border-slate-300 text-[#2E2E2E] rounded-lg mx-auto">
+        <div className="flex  flex-col gap-8 max-w-3xl mt-14 p-14 border border-slate-300 text-[#2E2E2E] rounded-lg mx-auto">
           <div>
             <h2 className="text-3xl font-semibold tracking-wide mb-6">
               Your API Key & Secret Key
@@ -128,7 +131,7 @@ export default function KeysCard() {
             <InputWithButtons keyValue={keys.api_secret} />
           </div>
           <Button
-            className="mx-auto"
+            className="mx-auto max-w-[90%]"
             variant={'authx'}
             type="button"
             onClick={() => {
@@ -136,7 +139,7 @@ export default function KeysCard() {
             }}
           >
             <CheckSquareValid />
-            <span className="ml-3">
+            <span className="ml-3 p-2 ">
               I’ve Stored The Keys In Safe and Want To Proceed
             </span>
           </Button>

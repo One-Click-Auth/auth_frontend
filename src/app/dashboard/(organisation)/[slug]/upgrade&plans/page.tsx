@@ -67,18 +67,17 @@ function UpgradeAndPlansPage() {
   const date = new Date().toDateString();
   return (
     <div className="mt-16  [&>div]:max-w-screen-xl flex items-center   flex-col justify-center w-full">
-      <div className="mb-12 pl-12  max-w-screen-xl w-full">
+      <div className="mb-12  max-w-screen-xl w-full">
         <div className="flex items-center gap-1">
           <CheckMarkSvg />
-
           <span>Updated on {`${date}`}</span>
         </div>
 
-        <p className="text-4xl">Manage Subscription</p>
+        <h1 className="text-4xl">Manage Subscription</h1>
       </div>
 
       <div className="flex-col  flex gap-8">
-        <Card className="shadow-none">
+        {/* <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
             <Image alt="dollar" src="/dollar.svg" width={35} height={35} />
             <CardTitle className="text-2xl !mt-2 font-medium">
@@ -97,7 +96,7 @@ function UpgradeAndPlansPage() {
               Pay Invoices Now
             </Button>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
@@ -177,8 +176,8 @@ function CheckMarkSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       fill="none"
     >

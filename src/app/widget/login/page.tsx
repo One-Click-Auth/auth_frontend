@@ -1403,7 +1403,7 @@ export default function Widget() {
                   <div className="w-full mt-8">
                     <button
                       style={goButtonStyle}
-                      className={`w-full h-12 shadow-md border hover:opacity-75`}
+                      className={`w-full h-12 shadow-md border hover:shadow-black transition-shadow`}
                       onClick={loading2 ? undefined : handleGo}
                     >
                       <span className="text-xl mx-auto">
@@ -1460,12 +1460,7 @@ export default function Widget() {
                         type="submit"
                         onClick={() => socialLogin('google')}
                       >
-                        <Image
-                          src={google}
-                          alt="google"
-                          className="hover:shadow-md"
-                          width={35}
-                        />
+                        <Image src={google} alt="google" width={35} />
                       </button>
                     </div>
                     <div>

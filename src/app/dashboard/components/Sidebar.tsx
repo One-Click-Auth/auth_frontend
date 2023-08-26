@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   OrgnaizationSvg,
-  SettingSvg,
   SupportSvg
 } from '../../../assets/Svg/Account/Account';
 import { ChevronsLeft, ChevronsRight, Menu, X, Instagram } from 'lucide-react';
@@ -113,7 +112,7 @@ export const Sidebar = () => {
               </span>
               {open ? <span>Support</span> : ''}
             </Link>
-            <Link
+            {/* <Link
               href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
@@ -123,7 +122,7 @@ export const Sidebar = () => {
                 <SettingSvg />
               </span>
               {open ? <span>Settings</span> : ''}
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

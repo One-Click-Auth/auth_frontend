@@ -4,17 +4,22 @@ import Image from 'next/image';
 import { ReactNode, useEffect } from 'react';
 import EstCostCard from './components/est-cost-card';
 import { usePathname, useParams } from 'next/navigation';
+import useOrgData, { Organization } from '../../../orgDataStore';
 
 export default function SettingLayout({ children }: { children: ReactNode }) {
+  const orgData = useOrgData(state => state.manageOrgData);
   const pathname = usePathname();
   const { slug } = useParams();
   useEffect(() => {
     console.log(pathname);
+    console.log(getCurrentMonth());
   }, [pathname]);
+
+  const apiCalls = orgData.past_month_api_calls[getCurrentMonth()];
   return (
     <>
       {pathname === `/dashboard/${slug}/settings/webhooks` ? (
-        <>{children}</>
+        <div className="flex-1 space-y-8 p-10 pt-4 lg:p-16">{children}</div>
       ) : (
         <div className="flex-1 space-y-8 p-10 pt-4 lg:p-16">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -31,8 +36,8 @@ export default function SettingLayout({ children }: { children: ReactNode }) {
                 />
               </CardHeader>
               <CardContent className="space-y-2">
-                <div className="text-2xl font-bold">45,000</div>
-                <p className="text-xs text-disabled">Last month's API calls</p>
+                <div className="text-2xl font-bold">{apiCalls}</div>
+                <p className="text-xs text-disabled">This month's API calls</p>
               </CardContent>
             </Card>
             <EstCostCard />
@@ -43,3 +48,13 @@ export default function SettingLayout({ children }: { children: ReactNode }) {
     </>
   );
 }
+
+const getCurrentMonth = () => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentMonthKey = `${currentYear}-${currentMonth
+    .toString()
+    .padStart(2, '0')}`;
+  return currentMonthKey;
+};

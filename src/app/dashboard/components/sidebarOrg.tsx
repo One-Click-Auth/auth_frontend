@@ -12,7 +12,6 @@ import {
   ServicesSVG,
   WidgetSettingSVG,
   SupportSVG,
-  GenSettingsSVG,
   WebhookSvg
 } from '@/assets/sidebarSVGs/sidebarSVGs';
 import FlitchcoinSVG from '@/assets/sidebarSVGs/flitchcoin.svg';
@@ -331,7 +330,7 @@ export const SidebarOrg = () => {
               </span>
               {open ? <span>Support</span> : ''}
             </Link>
-            <Link
+            {/* <Link
               href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
@@ -341,7 +340,7 @@ export const SidebarOrg = () => {
                 <GenSettingsSVG />
               </span>
               {open ? <span>Settings</span> : ''}
-            </Link>
+            </Link> */}
             <Link href={'/dashboard'} className="mx-auto my-6">
               <Button
                 className={` bg-accent text-black text-sm ${
