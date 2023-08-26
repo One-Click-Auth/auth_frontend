@@ -106,7 +106,7 @@ export default function Page() {
                   Emails Sent
                 </CardTitle>
                 <Image
-                  src="/dashboard-icons/credit-card.svg"
+                  src="/dashboard-icons/mail.svg"
                   alt="multiple users icon"
                   width={24}
                   height={24}
