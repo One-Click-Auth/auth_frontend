@@ -7,11 +7,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/Dialog';
-import CryptoJS from 'crypto-js';
-import { Separator } from '@/components/ui/seperator';
-import { ProfileItemSvg } from '@/assets/Svg/Account/DropDown';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Image from 'next/image';
+
 import { QRCodeSVG } from 'qrcode.react';
 import { useToast } from '@/components/ui/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -32,6 +28,8 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const [loading3, setLoading3] = useState(false);
+
   const [client_id, setClient_id] = useState('');
   const [client_secret, setClient_secret] = useState('');
 
@@ -90,37 +88,70 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
   async function addSocialGeneric() {
     setLoading2(true);
     try {
-      const response = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
-        method: 'PUT',
-        headers: {
-          accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          social: {
-            [social]: {
-              CLIENT_ID: null,
-              CLIENT_SECRET: null
+      const response = await fetch(
+        `https://api.trustauthx.com/org/${ORG_ID}?SocialConnecterName=${social}`,
+        {
+          method: 'PUT',
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            social: {
+              [social]: {}
             }
-          }
-        })
-      });
+          })
+        }
+      );
       if (response.status === 200) {
         setLoading2(false);
         if (token) await updateStoreWithFetch(token, ORG_ID);
         toast({
           title: 'Success!',
-          description: `${social} has been added successfully`,
+          description: `${social} generic has been added successfully`,
           variant: 'success'
         });
       } else {
         setLoading2(false);
         destructiveToast();
       }
+    } catch (error) {
+      console.log((error as Error).message);
+      setLoading2(false);
+      destructiveToast();
+    }
+  }
+  async function removeSocial() {
+    setLoading3(true);
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/org/${ORG_ID}?RemoveSocial=true&SocialConnecterName=${social}`,
+        {
+          method: 'PUT',
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({})
+        }
+      );
+      if (response.status === 200) {
+        setLoading3(false);
+        if (token) await updateStoreWithFetch(token, ORG_ID);
+        toast({
+          title: 'Success!',
+          description: `${social} has been removed successfully`,
+          variant: 'success'
+        });
+      } else {
+        setLoading3(false);
+        destructiveToast();
+      }
     } catch (err) {
       console.log(err);
-      setLoading2(false);
+      setLoading3(false);
       destructiveToast();
     }
   }
@@ -131,11 +162,11 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
         ' w-[1047px]  md:h-[666px] max-h-[85vh] md:p-16 !max-w-[90vw]  flex-col md:flex-row flex rounded-lg  overflow-hidden px-10 gap-12 md:gap-0       '
       )}
     >
-      <div className=" flex-col  gap-2 flex-1 md:border-r-2 md:flex no-scrollbar overflow-auto    md:pr-12 ">
+      <div className=" flex-col h-min-[200px] gap-2 flex-1 md:border-r-2 md:flex no-scrollbar overflow-auto    md:pr-12 ">
         <ConfigText />
       </div>
 
-      <div className=" flex flex-col  subtle-scrollbar justify-between    flex-1   md:ml-12 ">
+      <div className=" flex flex-col subtle-scrollbar justify-between    flex-1   md:ml-12 ">
         <DialogHeader className="">
           <DialogTitle className="text-3xl text-muted-foreground font-medium">
             Parameter config{' '}
@@ -144,7 +175,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
 
         <div
           className="flex flex-col 
-         rounded-md py-2 px-4 gap-11"
+         rounded-md py-2 px-4 gap-4 sm:gap-11"
         >
           <div>
             <p className="text-muted-foreground mb-1 text-left">
@@ -175,11 +206,11 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
           </div>
         </div>
 
-        <div className="flex gap-2 md:mt-0 mt-8 ">
+        <div className="flex flex-col sm:flex-row gap-2 md:mt-0 mt-8 ">
           <div className="flex-col flex">
             <Button
               variant={'outline'}
-              className="bg-slate-900 hover:text-black text-white"
+              className="bg-slate-900 w-full sm:w-40 hover:text-black text-white "
               onClick={addSocialGeneric}
             >
               {loading2 ? (
@@ -189,18 +220,22 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
                   <span>Adding...</span>
                 </div>
               ) : (
-                <>
-                  <Plus />
-                  Use Generic by TrustAuthX
-                </>
+                <div className="flex flex-row gap-2 justify-center items-center w-40">
+                  <Plus size={16} />
+                  Use Generic
+                </div>
               )}
             </Button>
-            <p className="text-sm text-right text-muted-foreground">
+            <span className="text-sm text-right text-muted-foreground">
               **Not Recommended
-            </p>
+            </span>
           </div>
 
-          <Button className="w-40" variant={'authx'} onClick={addSocial}>
+          <Button
+            className="w-full sm:w-40"
+            variant={'authx'}
+            onClick={addSocial}
+          >
             {loading ? (
               <div className="flex flex-row gap-1 items-center">
                 <Spinner size={16} color="green" />
@@ -209,6 +244,21 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
               </div>
             ) : (
               `Add ${social}`
+            )}
+          </Button>
+          <Button
+            className="w-full sm:w-40 bg-red-300"
+            variant={'authx'}
+            onClick={removeSocial}
+          >
+            {loading3 ? (
+              <div className="flex flex-row gap-1 items-center">
+                <Spinner size={16} color="green" />
+
+                <span>removing...</span>
+              </div>
+            ) : (
+              `Remove ${social}`
             )}
           </Button>
         </div>
@@ -344,7 +394,6 @@ function ConfigText() {
 
         <ul className="list-disc px-7 py-1 ">
           Google Identity: Setting up OAuth 2.0
-          <li></li>
         </ul>
       </ul>
     </div>
