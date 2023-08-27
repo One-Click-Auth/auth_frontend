@@ -9,8 +9,8 @@ type WidgetStore = BrandingSlice &
 
 export type Social = {
   [name: string]: {
-    CLIENT_ID: string | null;
-    CLIENT_SECRET: string | null;
+    CLIENT_ID?: string;
+    CLIENT_SECRET?: string;
   };
 };
 

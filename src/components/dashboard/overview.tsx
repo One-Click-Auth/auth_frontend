@@ -10,57 +10,6 @@ import {
 } from 'recharts';
 import useOrgData, { Organization } from '../../app/dashboard/orgDataStore';
 
-const data = [
-  {
-    month: 'Jan',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Feb',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Mar',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Apr',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'May',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Jun',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Jul',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Aug',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Sep',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Oct',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Nov',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  },
-  {
-    month: 'Dec',
-    calls: Math.floor(Math.random() * 100000) + 100000
-  }
-];
-
 export function Overview() {
   const formatTick = (value: any) => {
     const date = new Date(value);
