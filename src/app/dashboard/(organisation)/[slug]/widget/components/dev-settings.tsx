@@ -45,10 +45,6 @@ export function DevSettings() {
     setRedirectURL
   } = useWidgetStore();
 
-  useEffect(() => {
-    console.log(social);
-  }, [social]);
-
   const socialsList: SocialList = {
     github: {
       name: 'Github',

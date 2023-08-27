@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/Input';
 import { useParams } from 'next/navigation';
 import Spinner from '@/components/spinner';
 import { updateStoreWithFetch, useWidgetStore } from '../widgetStore';
+import { spawn } from 'child_process';
 
 function SocialSignInPopup({ socialName }: { socialName: string }) {
   const { toast } = useToast();
@@ -32,14 +33,13 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
 
   const [client_id, setClient_id] = useState('');
   const [client_secret, setClient_secret] = useState('');
+  const { social } = useWidgetStore();
+  const socialType = socialName.toLocaleLowerCase();
 
-  const social = socialName.toLocaleLowerCase();
-
-  // useEffect(()=>{
-  //   console.log(client_id)
-
-  // },[client_id])
-
+  const active = social[socialType] ? true : false;
+  // const generic = !active ? false : (social[socialType]?.CLIENT_ID);
+  const generic = !active ? false : !social[socialType].CLIENT_ID;
+  console.log(generic);
   const destructiveToast = () => {
     toast({
       variant: 'destructive',
@@ -49,7 +49,16 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
   };
 
   async function addSocial() {
+    if (client_id.length === 0 || client_secret.length === 0) {
+      toast({
+        title: 'Client details required',
+        description: `Please put the client Id and client Secret`,
+        variant: 'destructive'
+      });
+      return;
+    }
     setLoading(true);
+
     try {
       const response = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
         method: 'PUT',
@@ -60,7 +69,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
         },
         body: JSON.stringify({
           social: {
-            [social]: {
+            [socialType]: {
               CLIENT_ID: client_id,
               CLIENT_SECRET: client_secret
             }
@@ -72,7 +81,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
         if (token) await updateStoreWithFetch(token, ORG_ID);
         toast({
           title: 'Success!',
-          description: `${social} has been added successfully`,
+          description: `${socialType} has been added successfully`,
           variant: 'success'
         });
       } else {
@@ -89,7 +98,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
     setLoading2(true);
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/org/${ORG_ID}?SocialConnecterName=${social}`,
+        `https://api.trustauthx.com/org/${ORG_ID}?SocialConnecterName=${socialType}`,
         {
           method: 'PUT',
           headers: {
@@ -99,7 +108,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
           },
           body: JSON.stringify({
             social: {
-              [social]: {}
+              [socialType]: {}
             }
           })
         }
@@ -109,7 +118,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
         if (token) await updateStoreWithFetch(token, ORG_ID);
         toast({
           title: 'Success!',
-          description: `${social} generic has been added successfully`,
+          description: `${socialType} generic has been added successfully`,
           variant: 'success'
         });
       } else {
@@ -126,7 +135,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
     setLoading3(true);
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/org/${ORG_ID}?RemoveSocial=true&SocialConnecterName=${social}`,
+        `https://api.trustauthx.com/org/${ORG_ID}?RemoveSocial=true&SocialConnecterName=${socialType}`,
         {
           method: 'PUT',
           headers: {
@@ -142,7 +151,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
         if (token) await updateStoreWithFetch(token, ORG_ID);
         toast({
           title: 'Success!',
-          description: `${social} has been removed successfully`,
+          description: `${socialType} has been removed successfully`,
           variant: 'success'
         });
       } else {
@@ -171,6 +180,13 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
           <DialogTitle className="text-3xl text-muted-foreground font-medium">
             Parameter config{' '}
           </DialogTitle>
+          {generic ? (
+            <span className="text-blue-400">
+              {socialName} Generic has been used currently
+            </span>
+          ) : (
+            ''
+          )}
         </DialogHeader>
 
         <div
@@ -207,60 +223,74 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2 md:mt-0 mt-8 ">
-          <div className="flex-col flex">
+          {!generic ? (
+            <div className="flex-col flex">
+              <Button
+                variant={'outline'}
+                className="bg-slate-900 w-full sm:w-40 hover:text-black text-white "
+                onClick={
+                  loading2 ? () => console.log('loading...') : addSocialGeneric
+                }
+              >
+                {loading2 ? (
+                  <div className="flex flex-row gap-1 items-center">
+                    <Spinner size={16} color="green" />
+
+                    <span>Adding...</span>
+                  </div>
+                ) : (
+                  <div className="flex flex-row gap-2 justify-center items-center w-40">
+                    <Plus size={16} />
+                    Use Generic
+                  </div>
+                )}
+              </Button>
+              <span className="text-sm text-right text-muted-foreground">
+                **Not Recommended
+              </span>
+            </div>
+          ) : (
+            ''
+          )}
+
+          {!active || generic ? (
             <Button
-              variant={'outline'}
-              className="bg-slate-900 w-full sm:w-40 hover:text-black text-white "
-              onClick={addSocialGeneric}
+              className="w-full sm:w-40"
+              variant={'authx'}
+              onClick={addSocial}
             >
-              {loading2 ? (
+              {loading ? (
                 <div className="flex flex-row gap-1 items-center">
                   <Spinner size={16} color="green" />
 
                   <span>Adding...</span>
                 </div>
               ) : (
-                <div className="flex flex-row gap-2 justify-center items-center w-40">
-                  <Plus size={16} />
-                  Use Generic
-                </div>
+                `Add ${socialType}`
               )}
             </Button>
-            <span className="text-sm text-right text-muted-foreground">
-              **Not Recommended
-            </span>
-          </div>
+          ) : (
+            ''
+          )}
+          {active ? (
+            <Button
+              className="w-full sm:w-40 bg-red-300"
+              variant={'authx'}
+              onClick={removeSocial}
+            >
+              {loading3 ? (
+                <div className="flex flex-row gap-1 items-center">
+                  <Spinner size={16} color="green" />
 
-          <Button
-            className="w-full sm:w-40"
-            variant={'authx'}
-            onClick={addSocial}
-          >
-            {loading ? (
-              <div className="flex flex-row gap-1 items-center">
-                <Spinner size={16} color="green" />
-
-                <span>Adding...</span>
-              </div>
-            ) : (
-              `Add ${social}`
-            )}
-          </Button>
-          <Button
-            className="w-full sm:w-40 bg-red-300"
-            variant={'authx'}
-            onClick={removeSocial}
-          >
-            {loading3 ? (
-              <div className="flex flex-row gap-1 items-center">
-                <Spinner size={16} color="green" />
-
-                <span>removing...</span>
-              </div>
-            ) : (
-              `Remove ${social}`
-            )}
-          </Button>
+                  <span>removing...</span>
+                </div>
+              ) : (
+                `Remove ${socialType}`
+              )}
+            </Button>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </DialogContent>
