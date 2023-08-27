@@ -182,7 +182,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
           </DialogTitle>
           {generic ? (
             <span className="text-blue-400">
-              {socialName} Generic has been used currently
+              {socialName} Generic is being used currently
             </span>
           ) : (
             ''
