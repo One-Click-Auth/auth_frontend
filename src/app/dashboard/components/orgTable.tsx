@@ -103,10 +103,14 @@ export const OrgTable = () => {
           </>
         ) : (
           data.map(org => (
-            <TableRow key={org.org_id}>
+            <TableRow
+              key={org.org_id}
+              className={`${!org.state ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
               <TableCell className="py-[1.2rem] mr-2">
                 <Button
-                  className="px-10 py-2 bg-[#4338CA] text-white rounded-sm hover:bg-black hover:text-white"
+                  disabled={!org.state}
+                  className={`px-10 py-2 bg-[#4338CA] text-white rounded-sm hover:bg-black hover:text-white`}
                   onClick={() => router.push(`/dashboard/${org.org_id}`)}
                 >
                   Manage

@@ -8,8 +8,11 @@ import { ClipboardCopy } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
-import Spinner from '@/components/spinner';
 
+import Spinner from '@/components/spinner';
+import { PasswordDialogue } from '@/app/dashboard/components/PasswordDialgue';
+import { Dialog } from '@radix-ui/react-dialog';
+import { DialogTrigger } from '@/components/ui/Dialog';
 type Key = { keyValue: string };
 function InputWithButtons({ keyValue }: Key) {
   const handleCopy = () => {
@@ -53,11 +56,11 @@ export default function KeysCard() {
   const { slug } = useParams();
   const { toast } = useToast();
   const [generated, setGenerated] = useState(false);
-  const [pass, setPass] = useState('');
   const [keys, setKeys] = useState<Keys>({ api_key: '', api_secret: '' });
 
   const [loading, setLoading] = useState(false);
-  async function generateKeys() {
+
+  async function generateKeys(pass: string) {
     setLoading(true);
     try {
       const response = await fetch(
@@ -88,7 +91,6 @@ export default function KeysCard() {
         setKeys({ api_key: data.api_key, api_secret: data.api_secret });
         setGenerated(true);
         setLoading(false);
-        setPass('');
         return;
       }
       setLoading(false);
@@ -158,31 +160,16 @@ export default function KeysCard() {
               of Keys.{' '}
             </p>
           </div>
-          <div>
-            <label className="mb-2" htmlFor="password">
-              Please enter your password before proceeding
-            </label>
-            <Input
-              id="password"
-              placeholder="Password"
-              onChange={e => setPass(e.target.value)}
-            />
-          </div>
-          <Button
-            className="mx-auto min-w-[200px]"
-            variant={'authx'}
-            type="button"
-            onClick={generateKeys}
-          >
-            {loading ? (
-              <div className="flex flex-row gap-2 items-center">
-                <Spinner size={16} color="green" />
-                <span>requesting...</span>
-              </div>
-            ) : (
-              ' Delete existing & generate a new pair'
-            )}
-          </Button>
+
+          <Dialog>
+            <DialogTrigger className="py-2 mx-auto text-sm px-8 bg-accent  text-black shadow hover:text-white hover:bg-black min-w-fit w-48 rounded-md flex items-start h-fit  ">
+              {/* <Button className='bg-red-400 w-48' variant={'authx'}>
+               
+              </Button> */}
+              Delete existing & generate a new Pair
+            </DialogTrigger>
+            <PasswordDialogue request={generateKeys} loading={loading} />
+          </Dialog>
         </div>
       )}
     </>

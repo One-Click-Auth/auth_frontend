@@ -102,7 +102,7 @@ export const Sidebar = () => {
             }`}
           >
             <Link
-              href={'/dashboard/support'}
+              href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
