@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-
+// @ts-nocheck
 import { API_DOMAIN } from '@/constants';
 import axios from 'axios';
 import type { NextAuthOptions } from 'next-auth';
@@ -94,7 +94,6 @@ export const authOptions: NextAuthOptions = {
           client_id: '',
           client_secret: creds?.otp ? Number(creds?.otp) : '100000'
         };
-        console.log({body})
         const { data } = await axios
           .post(`${API_DOMAIN}/token`, body, {
             headers: {
@@ -111,7 +110,7 @@ export const authOptions: NextAuthOptions = {
         const {
           userData: { profile, ...restUser }
         } = await fetchUserInfo(tokens.access_token) as any;
-        return { user: { ...profile, ...restUser }, ...tokens };
+        return { user: { ...profile, ...restUser }, ...tokens,token_set:new Date()};
       }
     })
   ],
@@ -120,23 +119,29 @@ export const authOptions: NextAuthOptions = {
     async signIn(data) {
       // @ts-ignore
       const { access_token, ...user } = data.user;
-      console.log({ user ,data});
       return Promise.resolve({ user, access_token });
     },
     // @ts-ignore
     async jwt(jwtData) {
       const { token, trigger } = jwtData;
-      if (trigger === 'update') {
-        // @ts-ignoreß
-        const tokens = await refreshTokens(token.refresh_token)
+      const returnData = jwtData.user?.user ? jwtData.user : token
+      // @ts-ignore
+      const tokenDate = new Date(returnData.token_set)
+      const currentData = new Date()
+      const timeDifference = Math.abs(currentData - tokenDate);
+      const timeDifferenceMinutes = timeDifference / (1000 * 60);
+      console.log({timeDifferenceMinutes})
+      if (trigger === 'update' || timeDifferenceMinutes > 14) {        
+        const tokens = await refreshTokens(returnData.refresh_token)
+        returnData.refresh_token = tokens.refresh_token
+        returnData.access_token = tokens.access_token
+        returnData.token_set = new Date()
+        console.log('SESSION REFRESHED')
       }
       // @ts-ignore
-      if (jwtData.user?.user) {
-        return jwtData.user;
-      }
-      return token;
+      return returnData;
     },
-
+    
     // @ts-ignore
     async session(session, token) {
       session.user = token?.user ?? session.user
