@@ -6,33 +6,24 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GitHubProvider from 'next-auth/providers/github';
 
-async function refreshAccessToken(token: string) {
+async function refreshTokens(token: string) {
   try {
     const url = API_DOMAIN + '/token';
-    const response = await fetch(url, {
+    const {data:refreshedTokens} = await axios.get(url, {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
         token: token
       },
-      method: 'GET'
     });
 
-    const refreshedTokens = await response.json() as any;
-
-    if (!response.ok) {
-      throw refreshedTokens;
-    }
-
+    
     return {
-      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
       ...refreshedTokens
     };
   } catch (error) {
     console.log(JSON.stringify(error));
-
     return {
       token,
-      error: 'RefreshAccessTokenError'
+      error: 'refreshTokensError'
     };
   }
 }
@@ -89,7 +80,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(creds, req) {
         const githubToken = creds?.githubToken;
         if (githubToken) {
-          const tokenData = await refreshAccessToken(githubToken);
+          const tokenData = await refreshTokens(githubToken);
           const {
             userData: { profile, ...restUser }
           } = await fetchUserInfo(tokenData.access_token) as any;
@@ -100,48 +91,45 @@ export const authOptions: NextAuthOptions = {
           grant_type: '',
           username: creds?.username,
           password: creds?.password,
-          scope: '',
           client_id: '',
           client_secret: creds?.otp ? Number(creds?.otp) : '100000'
         };
+        console.log({body})
         const { data } = await axios
           .post(`${API_DOMAIN}/token`, body, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
               Accept: 'application/x-www-form-urlencoded'
-            }
+            },
+            params:{scp:0}
           })
           .catch(e => {
             console.error(e);
             return { data: null };
           });
+        const tokens = await refreshTokens(data.access_token)
         const {
           userData: { profile, ...restUser }
-        } = await fetchUserInfo(data.access_token) as any;
-        return { user: { ...profile, ...restUser }, ...data };
+        } = await fetchUserInfo(tokens.access_token) as any;
+        return { user: { ...profile, ...restUser }, ...tokens };
       }
     })
   ],
   callbacks: {
     // @ts-ignore
     async signIn(data) {
-      const { account } = data;
-      console.log({ data });
-      if (account?.provider === 'github') {
-        const access_token = account.access_token;
-        // const res = await axios.get", {
-        //   params: { access_token },
-        // });
-        // const userTokens = res.data;
-      }
       // @ts-ignore
       const { access_token, ...user } = data.user;
+      console.log({ user ,data});
       return Promise.resolve({ user, access_token });
     },
     // @ts-ignore
     async jwt(jwtData) {
-      const { token } = jwtData;
-      console.log('JWT', JSON.stringify(jwtData));
+      const { token, trigger } = jwtData;
+      if (trigger === 'update') {
+        // @ts-ignoreß
+        const tokens = await refreshTokens(token.refresh_token)
+      }
       // @ts-ignore
       if (jwtData.user?.user) {
         return jwtData.user;
