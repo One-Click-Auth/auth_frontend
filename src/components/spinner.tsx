@@ -2,12 +2,14 @@ import './spinner.css';
 type spinnerProps = {
   size: number;
   color: string;
+  opacity?: number;
 };
-const Spinner = ({ size, color }: spinnerProps) => {
+const Spinner = ({ size, color, opacity }: spinnerProps) => {
   return (
     <svg
       className="spinner animate-spin"
       stroke={color}
+      opacity={opacity}
       strokeLinecap="round"
       width={size}
       height={size}

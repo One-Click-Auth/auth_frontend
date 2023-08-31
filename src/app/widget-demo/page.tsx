@@ -72,7 +72,7 @@ function Page() {
         className={`p-10 h-[670px]   w-[397px] max-w-[90vw] max-h-[90vh]   m-4`}
       >
         <div className="space-y-10 flex-1 h-full justify-center flex flex-col  ">
-          <WidgetLogin />
+          <MFA />
         </div>
       </CardContent>
     </Card>

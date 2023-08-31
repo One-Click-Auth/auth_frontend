@@ -20,6 +20,9 @@ import microsoft from './microsoft.svg';
 import google from './google.svg';
 import discord from './discord.svg';
 import Spinner from '@/components/spinner';
+import MfaActivation from './components/MfaActivation';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+
 export default function Widget() {
   //store function to set the org data in the store. It takes two arguments org token and org data.
   const setOrgData = useOrgData(state => state.setOrgData);
@@ -89,20 +92,20 @@ export default function Widget() {
     fetchOrgDetails();
   }, []);
   //function to handle when the user decides to enable mfa from his side
-  const handleUserMfa = () => {
-    if (enableUserMfa) {
-      //display the panel for activating MFA which will have QR code to enable the authentication and the 6 didit mfa code input field
-      //construct the MFA panel with QR code and input field
-      setBtnAction(ButtonAction.MfaActivationSignup);
-      setButtonAction('mfa-activation-signup');
-      setShowMfaActivation(true);
-    } else if (!enableUserMfa) {
-      //email will be sent to the email id given by the user to verify the email address
-      setShowMsgPanel(true);
-      setMessage('Verify your email address to continue');
-      return setShowMsg(true);
-    }
-  };
+  // const handleUserMfa = () => {
+  //   if (enableUserMfa) {
+  //     //display the panel for activating MFA which will have QR code to enable the authentication and the 6 didit mfa code input field
+  //     //construct the MFA panel with QR code and input field
+  //     setBtnAction(ButtonAction.MfaActivationSignup);
+  //     setButtonAction('mfa-activation-signup');
+  //     setShowMfaActivation(true);
+  //   } else if (!enableUserMfa) {
+  //     //email will be sent to the email id given by the user to verify the email address
+  //     setShowMsgPanel(true);
+  //     setMessage('Verify your email address to continue');
+  //     return setShowMsg(true);
+  //   }
+  // };
   //function to create a newpassword while logging in
   const newPasswordRequest = async () => {
     setErr(false);
@@ -123,13 +126,15 @@ export default function Widget() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            new_user_password: pass
+            forget_password: true,
+            new_password: pass
           })
         }
       );
-      console.log(response);
 
       const data = (await response.json()) as any;
+      setLoading2(false);
+
       if (data.detail) {
         //show the message of password already set
         setErrMsg(data.detail);
@@ -140,16 +145,15 @@ export default function Widget() {
       setLoading2(false);
       if (response.status === 200) {
         setCurrentUserToken(user_token);
-        setMessage('Password created successfully!');
+        setMessage('Please check your email to confirm the new password');
+        setShowMsgPanel(true);
         setShowMsg(true);
-        handleSubmit();
-        setTimeout(() => setShowMsg(false), 2000);
-        console.log(msg);
         return;
       }
     } catch (error) {
       setErrMsg('Some error occured in request, try again');
       setErr(true);
+      setLoading2(false);
     }
   };
   //this fucntion is called when user is signing up and has to create a passeord and then go through further requests
@@ -224,8 +228,8 @@ export default function Widget() {
             //if the user has enabled mfa
             if (storeUserData.fa2 === false || storeUserData.fa2 === null) {
               setLoading2(false);
-              setMfaInProcess(false);
-              setShowEnableMfaLink(true);
+              // setMfaInProcess(false);
+              // setShowEnableMfaLink(true);
               //to handle user action after the choice to activate mfa is given
               setMessage('Please Check Your Email To Verify!');
               setShowMsg(true);
@@ -311,77 +315,77 @@ export default function Widget() {
     }
   };
   //function to be called when a user has to activate MFA
-  const handleMFActivation = async (login: boolean) => {
-    setErr(false);
-    setShowMsg(false);
-    setLoading2(true);
+  // const handleMFActivation = async (login: boolean) => {
+  //   setErr(false);
+  //   setShowMsg(false);
+  //   setLoading2(true);
 
-    if (testOTP(otp)) {
-      setErrMsg('Please put a valid OTP');
-      setLoading2(false);
-      return setErr(true);
-    }
-    try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            totp: otp,
-            switch_mfa: true
-          })
-        }
-      );
-      const data = (await response.json()) as any;
-      setLoading2(false);
-      console.log(data);
-      const { user_token } = data;
-      if (response.status === 200) {
-        setCurrentUserToken(user_token);
+  //   if (testOTP(otp)) {
+  //     setErrMsg('Please put a valid OTP');
+  //     setLoading2(false);
+  //     return setErr(true);
+  //   }
+  //   try {
+  //     const response = await fetch(
+  //       `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
+  //       {
+  //         method: 'PUT',
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         },
+  //         body: JSON.stringify({
+  //           totp: otp,
+  //           switch_mfa: true
+  //         })
+  //       }
+  //     );
+  //     const data = (await response.json()) as any;
+  //     setLoading2(false);
+  //     console.log(data);
+  //     const { user_token } = data;
+  //     if (response.status === 200) {
+  //       setCurrentUserToken(user_token);
 
-        //if the the mfa activation is coming from the login loop
-        if (login) {
-          setLoading2(false);
-          setMessage('MFA Successfully Activated!');
-          setShowMsg(true);
-          setShowMfaActivation(false);
-          setTimeout(() => setShowMsg(false), 3000);
-          handleSubmit();
-          return;
-        } else {
-          setMessage('MFA Successfully Activated! Check your Email.');
-          setShowMsgPanel(true);
-          return setShowMsg(true);
-        }
-      } else if (response.status === 402) {
-        setCurrentUserToken(data.user_token);
-        const msg =
-          data.msg +
-          ',  ' +
-          (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
-        setErrMsg(msg);
-        return setErr(true);
-        //when maximum tries for otp has been reached by the user
-      } else if (response.status === 429) {
-        const timeRegex = /(\d+):(\d+):(\d+\.\d+)/;
-        const matches = data.detail?.match(timeRegex);
-        const time = convertToApproxTime(matches[0]);
-        setErrMsg(
-          `maximum tries reached! Try again after ${time || 'some time'}`
-        );
-        return setErr(true);
-      }
-    } catch (error) {
-      console.log(error);
-      setLoading2(false);
-      //errors which are not handled
-      setErrMsg(`Some error occured in request`);
-      return setErr(true);
-    }
-  };
+  //       //if the the mfa activation is coming from the login loop
+  //       if (login) {
+  //         setLoading2(false);
+  //         setMessage('MFA Successfully Activated!');
+  //         setShowMsg(true);
+  //         setShowMfaActivation(false);
+  //         setTimeout(() => setShowMsg(false), 3000);
+  //         handleSubmit();
+  //         return;
+  //       } else {
+  //         setMessage('MFA Successfully Activated! Check your Email.');
+  //         setShowMsgPanel(true);
+  //         return setShowMsg(true);
+  //       }
+  //     } else if (response.status === 402) {
+  //       setCurrentUserToken(data.user_token);
+  //       const msg =
+  //         data.msg +
+  //         ',  ' +
+  //         (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
+  //       setErrMsg(msg);
+  //       return setErr(true);
+  //       //when maximum tries for otp has been reached by the user
+  //     } else if (response.status === 429) {
+  //       const timeRegex = /(\d+):(\d+):(\d+\.\d+)/;
+  //       const matches = data.detail?.match(timeRegex);
+  //       const time = convertToApproxTime(matches[0]);
+  //       setErrMsg(
+  //         `maximum tries reached! Try again after ${time || 'some time'}`
+  //       );
+  //       return setErr(true);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading2(false);
+  //     //errors which are not handled
+  //     setErrMsg(`Some error occured in request`);
+  //     return setErr(true);
+  //   }
+  // };
 
   //function to handle submit mfa
   const handleMFA = async () => {
@@ -841,7 +845,7 @@ export default function Widget() {
               if (userInfo.fa2 === null || userInfo.fa2 === false) {
                 //if the user has not enbaled mfa
                 setMfaInProcess(false);
-                setShowEnableMfaLink(true);
+                // setShowEnableMfaLink(true);
                 //to handle user action after the choice to activate mfa is given
                 setMessage('Please Check Your Email To Verify!');
                 setShowMsg(true);
@@ -893,6 +897,7 @@ export default function Widget() {
                   setButtonAction('mfa-activation-signup');
 
                   return setShowMfaActivation(true);
+                  // return;
                 }
 
                 //if the organization has not enabled strict mfa
@@ -900,7 +905,7 @@ export default function Widget() {
                 //if the user has not enbaled mfa
                 if (userInfo.fa2 === null || userInfo.fa2 === false) {
                   setMfaInProcess(false);
-                  setShowEnableMfaLink(true);
+                  // setShowEnableMfaLink(true);
                   //to handle user action after the choice to activate mfa is given
                   setMessage('Please Check Your Email To Verify!');
                   setShowMsg(true);
@@ -1004,8 +1009,8 @@ export default function Widget() {
 
               setButtonAction('login-password');
               setShowPassField(true);
-              setMfaInProcess(true);
-              setShowEnableMfaLink(true);
+              // setMfaInProcess(true);
+              // setShowEnableMfaLink(true);
               //to handle user action after the choice to activate mfa is given
               return;
             }
@@ -1028,8 +1033,6 @@ export default function Widget() {
         setShowMsg(true);
         setShowPassField(true);
         setBtnAction(ButtonAction.NewPasswordRequest);
-
-        setButtonAction('newPasswordRequest');
         return;
       } else if (response.status == 205) {
         //when organization has set passwordless true and user is verified, means passwordless login.
@@ -1093,8 +1096,8 @@ export default function Widget() {
               setButtonAction('passwordless-login-mfa');
               return;
             } else if (userInfo.fa2 === null || userInfo.fa2 === false) {
-              setMfaInProcess(true);
-              setShowEnableMfaLink(true);
+              // setMfaInProcess(true);
+              // setShowEnableMfaLink(true);
               //to handle user action after the choice to activate mfa is given
               setMessage(
                 'Kindly check your Email for the passwordless login link.'
@@ -1125,16 +1128,6 @@ export default function Widget() {
     // reset();
     window.location.href = url; //next router was creating a problem in routing back that's why window object is being used
   };
-
-  // resend email
-  // const sendEmailAgain = async () => {
-  //   const response = await fetch(
-  //     `https://api.trustauthx.com/user/me/auth?usr=${email}&OrgToken=${storeOrg_token}`,
-  //     {
-  //       method: 'GET'
-  //     }
-  //   );
-  // };
 
   const reset = () => {
     location.reload();
@@ -1174,9 +1167,9 @@ export default function Widget() {
       case ButtonAction.NewPasswordRequest:
         newPasswordRequest();
         break;
-      case ButtonAction.VerifyEmail:
-        handleUserMfa();
-        break;
+      // case ButtonAction.VerifyEmail:
+      //   handleUserMfa();
+      //   break;
       case ButtonAction.FirstPassword:
         handleNewPassword();
         break;
@@ -1195,11 +1188,23 @@ export default function Widget() {
       case ButtonAction.MfaLogin:
         handleMFA();
         break;
-      case ButtonAction.MfaActivationSignup:
-        handleMFActivation(false);
+        // case ButtonAction.MfaActivationSignup:
+        //   handleMFActivation(false);
+        //   break;
+        // case ButtonAction.MfaActivationLogin:
+        //   handleMFActivation(true);
         break;
-      case ButtonAction.MfaActivationLogin:
-        handleMFActivation(true);
+      default:
+        handleSubmit();
+        break;
+    }
+  };
+
+  //button actions for MFA activation
+  const MFA_activation_handler = () => {
+    switch (btnAction) {
+      case ButtonAction.ShowMfaPopup:
+        showMfaPopupForLogin();
         break;
       default:
         handleSubmit();
@@ -1487,4 +1492,29 @@ export default function Widget() {
       )}
     </>
   );
+
+  //   return (
+  //     <>
+  //     {loading1 ? (
+  //         <div className="w-[100vw] h-[100vh] flex justify-center items-center bg-slate-300  ">
+  //          <Spinner color='#1058de' opacity={0.6} size={100} />
+  //         </div>
+  //       ) :
+  //     <div
+  //     style={bgStyle}
+  //     className="w-[100vw] h-[100vh] min-h-fit flex items-center justify-center"
+  //   >
+  //     <Card className='h-[670px] w-[397px] max-w-[90vw] max-h-[90vh] ' style={cardStyle} >
+  //     <CardContent
+  //       className={` m-4`}
+  //     >
+  //       <div className="space-y-10 flex-1 h-full justify-center flex flex-col  ">
+  //       <MfaActivation code='wfwef' mfaAction={()=>console.log("mfa")}/>
+  //       </div>
+  //     </CardContent>
+  //     </Card>
+  //   </div>
+  // }
+  //     </>
+  //   )
 }
