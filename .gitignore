@@ -137,3 +137,4 @@ next-env.d.ts
 # local env files
 .env*.local
 .env
+snyk-macos
