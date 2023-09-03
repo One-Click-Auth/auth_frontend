@@ -28,6 +28,7 @@ import {
 import OTPInput from 'react-otp-input';
 import { QRCodeSVG } from 'qrcode.react';
 import { VscEye, VscEyeClosed } from 'react-icons/vsc';
+import { AiFillCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 import Widget from '../widget/login/page';
 
 function Page() {
@@ -72,7 +73,7 @@ function Page() {
         className={`p-10 h-[670px]   w-[397px] max-w-[90vw] max-h-[90vh]   m-4`}
       >
         <div className="space-y-10 flex-1 h-full justify-center flex flex-col  ">
-          <MFA />
+          <Password />
         </div>
       </CardContent>
     </Card>
@@ -101,8 +102,8 @@ function Password() {
     greetingFontColor
   } = useWidgetStore();
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState('');
+  const [showpass, setShowpass] = useState(false);
+  const [pass, setpass] = useState('');
 
   const socialValues = Object.values(social);
   const [checks, setChecks] = useState({
@@ -114,12 +115,12 @@ function Password() {
 
   useEffect(() => {
     setChecks({
-      length: password.length >= 8,
-      lowerCase: /[a-z]/.test(password),
-      upperCase: /[A-Z]/.test(password),
-      number: /[0-9]/.test(password)
+      length: pass.length >= 8,
+      lowerCase: /[a-z]/.test(pass),
+      upperCase: /[A-Z]/.test(pass),
+      number: /[0-9]/.test(pass)
     });
-  }, [password]);
+  }, [pass]);
 
   return (
     <>
@@ -148,7 +149,7 @@ function Password() {
           </p>
 
           <p className="text-muted-foreground text-center">
-            Create a Password for your
+            Create a pass for your
             <br />
             <span className=" text-black">Flitchcoin </span> account
           </p>
@@ -157,11 +158,11 @@ function Password() {
         <div>
           <div className="relative">
             <input
-              name="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Password"
-              type={showPassword ? 'text' : 'password'}
+              name="pass"
+              value={pass}
+              onChange={e => setpass(e.target.value)}
+              placeholder="pass"
+              type={showpass ? 'text' : 'password'}
               style={{
                 borderRadius: Number(inputBoxRadius),
                 borderColor: inputBorderColor.hex,
@@ -172,27 +173,21 @@ function Password() {
 
             <button
               className="absolute right-3 top-3 opacity-60"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowpass(!showpass)}
             >
-              {showPassword ? <VscEye size={24} /> : <VscEyeClosed size={24} />}
+              {showpass ? <VscEye size={24} /> : <VscEyeClosed size={24} />}
             </button>
           </div>
 
-          <div
-            style={{
-              borderRadius: Number(inputBoxRadius),
-              background: 'transparent'
-            }}
-            className="border p-4 mt-1 flex flex-col gap-3"
-          >
-            <p>Your password must contain:</p>
+          <div className="border p-4 mt-1 flex flex-col gap-3">
+            <p>Your pass must contain:</p>
 
             <div className="flex items-center gap-2">
               {' '}
               {checks.length ? (
-                <Image width={18} height={18} alt="icon" src={'./check.svg'} />
+                <AiFillCheckCircle className="text-green-600" />
               ) : (
-                <p>x</p>
+                <AiOutlineCloseCircle />
               )}
               <p className="text-muted-foreground"> At least 8 Characters</p>
             </div>
@@ -200,9 +195,9 @@ function Password() {
             <div className="flex items-center gap-2">
               {' '}
               {checks.lowerCase ? (
-                <Image width={18} height={18} alt="icon" src={'./check.svg'} />
+                <AiFillCheckCircle className="text-green-600" />
               ) : (
-                <p>x</p>
+                <AiOutlineCloseCircle />
               )}
               <p className="text-muted-foreground"> Lower case letters (a-z)</p>
             </div>
@@ -210,9 +205,9 @@ function Password() {
             <div className="flex items-center gap-2">
               {' '}
               {checks.upperCase ? (
-                <Image width={18} height={18} alt="icon" src={'./check.svg'} />
+                <AiFillCheckCircle className="text-green-600" />
               ) : (
-                <p>x</p>
+                <AiOutlineCloseCircle />
               )}
               <p className="text-muted-foreground"> Upper case letters (A-Z)</p>
             </div>
@@ -220,9 +215,9 @@ function Password() {
             <div className="flex items-center gap-2">
               {' '}
               {checks.number ? (
-                <Image width={18} height={18} alt="icon" src={'./check.svg'} />
+                <AiFillCheckCircle className="text-green-600" />
               ) : (
-                <p>x</p>
+                <AiOutlineCloseCircle />
               )}
               <p className="text-muted-foreground"> Numbers (0-9)</p>
             </div>
@@ -350,9 +345,9 @@ function EmailSent() {
   const show = socialValues.length > 0;
 
   return (
-    <>
+    <div>
       <div className="flex flex-col justify-center items-center">
-        <div className="relative flex mb-4 items-center">
+        <div className="relative flex mb-4 items-center ">
           <Avatar className="w-16 h-16 ml-6  ">
             <AvatarImage
               src={'https://avatars.githubusercontent.com/u/110340508?v=4'}
@@ -361,7 +356,7 @@ function EmailSent() {
             <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
           </Avatar>
 
-          <Avatar className="w-16 h-16  -left-6  z-10">
+          <Avatar className="w-16 h-16  -left-6  z-10 ">
             <AvatarImage
               src="https://github.com/shadcn.png"
               alt="Organisation Logo"
@@ -405,15 +400,14 @@ function EmailSent() {
 
         <div className="flex flex-col items-center gap-8 ">
           <div className="relative text-center text-lg w-full py-2">
-            An email with your Passwordless Login has been sent to
-            anyone@gmail.com
+            An email with your passless Login has been sent to anyone@gmail.com
           </div>
           <Button variant={'authx'} className="text-lg p-4">
             Want to turn on MFA?
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
