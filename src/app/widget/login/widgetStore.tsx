@@ -36,7 +36,12 @@ interface Widget {
   pp: unknown; // Update this type to match the actual structure of the "pp" property
   redirect_url: string;
 }
-
+export type Social = {
+  [name: string]: {
+    CLIENT_ID?: string;
+    CLIENT_SECRET?: string;
+  };
+};
 interface Data {
   breach_pass_det: boolean;
   m2m: boolean;
@@ -59,7 +64,7 @@ interface Data {
   email_val: boolean;
   social_sign: boolean;
   SSO: unknown[]; // Update this type to match the actual structure of the "SSO" property
-  social: unknown; // Update this type to match the actual structure of the "social" property
+  social: Social; // Update this type to match the actual structure of the "social" property
   widget: Widget;
   callback_url: string;
 }
@@ -69,6 +74,53 @@ interface OrgData {
   data: Data;
   setOrgData: (orgToken: string, data: Data) => void;
 }
+
+const socialDefaults: Social = {
+  github: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  google: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  discord: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  microsoft: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  facebook: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  figma: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  tiktok: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  linkedin: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  twitter: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  whatsapp: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  },
+  apple: {
+    CLIENT_ID: '',
+    CLIENT_SECRET: ''
+  }
+};
 
 export const useOrgData = create<OrgData>(set => ({
   org_token: '',
@@ -94,7 +146,7 @@ export const useOrgData = create<OrgData>(set => ({
     email_val: false,
     social_sign: false,
     SSO: [],
-    social: {},
+    social: socialDefaults,
     widget: {
       name: '',
       logo_url: '',
