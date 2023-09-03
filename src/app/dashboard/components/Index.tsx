@@ -5,7 +5,10 @@ import { useRouter } from 'next/navigation';
 import OrgList from './OrgList';
 import { useAuth } from '@/Providers/AuthContext';
 import useOrgdata, { Organization } from '../orgDataStore';
+import { PricingCard } from './pricingCard';
 import PricingPage from './PricingPage';
+// import { DropdownMenu } from '@/components/ui/dropdown-menu';
+// import { Input } from '@/components/ui/Input';
 
 function AccountIndex() {
   const [hasOrg, setHasOrg] = useState(true);

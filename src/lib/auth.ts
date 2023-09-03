@@ -1,29 +1,38 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+
 import { API_DOMAIN } from '@/constants';
 import axios from 'axios';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GitHubProvider from 'next-auth/providers/github';
 
-async function refreshTokens(token: string) {
+async function refreshAccessToken(token: string) {
   try {
     const url = API_DOMAIN + '/token';
-    const {data:refreshedTokens} = await axios.get(url, {
+    const response = await fetch(url, {
       headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
         token: token
       },
+      method: 'GET'
     });
 
-    
+    const refreshedTokens = await response.json() as any;
+
+    if (!response.ok) {
+      throw refreshedTokens;
+    }
+
     return {
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
       ...refreshedTokens
     };
   } catch (error) {
     console.log(JSON.stringify(error));
+
     return {
       token,
-      error: 'refreshTokensError'
+      error: 'RefreshAccessTokenError'
     };
   }
 }
@@ -80,7 +89,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(creds, req) {
         const githubToken = creds?.githubToken;
         if (githubToken) {
-          const tokenData = await refreshTokens(githubToken);
+          const tokenData = await refreshAccessToken(githubToken);
           const {
             userData: { profile, ...restUser }
           } = await fetchUserInfo(tokenData.access_token) as any;
@@ -91,6 +100,7 @@ export const authOptions: NextAuthOptions = {
           grant_type: '',
           username: creds?.username,
           password: creds?.password,
+          scope: '',
           client_id: '',
           client_secret: creds?.otp ? Number(creds?.otp) : '100000'
         };
@@ -99,49 +109,46 @@ export const authOptions: NextAuthOptions = {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
               Accept: 'application/x-www-form-urlencoded'
-            },
-            params:{scp:0}
+            }
           })
           .catch(e => {
             console.error(e);
             return { data: null };
           });
-        const tokens = await refreshTokens(data.access_token)
         const {
           userData: { profile, ...restUser }
-        } = await fetchUserInfo(tokens.access_token) as any;
-        return { user: { ...profile, ...restUser }, ...tokens,token_set:new Date()};
+        } = await fetchUserInfo(data.access_token) as any;
+        return { user: { ...profile, ...restUser }, ...data };
       }
     })
   ],
   callbacks: {
     // @ts-ignore
     async signIn(data) {
+      const { account } = data;
+      console.log({ data });
+      if (account?.provider === 'github') {
+        const access_token = account.access_token;
+        // const res = await axios.get", {
+        //   params: { access_token },
+        // });
+        // const userTokens = res.data;
+      }
       // @ts-ignore
       const { access_token, ...user } = data.user;
       return Promise.resolve({ user, access_token });
     },
     // @ts-ignore
     async jwt(jwtData) {
-      const { token, trigger } = jwtData;
-      const returnData = jwtData.user?.user ? jwtData.user : token
+      const { token } = jwtData;
+      console.log('JWT', JSON.stringify(jwtData));
       // @ts-ignore
-      const tokenDate = new Date(returnData.token_set)
-      const currentData = new Date()
-      const timeDifference = Math.abs(currentData - tokenDate);
-      const timeDifferenceMinutes = timeDifference / (1000 * 60);
-      console.log({timeDifferenceMinutes})
-      if (trigger === 'update' || timeDifferenceMinutes > 14) {        
-        const tokens = await refreshTokens(returnData.refresh_token)
-        returnData.refresh_token = tokens.refresh_token
-        returnData.access_token = tokens.access_token
-        returnData.token_set = new Date()
-        console.log('SESSION REFRESHED')
+      if (jwtData.user?.user) {
+        return jwtData.user;
       }
-      // @ts-ignore
-      return returnData;
+      return token;
     },
-    
+
     // @ts-ignore
     async session(session, token) {
       session.user = token?.user ?? session.user
