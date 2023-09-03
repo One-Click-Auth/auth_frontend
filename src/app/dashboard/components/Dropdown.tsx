@@ -58,6 +58,7 @@ export function AccountDropdown() {
               <p className="text-xs">{user?.email}</p>
             </div>
           </div>
+
           <ScrollArea className=" max-h-[60vh] overflow-y-scroll overflow-hidden">
             {/* The component wasnt used here because of radix/shadcn having to access the ref, and the component being a Link */}
             <DialogTrigger asChild>
