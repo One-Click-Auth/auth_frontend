@@ -4,18 +4,27 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
 import useOrgData, { Organization } from '../../../orgDataStore';
-import { Subscript } from 'lucide-react';
+// import { Subscript } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import Spinner from '@/components/spinner';
+import { PasswordDialogue } from '@/app/dashboard/components/PasswordDialgue';
+import { Dialog } from '@radix-ui/react-dialog';
+import { DialogTrigger } from '@/components/ui/Dialog';
+import { useToast } from '@/components/ui/use-toast';
+
 function UpgradeAndPlansPage() {
+  const router = useRouter();
+  const { toast } = useToast();
   //sups_id
   const { token } = useAuth();
   const { slug } = useParams();
   const orgId = slug;
   const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
   //   const getOrgData = async ()=>{
   //     const response = await fetch(`https://api.trustauthx.com/org/${orgId}`, {
@@ -29,8 +38,8 @@ function UpgradeAndPlansPage() {
   //   return data.subs_id;
 
   // }
-
-  const managePlan = async () => {
+  //to manage sunscription plan
+  async function managePlan() {
     if (loading1) return;
     setLoading1(true);
     try {
@@ -63,22 +72,72 @@ function UpgradeAndPlansPage() {
       console.log(error);
       return;
     }
-  };
+  }
+  //to cancel the subscription
+  async function cancelSub(pass: string) {
+    setLoading2(true);
+    try {
+      const response = await fetch(`https://api.trustauthx.com/subscriptions`, {
+        method: 'DELETE',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          org_id: slug,
+          password: pass
+          // totp: 0
+        })
+      });
+      if (response.status === 401) {
+        setLoading2(false);
+        toast({
+          title: 'Incorrect Password',
+          description: 'Please enter the correct password',
+          variant: 'destructive'
+        });
+        return;
+      }
+      if (response.status === 200) {
+        const data = await response.json();
+        toast({
+          variant: 'success',
+          title: 'Subscription Cancelled successfully'
+          // description: 'Subscription Cancelled successfully'
+        });
+        router.push(`/dashboard`);
+        setLoading2(false);
+
+        return;
+      }
+      setLoading2(false);
+      return;
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong with your request',
+        description: error.message
+      });
+      setLoading2(false);
+      return;
+    }
+  }
+
   const date = new Date().toDateString();
   return (
     <div className="mt-16  [&>div]:max-w-screen-xl flex items-center   flex-col justify-center w-full">
-      <div className="mb-12 pl-12  max-w-screen-xl w-full">
+      <div className="mb-12  max-w-screen-xl w-full">
         <div className="flex items-center gap-1">
           <CheckMarkSvg />
-
           <span>Updated on {`${date}`}</span>
         </div>
 
-        <p className="text-4xl">Manage Subscription</p>
+        <h1 className="text-4xl">Manage Subscription</h1>
       </div>
 
       <div className="flex-col  flex gap-8">
-        <Card className="shadow-none">
+        {/* <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
             <Image alt="dollar" src="/dollar.svg" width={35} height={35} />
             <CardTitle className="text-2xl !mt-2 font-medium">
@@ -97,7 +156,7 @@ function UpgradeAndPlansPage() {
               Pay Invoices Now
             </Button>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card className="shadow-none">
           <CardHeader className="px-10 pb-2">
@@ -163,9 +222,16 @@ function UpgradeAndPlansPage() {
               you can protect your platform from various types of attacks and
               ensure a secure environment for legitimate users.
             </p>
-            <Button variant={'destructive'} className="w-48 ">
-              Cancel Subscription{' '}
-            </Button>
+
+            <Dialog>
+              <DialogTrigger className="py-2 text-sm px-8 bg-red-400  text-black shadow hover:text-white hover:bg-black min-w-fit w-48 rounded-md flex items-start h-fit  ">
+                {/* <Button className='bg-red-400 w-48' variant={'authx'}>
+               
+              </Button> */}
+                Cancel Subscription
+              </DialogTrigger>
+              <PasswordDialogue request={cancelSub} loading={loading2} />
+            </Dialog>
           </CardContent>
         </Card>
       </div>
@@ -177,8 +243,8 @@ function CheckMarkSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       fill="none"
     >
