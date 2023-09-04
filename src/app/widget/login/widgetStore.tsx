@@ -17,6 +17,7 @@ interface Widget {
   button: {
     radius: number;
     bc: string;
+    width: number;
   };
   color0: string;
   color1: string;
@@ -163,7 +164,8 @@ export const useOrgData = create<OrgData>(set => ({
       },
       button: {
         radius: 0,
-        bc: ''
+        bc: '',
+        width: 0
       },
       color0: '',
       color1: '',

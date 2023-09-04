@@ -17,7 +17,7 @@ async function refreshAccessToken(token: string) {
       method: 'GET'
     });
 
-    const refreshedTokens = await response.json() as any;
+    const refreshedTokens = (await response.json()) as any;
 
     if (!response.ok) {
       throw refreshedTokens;
@@ -92,7 +92,7 @@ export const authOptions: NextAuthOptions = {
           const tokenData = await refreshAccessToken(githubToken);
           const {
             userData: { profile, ...restUser }
-          } = await fetchUserInfo(tokenData.access_token) as any;
+          } = (await fetchUserInfo(tokenData.access_token)) as any;
           return { user: { ...profile, ...restUser }, ...tokenData };
         }
         const body = {
@@ -117,7 +117,7 @@ export const authOptions: NextAuthOptions = {
           });
         const {
           userData: { profile, ...restUser }
-        } = await fetchUserInfo(data.access_token) as any;
+        } = (await fetchUserInfo(data.access_token)) as any;
         return { user: { ...profile, ...restUser }, ...data };
       }
     })
@@ -151,8 +151,8 @@ export const authOptions: NextAuthOptions = {
 
     // @ts-ignore
     async session(session, token) {
-      session.user = token?.user ?? session.user
-      return session
-    },
-  },
+      session.user = token?.user ?? session.user;
+      return session;
+    }
+  }
 };
