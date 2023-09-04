@@ -34,6 +34,7 @@ export function WidgetFooter({ reset }: FooterProps) {
     inputBoxRadius,
     buttonBorderColor,
     buttonRadius,
+    buttonBorderWidth,
     widgetBorderWidth,
     widgetBoxRadius,
     widgetBorderColor,
@@ -85,7 +86,8 @@ export function WidgetFooter({ reset }: FooterProps) {
       },
       button: {
         radius: buttonRadius,
-        bc: buttonBorderColor.hex
+        bc: buttonBorderColor.hex,
+        width: buttonBorderWidth
       },
       color0: color.hex,
       color1: color1.hex,

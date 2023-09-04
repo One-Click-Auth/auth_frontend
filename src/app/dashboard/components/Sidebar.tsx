@@ -6,7 +6,7 @@ import {
   SupportSvg
 } from '../../../assets/Svg/Account/Account';
 import { ChevronsLeft, ChevronsRight, Menu, X, Instagram } from 'lucide-react';
-// import { } from 'lucide-react';
+
 import Link from 'next/link';
 import { useAuth } from '@/Providers/AuthContext';
 
@@ -34,7 +34,7 @@ export const Sidebar = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  const { update } = useAuth()
+  // const { update } = useAuth()
   return (
     <div
       className={` flex flex-col flex-shrink-0 items-center transition-all text-white bg-black  ${
@@ -43,7 +43,7 @@ export const Sidebar = () => {
           : `sm:w-[4rem] w-0 ${isSmall < 640 ? 'h-[50px] overflow-hidden' : ''}`
       } sm:min-h-[100vh]`}
     >
-      <button onClick={() => update()}>Update</button>
+      {/* <button onClick={() => update()}>Update</button> */}
       {isSmall < 640 ? (
         <div className="flex flex-col  justify-center absolute  top-0, left-0 h-[50px] w-[100vw] pl-2 bg-black">
           <button

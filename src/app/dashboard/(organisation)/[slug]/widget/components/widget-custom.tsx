@@ -37,6 +37,8 @@ export function WidgetCustom() {
     setInputBoxRadius,
     buttonRadius,
     setButtonRadius,
+    buttonBorderWidth,
+    setButtonBorderWidth,
     widgetBoxRadius,
     setWidgetBoxRadius,
     widgetBorderWidth,
@@ -99,6 +101,17 @@ export function WidgetCustom() {
             color: buttonBorderColor,
             setColor: setButtonBorderColor
           }}
+        />
+      </div>
+      <div>
+        <span className="text-sm pl-2 text-zinc-500">Button Border Size</span>
+        <Input
+          className="h-11 shadow-none"
+          type="number"
+          min={0}
+          max={8}
+          value={buttonBorderWidth}
+          onChange={e => setButtonBorderWidth(e.target.value)}
         />
       </div>
       <div>

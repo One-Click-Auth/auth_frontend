@@ -1163,6 +1163,14 @@ export default function Widget() {
     window.location.href = url; //next router was creating a problem in routing back that's why window object is being used
   };
 
+  const forgotPass = () => {
+    setNewPassBtnAction(NewPassActions.NewPasswordRequest);
+    setShowPassword(false);
+    setShowMfaPopup(false);
+    setShowMsgPanel(false);
+    setShowNewPassword(true);
+  };
+
   const reset = () => {
     location.reload();
   };
@@ -1181,19 +1189,6 @@ export default function Widget() {
     setMfaBtnAction(MfaActions.LoginPasswordMfa);
   };
 
-  //enum ButtonAction {
-  // ShowMfaPopup,
-  // NewPasswordRequest,
-  // VerifyEmail,
-  // FirstPassword,
-  // LoginPassword,
-  // LoginPasswordMfa,
-  //PasswordlessLogin,
-  // PasswordlessLoginMfa,
-  // MfaLogin,
-  // MfaActivationSignup,
-  // MfaActivationLogin
-  // }
   enum MfaActions {
     MfaLogin,
     LoginPasswordMfa,
@@ -1246,41 +1241,6 @@ export default function Widget() {
     }
   };
 
-  //change the action of the button based on responses
-  // const handleGo = () => {
-  // switch (btnAction) {
-  // case ButtonAction.ShowMfaPopup:
-  //   showMfaPopupForLogin();
-  //   break;
-  // case ButtonAction.NewPasswordRequest:
-  //   newPasswordRequest();
-  //   break;
-  // case ButtonAction.VerifyEmail:
-  //   handleUserMfa();
-  //   break;
-  // case ButtonAction.FirstPassword:
-  //   handleNewPassword();
-  //   break;
-  // case ButtonAction.LoginPassword:
-  //   loginWithPassword();
-  //   break;
-  // case ButtonAction.LoginPasswordMfa:
-  //   loginWithPasswordMFA();
-  //   break;
-  //case ButtonAction.PasswordlessLogin:
-  // passwordlessLogin();
-  // break;
-  // case ButtonAction.PasswordlessLoginMfa:
-  //   passwordlessLoginMfa();
-  //   break;
-  // case ButtonAction.MfaLogin:
-  //   handleMFA();
-  //   break;
-  //default:
-  //  handleSubmit();
-  // break;
-  //   }
-  // };
   const socialValues = Object.keys(storeOrgData.social);
   const show = socialValues.length > 0;
 
@@ -1288,6 +1248,7 @@ export default function Widget() {
   const goButtonStyle = {
     color: widget.color9,
     background: `linear-gradient(to right, ${widget.color0} 0%,${widget.color1} 50%,${widget.color2} 100% )`,
+    border: `${widget.button.width}px solid`,
     borderRadius: `${widget.button.radius}px`,
     borderColor: widget.button.bc
   };
@@ -1314,6 +1275,7 @@ export default function Widget() {
     borderColor: ` ${widget.input_border.color}`,
     borderRadius: `${widget.input_border.radius}px`
   };
+  const placeholder = `placeholder:text-[${widget.input_border.color}]`;
   const otpInputStyle = {
     borderRadius: '0.75rem',
     border: '1.3px solid',
@@ -1326,254 +1288,6 @@ export default function Widget() {
   const labelStyle = {
     color: ` ${widget.input_border.color}`
   };
-
-  // return (
-  //   <>
-  //     {loading1 ? (
-  //       <div className="w-[100vw] h-10 flex justify-center items-center rounded-xl text-center ">
-  //         <div className="border-t-transparent rounded-full border-solid animate-spin border-blue-400 border-8  h-20 w-20"></div>
-  //       </div>
-  //     ) : (
-  //       <div className="w-[100vw] h-[100vh] min-h-max" style={bgStyle}>
-  //         <div
-  //           style={cardStyle}
-  //           className="top-1/2 flex justify-center items-center absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw]  px-[11%] sm:w-[310px] "
-  //         >
-  //           <div className="flex flex-col items-center p-[20px] mr-0 !important ">
-  //             <div className="flex flex-col justify-center items-center ">
-  //               <Image
-  //                 width={60}
-  //                 height={60}
-  //                 src={
-  //                   widget.logo_url ||
-  //                   'https://flitchcoin.s3.eu-west-2.amazonaws.com/authxlogo.svg'
-  //                 }
-  //                 alt="AuthX logo"
-  //               />
-
-  //               <div className="mt-1">
-  //                 <span className="text-xl font-semibold" style={orgNameStyle}>
-  //                   {storeOrgData.widget.name}
-  //                 </span>
-  //               </div>
-  //               {showMsg ? (
-  //                 <span
-  //                   className={`text-blue-400 text-center ${
-  //                     showMsgPanel ? 'my-20' : ''
-  //                   } `}
-  //                 >
-  //                   {message}
-  //                 </span>
-  //               ) : (
-  //                 ''
-  //               )}
-  //               {!showMsgPanel ? (
-  //                 <div className="mt-4">
-  //                   <span className="text-base text-4md" style={greetingStyle}>
-  //                     {showMfaActivation
-  //                       ? 'Continue to register MFA'
-  //                       : storeOrgData.widget.greeting}
-  //                   </span>
-  //                 </div>
-  //               ) : (
-  //                 ''
-  //               )}
-  //             </div>
-  //             {showMsgPanel ? (
-  //               <div>
-  //                 {showEnableMfaLink ? (
-  //                   <div>
-  //                     <button
-  //                       className="px-2  py-1 bg-slate-300 border-none outline-none w-max text-blue-400 hover:text-blue-600 transition-colors focus:text-red-600"
-  //                       onClick={userMfaRequest}
-  //                     >
-  //                       Want to Turn on MFA?
-  //                     </button>
-  //                   </div>
-  //                 ) : (
-  //                   ''
-  //                 )}
-  //                 <span
-  //                   className="text-blue-400 hover:text-blue-600 cursor-pointer"
-  //                   // onClick={sendEmailAgain}
-  //                 >
-  //                   Did not receive email? Try again.
-  //                 </span>
-  //               </div>
-  //             ) : (
-  //               <div
-  //                 className={`w-[260px] sm:w-[300px] mt-[30px] flex flex-col items-center`}
-  //               >
-  //                 {showMfaActivation ? (
-  //                   <div
-  //                     id="mfaActivationPanel"
-  //                     className="flex flex-col items-center"
-  //                   >
-  //                     <span className="mb-2 text-center">
-  //                       Scan the code using Google authenticator
-  //                     </span>
-
-  //                     <QRCodeSVG value={qr} bgColor="transparent" />
-  //                     <span className="my-2">Enter OTP to turn on MFA</span>
-  //                     <OtpInput
-  //                       containerStyle="grid grid-cols-2 justify-center gap-1"
-  //                       inputStyle="!w-8 h-8 md:!w-10 mt-4 border bg-transparent border-black sm:h-8 md:h-10 p-0 text-center rounded-xl"
-  //                       value={otp}
-  //                       onChange={setOtp}
-  //                       numInputs={6}
-  //                       renderSeparator={<span></span>}
-  //                       renderInput={props => <input {...props} />}
-  //                     />
-  //                   </div>
-  //                 ) : showMfaPopup ? (
-  //                   <div id="mfaPopup" className="flex flex-col items-center">
-  //                     <span className="mb-2 text-center">
-  //                       Enter the MFA code
-  //                     </span>
-
-  //                     <OtpInput
-  //                       containerStyle="grid grid-cols-2 justify-center gap-1"
-  //                       inputStyle="!w-8 h-8 md:!w-10 mt-4 border bg-transparent border-blue-400 focus:ring-blue-400 sm:h-8 md:h-10 p-0 text-center rounded-xl"
-  //                       value={otp}
-  //                       onChange={setOtp}
-  //                       numInputs={6}
-  //                       renderSeparator={<span></span>}
-  //                       renderInput={props => <input {...props} />}
-  //                     />
-  //                   </div>
-  //                 ) : showpassField ? (
-  //                   <>
-  //                     <div className="w-full flex flex-col">
-  //                       <label className={''} style={labelStyle}>
-  //                         Password
-  //                       </label>
-  //                       <input
-  //                         style={inputStyle}
-  //                         className={`outline-none p-2 rounded-md bg-transparent border-2`}
-  //                         id="password"
-  //                         type="password"
-  //                         value={pass}
-  //                         placeholder=" "
-  //                         onChange={e => setPass(e.target.value)}
-  //                       />
-  //                     </div>
-  //                   </>
-  //                 ) : (
-  //                   <div className={`w-full flex flex-col `}>
-  //                     <label className={''} style={labelStyle}>
-  //                       Your Email
-  //                     </label>
-  //                     <input
-  //                       style={inputStyle}
-  //                       className="outline-none p-2  bg-transparent border-[1.4px]"
-  //                       id="email"
-  //                       type="email"
-  //                       value={email}
-  //                       placeholder=" "
-  //                       onChange={e => setEmail(e.target.value)}
-  //                     />
-  //                   </div>
-  //                 )}
-
-  //                 {err ? (
-  //                   <span className="text-red-500 text-center">{errMsg}</span>
-  //                 ) : (
-  //                   ''
-  //                 )}
-  //                 {showEnableMfaLink ? (
-  //                   <button
-  //                     className="px-2 py-1 border-none outline-none w-max text-blue-400 hover:text-blue-600 transition-colors focus:text-red-600"
-  //                     onClick={userMfaRequest}
-  //                   >
-  //                     Want to Turn on MFA?
-  //                   </button>
-  //                 ) : (
-  //                   ''
-  //                 )}
-  //                 {/* onChange={() => setEnablUsereMfa(!enableUserMfa)} */}
-
-  //                 <div className="w-full mt-8">
-  //                   <button
-  //                     style={goButtonStyle}
-  //                     className={`w-full h-12 shadow-md border hover:shadow-black transition-shadow`}
-  //                     onClick={loading2 ? undefined : handleGo}
-  //                   >
-  //                     <span className="text-xl mx-auto">
-  //                       {loading2 ? (
-  //                         <div className="border-t-transparent border-solid mx-auto animate-spin rounded-full border-blue-400 border-4 h-8 w-8"></div>
-  //                       ) : (
-  //                         'Go >'
-  //                       )}
-  //                     </span>
-  //                   </button>
-  //                 </div>
-  //               </div>
-  //             )}
-  //             {!showSocial ? (
-  //               <div className="w-full">
-  //                 <span
-  //                   className="text-sm  text-right w-fit mt-1 text-blue-400 hover:text-blue-600 cursor-pointer"
-  //                   onClick={reset}
-  //                 >
-  //                   Try with another email
-  //                 </span>
-  //               </div>
-  //             ) : (
-  //               ''
-  //             )}
-  //             {showSocial ? (
-  //               <div className="flex flex-col gap-14 w-full mt-6">
-  //                 <div className="flex w-full justify-center mt-2 relative">
-  //                   <div className="absolute inset-0 flex items-center">
-  //                     <span className="w-full border-black border-t" />
-  //                     <span className="px-2">or</span>
-  //                     <span className="w-full border-black border-t" />
-  //                   </div>
-  //                 </div>
-  //                 <div className="flex flex-row flex-wrap justify-evenly">
-  //                   <div>
-  //                     <button
-  //                       type="submit"
-  //                       onClick={() => socialLogin('github')}
-  //                     >
-  //                       <Image src={github} alt="github" width={35} />
-  //                     </button>
-  //                   </div>
-  //                   <div>
-  //                     <button
-  //                       type="submit"
-  //                       onClick={() => socialLogin('microsoft')}
-  //                     >
-  //                       <Image src={microsoft} alt="microsoft" width={32} />
-  //                     </button>
-  //                   </div>
-  //                   <div>
-  //                     <button
-  //                       type="submit"
-  //                       onClick={() => socialLogin('google')}
-  //                     >
-  //                       <Image src={google} alt="google" width={35} />
-  //                     </button>
-  //                   </div>
-  //                   <div>
-  //                     <button
-  //                       type="submit"
-  //                       onClick={() => socialLogin('discord')}
-  //                     >
-  //                       <Image src={discord} alt="discord" width={40} />
-  //                     </button>
-  //                   </div>
-  //                 </div>
-  //               </div>
-  //             ) : (
-  //               ''
-  //             )}
-  //           </div>
-  //         </div>
-  //       </div>
-  //     )}
-  //   </>
-  // );
 
   return (
     <>
@@ -1677,7 +1391,7 @@ export default function Widget() {
 
                         <Button
                           style={goButtonStyle}
-                          className="w-full h-[2.8rem] border-[1px] mb-4 drop-shadow-md"
+                          className="w-full h-[2.8rem] mb-4"
                           disabled={loading2}
                           onClick={handleMfaActions}
                         >
@@ -1721,7 +1435,7 @@ export default function Widget() {
                           value={newPass}
                           onChange={e => setNewPass(e.target.value)}
                           style={inputStyle}
-                          className="w-full h-[2.8rem] shadow-md border-[1.4px] px-4 py-0 mb-2 focus-visible:ring-0 bg-transparent"
+                          className="w-full h-[2.8rem]  border-[1.4px] px-4 py-0 mb-2 focus-visible:ring-0 bg-transparent"
                           placeholder="password"
                           type={showpass ? 'text' : 'password'}
                         />
@@ -1741,7 +1455,7 @@ export default function Widget() {
 
                       <Button
                         style={goButtonStyle}
-                        className="w-full h-[2.8rem] border-[1px] mb-4 drop-shadow-md"
+                        className="w-full h-[2.8rem] mb-4 "
                         disabled={loading2}
                         onClick={handleNewPassActions}
                       >
@@ -1784,7 +1498,7 @@ export default function Widget() {
                           value={pass}
                           onChange={e => setPass(e.target.value)}
                           style={inputStyle}
-                          className="w-full h-[2.8rem] shadow-md border-[1.4px] px-4 py-0 mb-2 focus-visible:ring-0 bg-transparent"
+                          className="w-full h-[2.8rem] border-[1.4px] px-4 py-0 mb-2 focus-visible:ring-0 bg-transparent"
                           placeholder="password"
                           type={showpass ? 'text' : 'password'}
                         />
@@ -1803,7 +1517,7 @@ export default function Widget() {
 
                       <Button
                         style={goButtonStyle}
-                        className="w-full h-[2.8rem] border-[1px] mb-4 drop-shadow-md"
+                        className="w-full h-[2.8rem] "
                         disabled={loading2}
                         onClick={handlePassActions}
                       >
@@ -1815,6 +1529,15 @@ export default function Widget() {
                           <span>Continue</span>
                         )}
                       </Button>
+                      <div>
+                        <Button
+                          color={widget.color1}
+                          className="bg-transparent shadow-none w-fit h-fit p-0 hover:bg-transparent hover:text-blue-500"
+                          onClick={forgotPass}
+                        >
+                          Forgot password
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -1850,14 +1573,14 @@ export default function Widget() {
                             id="email"
                             type="email"
                             style={inputStyle}
-                            className="w-full h-[2.8rem] shadow-md border-[1.4px] px-4 py-0 focus-visible:ring-0 bg-transparent"
+                            className={`w-full h-[2.8rem] border-[1.4px] px-4 py-0 focus-visible:ring-0 bg-transparent`}
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                           />
                         </div>
                         <Button
                           style={goButtonStyle}
-                          className="w-full h-[2.8rem] border-[1px] mb-4 drop-shadow-md"
+                          className="w-full h-[2.8rem]  mb-4 "
                           disabled={loading2}
                           onClick={handleSubmit}
                         >
@@ -1872,7 +1595,7 @@ export default function Widget() {
                       </div>
                       {show && (
                         <>
-                          <div className="relative w-full py-4">
+                          <div className="relative w-full py-2">
                             <div className="absolute w-full lg:px-4 inset-0 flex items-center">
                               <span className="w-full border-black border-t"></span>
                               <span className="px-2">or</span>
@@ -1887,7 +1610,7 @@ export default function Widget() {
                                     src={github}
                                     alt="github"
                                     width={30}
-                                    className="cursor-pointer drop-shadow-lg"
+                                    className="cursor-pointer"
                                   />
                                 </div>
                               </button>
@@ -1901,7 +1624,7 @@ export default function Widget() {
                                     src={microsoft}
                                     alt="microsoft"
                                     width={26}
-                                    className="cursor-pointer  drop-shadow-lg"
+                                    className="cursor-pointer "
                                   />
                                 </div>
                               </button>
@@ -1915,7 +1638,7 @@ export default function Widget() {
                                     src={google}
                                     alt="google"
                                     width={28}
-                                    className="cursor-pointer  drop-shadow-lg"
+                                    className="cursor-pointer"
                                   />
                                 </div>
                               </button>
@@ -1924,12 +1647,12 @@ export default function Widget() {
                             {socialValues.includes('discord') && (
                               <button onClick={() => socialLogin('discord')}>
                                 {' '}
-                                <div className={`h-fit w-fit rounded-full`}>
+                                <div className={`h-fit w-fit`}>
                                   <Image
                                     src={discord}
                                     alt="discord"
                                     width={34}
-                                    className="cursor-pointer  drop-shadow-lg"
+                                    className="cursor-pointer"
                                   />
                                 </div>
                               </button>

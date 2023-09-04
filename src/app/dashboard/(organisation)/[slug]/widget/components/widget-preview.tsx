@@ -16,6 +16,7 @@ import {
 } from '@/assets/Svg/Account/Account';
 import { cn } from '@/lib/utils';
 import { useWidgetStore } from '../widgetStore';
+import { Input } from '@/components/ui/Input';
 export function WidgetPreview() {
   const {
     button2Status,
@@ -35,6 +36,7 @@ export function WidgetPreview() {
     widgetColor2,
     inputBoxRadius,
     buttonRadius,
+    buttonBorderWidth,
     nameFontColor,
     greetingFontColor
   } = useWidgetStore();
@@ -98,20 +100,11 @@ export function WidgetPreview() {
 
       <div className="flex flex-col gap-8 items-center">
         <div className="flex flex-col">
-          <label
-            style={{
-              backgroundColor: 'transparent',
-              color: inputBorderColor.hex
-            }}
-            htmlFor="email"
-            className="form-label text-[0.7rem] "
-          >
-            Your Email
-          </label>
-          <input
-            name="username"
+          {/* <Input
+            name="email"
             id="email"
             type="text"
+            placeholder='Email'
             style={{
               borderRadius: Number(inputBoxRadius),
               borderColor: inputBorderColor.hex,
@@ -119,6 +112,17 @@ export function WidgetPreview() {
             }}
             className="w-44 px-4 py-0.5 border-[1.4px] disabled:bg-primary"
             disabled
+          /> */}
+          <Input
+            name="newpass"
+            id="newPass"
+            style={{
+              borderRadius: Number(inputBoxRadius),
+              borderColor: inputBorderColor.hex,
+              background: 'transparent'
+            }}
+            className="w-44  placeholder:text-sm border-[1.4px] px-4 h-[2rem] py-0 focus-visible:ring-0 bg-transparent disabled:bg-primary"
+            placeholder="Email"
           />
         </div>
         <Button
@@ -126,9 +130,10 @@ export function WidgetPreview() {
             background: buttonBackground,
             color: color9.hex,
             borderRadius: Number(buttonRadius),
+            borderWidth: Number(buttonBorderWidth),
             borderColor: buttonBorderColor.hex
           }}
-          className={cn('w-44 h-8 border-[1px]', !show && 'mb-3')}
+          className={cn('w-44 h-8', !show && 'mb-3')}
         >
           <span className="ml-6">Go !!</span>
           <ChevronRightIcon className="ml-3" />

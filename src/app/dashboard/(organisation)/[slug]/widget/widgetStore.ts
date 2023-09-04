@@ -34,6 +34,7 @@ export type OrgObject = {
     button: {
       radius: string;
       bc: string;
+      width: string;
     };
     color0: string;
     color1: string;
@@ -188,6 +189,7 @@ interface CustomisationSlice {
   shadowColor: Color;
   inputBoxRadius: string;
   buttonRadius: string;
+  buttonBorderWidth: string;
   widgetBoxRadius: string;
   widgetBorderWidth: string;
   nameFontColor: Color;
@@ -206,6 +208,7 @@ interface CustomisationSlice {
   setShadowColor: (shadowColor: Color) => void;
   setInputBoxRadius: (inputBoxRadius: string) => void;
   setButtonRadius: (buttonRadius: string) => void;
+  setButtonBorderWidth: (buttonBorderWidth: string) => void;
   setWidgetBoxRadius: (widgetBoxRadius: string) => void;
   setWidgetBorderWidth: (widgetBorderWidth: string) => void;
   setNameFontColor: (nameFontColor: Color) => void;
@@ -230,6 +233,7 @@ type CustomisationState = {
   shadowColor: Color;
   inputBoxRadius: string;
   buttonRadius: string;
+  buttonBorderWidth: string;
   widgetBoxRadius: string;
   widgetBorderWidth: string;
 };
@@ -249,6 +253,7 @@ let initialCustomisationState: CustomisationState = {
   shadowColor: toColor('hex', '#121212'),
   inputBoxRadius: '6',
   buttonRadius: '6',
+  buttonBorderWidth: '1',
   widgetBoxRadius: '8',
   widgetBorderWidth: '1',
   nameFontColor: toColor('hex', '#121212'),
@@ -279,6 +284,8 @@ const createCustomisationSlice: StateCreator<
   setShadowColor: (shadowColor: Color) => set({ shadowColor }),
   setInputBoxRadius: (inputBoxRadius: string) => set({ inputBoxRadius }),
   setButtonRadius: (buttonRadius: string) => set({ buttonRadius }),
+  setButtonBorderWidth: (buttonBorderWidth: string) =>
+    set({ buttonBorderWidth }),
   setWidgetBoxRadius: (widgetBoxRadius: string) => set({ widgetBoxRadius }),
   setWidgetBorderWidth: (widgetBorderWidth: string) =>
     set({ widgetBorderWidth }),
@@ -447,6 +454,7 @@ export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
       shadowColor: toColor('hex', data.widget.color8),
       inputBoxRadius: data.widget.input_border.radius,
       buttonRadius: data.widget.button.radius,
+      buttonBorderWidth: data.widget.button.width,
       widgetBoxRadius: data.widget.widget_border.radius,
       widgetBorderWidth: data.widget.widget_border.width,
       nameFontColor: toColor('hex', data.widget.color10),
@@ -516,6 +524,7 @@ const setInitialState = (data: OrgObject) => {
     greetingFontColor: toColor('hex', data.widget.color11),
     inputBoxRadius: data.widget.input_border.radius,
     buttonRadius: data.widget.button.radius,
+    buttonBorderWidth: data.widget.button.width,
     widgetBoxRadius: data.widget.widget_border.radius,
     widgetBorderWidth: data.widget.widget_border.width
   };
