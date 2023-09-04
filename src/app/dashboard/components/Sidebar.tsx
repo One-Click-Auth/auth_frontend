@@ -8,7 +8,6 @@ import {
 import { ChevronsLeft, ChevronsRight, Menu, X, Instagram } from 'lucide-react';
 
 import Link from 'next/link';
-import { useAuth } from '@/Providers/AuthContext';
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true);

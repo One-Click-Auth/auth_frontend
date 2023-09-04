@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 'use client';
 import { Session } from 'next-auth';
-import { useSession } from 'next-auth/react';
 import { createContext, useContext, useMemo } from 'react';
 
 export interface IUser {
@@ -19,16 +18,14 @@ export function AuthContext({
   children: React.ReactNode;
 }) {
   // const user = useMemo(() => session.token)
-  const {update} = useSession()
   const values: AuthContextType = useMemo(
     () => ({
       // @ts-ignore
       user: session?.token?.user ?? {},
       // @ts-ignore
-      token: session?.token?.access_token,
-      update
+      token: session?.token?.access_token
     }),
-    [session,update]
+    [session]
   );
   return (
     <authContext.Provider value={{ ...values }}>
