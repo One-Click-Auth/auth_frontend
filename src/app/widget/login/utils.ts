@@ -7,7 +7,9 @@ export const decryptCode = (mfa: string): string => {
 };
 //to test input password string
 export const testPass = (password: string): boolean => {
-  return !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,20}$/.test(password);
+  return !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,1000}$/.test(
+    password
+  );
 };
 //correct password msg
 export const passMsg =
