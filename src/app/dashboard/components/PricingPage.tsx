@@ -29,8 +29,6 @@ function PricingPage() {
     setBlurBoth(false);
   }
 
-  console.log(price);
-
   const handlePayment = async (freelance_discount: boolean) => {
     setLoading(true);
     try {
