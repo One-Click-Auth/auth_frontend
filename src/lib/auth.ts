@@ -130,7 +130,7 @@ export const authOptions: NextAuthOptions = {
       const timeDifference = Math.abs(currentData - tokenDate);
       const timeDifferenceMinutes = timeDifference / (1000 * 60);
       console.log({timeDifferenceMinutes})
-      if (trigger === 'update' || timeDifferenceMinutes > 1) {        
+      if (trigger === 'update' || timeDifferenceMinutes > 14) {        
         const tokens = await refreshTokens(returnData.refresh_token)
         console.log('SESSION REFRESHED')
         console.log('SESSION ',returnData.refresh_token)
