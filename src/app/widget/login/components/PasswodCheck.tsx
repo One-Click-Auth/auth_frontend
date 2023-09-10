@@ -26,7 +26,7 @@ export function PasswordCheck({ pass }: PasswordCheckProps) {
 
   return (
     <div className="w-full border rounded-md border-gray-400 p-4 mt-1 flex flex-col gap-3 bg-white backdrop-blur-lg backdrop-opacity-80 bg-opacity-50">
-      <span className="text-sm">Your pass must contain:</span>
+      <span className="text-sm text-left">Your password must contain:</span>
       <div className="flex items-center gap-2">
         {' '}
         {checks.length ? (
