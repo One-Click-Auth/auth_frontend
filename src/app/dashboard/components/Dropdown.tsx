@@ -58,6 +58,7 @@ export function AccountDropdown() {
               <p className="text-xs">{user?.email}</p>
             </div>
           </div>
+
           <ScrollArea className=" max-h-[60vh] overflow-y-scroll overflow-hidden">
             {/* The component wasnt used here because of radix/shadcn having to access the ref, and the component being a Link */}
             <DialogTrigger asChild>
@@ -167,7 +168,7 @@ function TrustAuthXLogo() {
           gradientTransform="translate(30.9017 29.8005) rotate(-90.0445) scale(29.9638)"
         >
           <stop offset="0.220303" />
-          <stop offset="0.995966" stop-opacity="0" />
+          <stop offset="0.995966" stopOpacity="0" />
         </radialGradient>
       </defs>
     </svg>
