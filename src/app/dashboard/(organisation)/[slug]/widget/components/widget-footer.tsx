@@ -168,7 +168,7 @@ export function WidgetFooter({ reset }: FooterProps) {
         // PUT file to s3 bucket
         const res = await fetch(url, {
           method: 'PUT',
-          headers: {
+          headers: { 
             'Content-Type': contentType
           },
           body: logo

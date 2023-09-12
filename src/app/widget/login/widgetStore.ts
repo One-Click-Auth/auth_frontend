@@ -68,7 +68,7 @@ export type Social = {
   social: Social; // Update this type to match the actual structure of the "social" property
   widget: Widget;
   callback_url: string;
-}
+} 
 
 export interface OrgData {
   org_token: string;
@@ -246,7 +246,7 @@ type ProfileState = {
   email:string 
 }
 
-let initialProfileState:ProfileState = {
+const initialProfileState:ProfileState = {
   username:'None',
   email:'anyone@gmail.com',
   image:'https://openauthx.s3.ap-south-1.amazonaws.com/Group+39554+(1).svg'
@@ -255,7 +255,7 @@ type SecurityState = {
   mfa:boolean,
   password:boolean
 }
-let initialSecurityState:SecurityState={
+const initialSecurityState:SecurityState={
   mfa:false,
   password:false
 }
