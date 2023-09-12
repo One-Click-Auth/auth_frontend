@@ -1,12 +1,102 @@
+'use client';
+
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Switch } from '@/components/ui/Switch';
-import { Slider } from '@/components/ui/slider';
 import Image from 'next/image';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { RadioGroup } from './components/Radiogroup';
+import Spinner from '@/components/spinner';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 function Page() {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [isSendingGenerateRequest, setIsSendingGenerateRequest] =
+    useState(false);
+  const [isUploadingToS3, setIsUploadingToS3] = useState(false);
+  const [imageURL, setImageURL] = useState('');
+
+  async function handleImageUploadToS3() {
+    // Check filename extension
+    try {
+      if (!imageURL) return;
+
+      // Fetch Upload url
+      const response = await fetch(
+        `/api/preSignedUrl?fileName=${imageURL}`
+      ).catch(err => console.log(err));
+      const data = await response?.json();
+      const { url } = data as { url: string };
+
+      // PUT file to s3 bucket
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'image/*'
+        },
+        body: imageURL
+      }).catch(err => {
+        setIsUploadingToS3(false);
+        console.log(err);
+      });
+
+      const imageUrl = url.split('?')[0];
+      console.log({ imageUrl });
+    } catch (error) {
+      setIsUploadingToS3(false);
+    }
+  }
+
+  // recursively try to generate image
+  async function handleImageGenerateAPI(
+    inputs: string
+  ): Promise<AxiosResponse | null> {
+    const API_TOKEN = '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';
+    const headers = { Authorization: `Bearer ${API_TOKEN}` };
+    const API_URL =
+      'https://api-inference.huggingface.co/models/moonlightnexus/RealityCreation';
+
+    const prompt = JSON.stringify({ inputs });
+
+    try {
+      return await axios.post(API_URL, prompt, {
+        headers: headers,
+        responseType: 'arraybuffer'
+      });
+    } catch (err) {
+      if (err instanceof AxiosError && err.response?.status === 503) {
+        console.log('retrying');
+        await new Promise(resolve => setTimeout(resolve, 2500)); // Introduce a delay between retries
+        return handleImageGenerateAPI(inputs);
+      } else {
+        console.log(err);
+        return null;
+      }
+    }
+  }
+
+  async function handleImageGeneration() {
+    const inputs = inputRef?.current?.value;
+
+    if (!inputs) return;
+
+    setIsSendingGenerateRequest(true);
+
+    const response = await handleImageGenerateAPI(inputs);
+
+    if (!response) {
+      setIsSendingGenerateRequest(false);
+      return;
+    }
+
+    const blob = new Blob([response.data], { type: 'image/jpeg' });
+    const img = URL.createObjectURL(blob);
+
+    setImageURL(img);
+    setIsSendingGenerateRequest(false);
+  }
+
   return (
     <div className="flex flex-col mt-12 justify-center items-center gap-11">
       <div className="flex justify-between flex-1 px-10 py-6 border rounded-lg  gap-28 items-center">
@@ -37,21 +127,35 @@ function Page() {
           </div>
 
           <div className=" flex flex-col mt-14 gap-11">
-            <div className=" flex  items-center  gap-4 ">
+            <form
+              className="flex  items-center  gap-4"
+              onSubmit={e => {
+                e.preventDefault();
+                handleImageGeneration();
+              }}
+            >
               <Button
-                className="showcase-1-btn  flex
-               w-[200px] !h-[45px]  items-center gap-3 text-lg rounded-lg pr-8 font-semibold text-white"
+                className={`showcase-1-btn  flex w-[200px] !h-[45px]  items-center gap-3 text-lg rounded-lg pr-8 font-semibold text-white ${
+                  isSendingGenerateRequest ? 'cursor-not-allowed' : ''
+                }}`}
+                type="submit"
               >
-                <GradientAISvg />
-                Generate
+                {isSendingGenerateRequest ? (
+                  <Spinner color="white" size={30} />
+                ) : (
+                  <>
+                    <GradientAISvg /> Generate
+                  </>
+                )}
               </Button>
 
               <Input
                 className="p-3 px-10  w-full !h-[45px]"
-                placeholder="pile of white rubik cubes in a red room, wes anderson style 
+                placeholder="pile of white rubik cubes in a red room, wes anderson style
 "
+                ref={inputRef}
               />
-            </div>
+            </form>
 
             <div className="flex  lg:flex-row flex-col gap-4">
               <div className="flex flex-col gap-4">
@@ -63,16 +167,23 @@ function Page() {
                 </div>
 
                 <Button
-                  variant={'authx'}
+                  variant="authx"
                   className="  flex
                w-[200px] !h-[45px]  items-center gap-3 text-lg  "
+                  onClick={handleImageUploadToS3}
                 >
                   Save
                 </Button>
               </div>
 
               <div className="">
-                <img src={'/magic.svg'} />
+                <Image
+                  src={imageURL || '/magic.svg'}
+                  alt="magic-ai"
+                  width={500}
+                  height={400}
+                  style={{ width: 'auto', height: 'auto' }}
+                />
               </div>
             </div>
           </div>
