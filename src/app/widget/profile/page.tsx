@@ -5,7 +5,7 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
+
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { useOrgData, OrgData, UserProfileData, useUserProfileData,  useProfileStore, useSecurityStore  } from '../login/widgetStore';
 import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
-import profileImage from './profile.gif';
+
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { PasswordCheck } from '../login/components/PasswodCheck';
 import OTPInput from 'react-otp-input';
@@ -53,9 +53,9 @@ export default function WidgetProfile() {
   const set_user_token = useToken(state=>state.set_user_token);
   const user_token = useToken(state=>state.user_token);
    //to fetch the org token from the store
-   const storeOrg_token = useOrgData(state => state.org_token);
+  //  const storeOrg_token = useOrgData(state => state.org_token);
    //to fetch the org data from the store
-   const storeOrgData = useOrgData(state => state.data);
+  //  const storeOrgData = useOrgData(state => state.data);
    //to set the org Data
   const setOrgData = useOrgData(state => state.setOrgData);
   const setUserData = useUserProfileData(state => state.setProfileData);
@@ -75,18 +75,17 @@ export default function WidgetProfile() {
      .then(()=>getUserData())
      .then(()=>setLoading1(false))
      .catch(error=>{
-      const errMsg = (error as Error).message;
+      const errMsg = (error as Error).message
       toast({
         title:'Error!',
         description: `${errMsg}`,
         variant: 'destructive'
       });
-      return;
+      return
      })
   },[])
 
-  function fetchOrgDetails() {
-    return new Promise(async (resolve, reject) => {
+  async function fetchOrgDetails() {
       try {
         const response = await fetch(
           `https://api.trustauthx.com/settings/auth?org_id=${org_id}`,
@@ -96,47 +95,44 @@ export default function WidgetProfile() {
         );
   
         if (response.status === 406) {
-       
-          reject('Something went wrong');
-          
+          throw new Error('Some error occured with the request');
         }
   
         if (response.status === 200) {
-          const orgData = (await response.json()) as OrgData;
-          const { org_token, ...rest } = orgData;
+          const orgData = (await response.json()) as OrgData
+          const { org_token, ...rest } = orgData
           const data = rest.data;
   
           //store the org token and data from the response to the zustand store
           setOrgData(org_token, data);
+          return;
           
-          resolve(true);
           
         }
       } catch (error) {
-        const errMsg = (error as Error).message;
-        reject(errMsg);
+        const errMsg = (error as Error).message
+        throw new Error(errMsg);
       }
-    });
   }
   
 
   const getAccessToken = () :string => {
-    const cookies = document.cookie.split(';');
-    let token = '';
+    const cookies = document.cookie.split(';')
+    let token = ''
     for (const cookie of cookies) {
       // split the cookie into name and value
-      const [key, value] = cookie.split('=');
+      const [key, value] = cookie.split('=')
       // if the key matches code, return the value
       if (key === code) {
-        token = value;
+        token = value
       }
     }
-    return token;
-  };
+    return token
+  }
 
-function getUserToken() {
+async function getUserToken() {
   const token = getAccessToken();
-    return new Promise(async (resolve, reject) => {
+  
       try {
         const response = await fetch(
           `https://api.trustauthx.com/user/me/get/user-token?code=${code}`,
@@ -153,20 +149,15 @@ function getUserToken() {
         );
         const data  = await response.json() as string
         set_user_token(data);
-        resolve(true);
+        return;
       } catch (error) {
         console.log(error);
         const errMsg = (error as Error).message; 
-        reject(errMsg);
+        throw new Error(errMsg)
       }
-
-    })
-   
   }
 
- function getUserData(){
-  return new Promise(async (resolve, reject)=>{
-
+ async function getUserData(){
     try {
       const response = await fetch(`https://api.trustauthx.com/user/me/auth/data?userToken=${user_token}`,{
         method:'GET',
@@ -180,18 +171,19 @@ function getUserToken() {
        setUsername(userData.data.partner.org_id.full_name);
        setImage(userData.data.partner.org_id.img);
        setEmail(userData.email);
-       setPassword(userData.data.partner.org_id.password)
-       setMfa(userData.data.partner.org_id.fa2)
+       setPassword(userData.data.partner.org_id.password);
+       setMfa(userData.data.partner.org_id.fa2);
        setUserData(userData);
-       resolve(true)
+       return;
       
       
     } catch (error) {
-      const errMsg = (error as Error).message;
-      reject(errMsg)
+      const errMsg = (error as Error).message
+      console.log(error)
+      throw new Error(errMsg)
     }
-  })
   
+
   }
 
   return (
@@ -242,10 +234,10 @@ function getUserToken() {
 
 //Profile Component
 function Profile() {
-  type logoImage = string;
-  type setLogoImage = (logoImage: string) => void;
-  type setLogo = (logo: File | undefined) => void;
-  type logo = URL;
+  // type logoImage = string
+  // type setLogoImage = (logoImage: string) => void;
+  // type setLogo = (logo: File | undefined) => void;
+  // type logo = URL;
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
   const org_id = searchParams.get('org_id');
@@ -253,11 +245,11 @@ function Profile() {
 
 
   //from widget store
-  const setOrgData = useOrgData(state => state.setOrgData);
+  // const setOrgData = useOrgData(state => state.setOrgData);
   const setUserData = useUserProfileData(state => state.setProfileData);
   const userData = useUserProfileData(state => state.data);
 
-  const userPartnerdata = userData.data.partner.org_id
+  // const userPartnerdata = userData.data.partner.org_id
   //created in this file only
   const user_token = useToken(state=>state.user_token);
   const [loading1, setLoading1] = useState<boolean>(false);
@@ -269,9 +261,8 @@ function Profile() {
   const [imageUrl, setImageUrl] = useState('')
   const { username, image,email, setUsername, setImage,  setEmail } = useProfileStore();
 
-  function getUserData(){
-    return new Promise(async (resolve, reject)=>{
-  
+  async function getUserData(){
+
       try {
         const response = await fetch(`https://api.trustauthx.com/user/me/auth/data?userToken=${user_token}`,{
           method:'GET',
@@ -286,15 +277,14 @@ function Profile() {
          setImage(userData.data.partner.org_id.img);
          setEmail(userData.email);
          setUserData(userData);
-         resolve(true)
+         return;
         
         
       } catch (error) {
-        const errMsg = (error as Error).message;
-        reject(errMsg)
+        const errMsg = (error as Error).message
+        console.log(error)
+        throw new Error(errMsg)
       }
-    })
-    
     }
 
 
@@ -330,7 +320,7 @@ function Profile() {
     return;
   } catch (error) {
     console.log(error)
-    const errMsg = (error as Error).message;
+    const errMsg = (error as Error).message
     toast({
       variant:'destructive',
       title:'Error!',
@@ -359,7 +349,7 @@ function Profile() {
         return;
       }  
     }else{
-      await uploadImageToS3();
+      await uploadImageToS3()
     } 
     const response = await fetch(`https://api.trustauthx.com/user/me/widget/settings?img=${image}&&code=${code}&&Access_token=${user_token}&&redirect_url=${redirect_url}`,{
       method:'GET',
@@ -378,17 +368,17 @@ function Profile() {
       await getUserData();
       return
     }
-    return;
+    return
   } catch (error) {
     console.log(error)
-    const errMsg = (error as Error).message;
+    const errMsg = (error as Error).message
     toast({
       variant:'destructive',
       title:'Error!',
       description:`${errMsg}`
     })
     setLoading1(false)
-    return;
+    return
   }
  } 
 
@@ -399,14 +389,14 @@ function Profile() {
       const splitName = imageFile?.name.split('.');
       const fileExtension = splitName?.slice(-1);
       const contentType =
-        fileExtension[0] === 'svg' ? 'image/svg+xml' : 'image/*';
+        fileExtension[0] === 'svg' ? 'image/svg+xml' : 'image/*'
 
       // Fetch Upload url
       const response = await fetch(
         `/api/preSignedUrl?fileName=${imageFile?.name}`
-      ).catch(err => console.log(err));
-      const data = await response?.json();
-      const { url } = data as { url: string };
+      ).catch(err => console.log(err))
+      const data = await response?.json()
+      const { url } = data as { url: string }
       // PUT file to s3 bucket
       const res = await fetch(url, {
         method: 'PUT',
@@ -417,7 +407,7 @@ function Profile() {
       }).catch(err => { 
         console.log(err);
         throw new Error('some error occured with the request')
-      });
+      })
 
       if (res?.status === 200) {
         const imageUrl = url.split('?')[0];
@@ -437,10 +427,10 @@ function Profile() {
     event.preventDefault();
     if (event.target.files) {
       setImageFile(event.target.files[0]);
-      setImage(URL.createObjectURL(event.target.files[0]))
+      setImage(URL.createObjectURL(event.target.files[0]));
     }
     // uploadImageToS3()
-  };
+  }
 
   return (
     <Card className="border-none shadow-none flex flex-col sm:items-start">
@@ -513,7 +503,7 @@ function Profile() {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 //Security Component
@@ -532,7 +522,7 @@ function Security() {
     background: 'transparent',
     height: '2.2rem',
     width: '2.2rem'
-  };
+  }
   return (
     <Card className="border-none shadow-none flex flex-col sm:items-start ">
       <CardHeader className="sm:pt-0 flex flex-col sm:items-start">
