@@ -12,8 +12,8 @@ import {
   ServicesSVG,
   WidgetSettingSVG,
   SupportSVG,
-  WebhookSvg
-} from '@/assets/sidebarSVGs/sidebarSVGs';
+  WebhookSvg, MagicSvg
+} from '@/assets/sidebarSVGs/sidebarSVGs'
 import FlitchcoinSVG from '@/assets/sidebarSVGs/flitchcoin.svg';
 import { ChevronsLeft, ChevronsRight, Menu, X } from 'lucide-react';
 import Link from 'next/link';
@@ -261,6 +261,17 @@ export const SidebarOrg = () => {
                   <WebhookSvg />
                 </span>
                 {open ? <span>Webhooks</span> : ''}
+              </Link>
+              <Link
+                href={`/dashboard/${slug}/settings/webhooks`}
+                className={`hover:bg-white hover:bg-opacity-40 ${
+                  open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
+                } mb-4 rounded-md flex items-center space-x-2`}
+              >
+                <span>
+                  <MagicSvg />
+                </span>
+                {open ? <span>Magic</span> : ''}
               </Link>
             </div>
 

@@ -1,12 +1,61 @@
+'use client';
+
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Switch } from '@/components/ui/Switch';
-import { Slider } from '@/components/ui/slider';
 import Image from 'next/image';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { RadioGroup } from './components/Radiogroup';
+import Spinner from '@/components/spinner';
+import axios, { AxiosError } from 'axios';
 
 function Page() {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [isSending, setIsSending] = useState(false);
+  const [imageURL, setImageURL] = useState('');
+
+  async function handleGenerateAPI(inputs: string) {
+    const API_TOKEN = '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';
+    const headers = { Authorization: `Bearer ${API_TOKEN}` };
+    const API_URL =
+      'https://api-inference.huggingface.co/models/moonlightnexus/RealityCreation';
+
+    const prompt = JSON.stringify({ inputs });
+
+    try {
+      return await axios.post(API_URL, prompt, {
+        headers: headers,
+        responseType: 'arraybuffer'
+      });
+    } catch (err) {
+      if (err instanceof AxiosError && err.code === '503') {
+        console.log('retrying');
+        await handleGenerateAPI(inputs);
+      } else {
+        console.log(err);
+      }
+    }
+  }
+
+  async function handleImageGeneration() {
+    const inputs = inputRef?.current?.value;
+
+    if (!inputs) return;
+
+    setIsSending(true);
+
+    const response = await handleGenerateAPI(inputs);
+
+    if (!response) return;
+
+    const blob = new Blob([response.data], { type: 'image/jpeg' });
+    const img = URL.createObjectURL(blob);
+
+    setImageURL(img);
+    setIsSending(false);
+  }
+
   return (
     <div className="flex flex-col mt-12 justify-center items-center gap-11">
       <div className="flex justify-between flex-1 px-10 py-6 border rounded-lg  gap-28 items-center">
@@ -37,21 +86,35 @@ function Page() {
           </div>
 
           <div className=" flex flex-col mt-14 gap-11">
-            <div className=" flex  items-center  gap-4 ">
+            <form
+              className="flex  items-center  gap-4"
+              onSubmit={e => {
+                e.preventDefault();
+                handleImageGeneration();
+              }}
+            >
               <Button
-                className="showcase-1-btn  flex
-               w-[200px] !h-[45px]  items-center gap-3 text-lg rounded-lg pr-8 font-semibold text-white"
+                className={`showcase-1-btn  flex w-[200px] !h-[45px]  items-center gap-3 text-lg rounded-lg pr-8 font-semibold text-white ${
+                  isSending ? 'cursor-not-allowed' : ''
+                }}`}
+                type="submit"
               >
-                <GradientAISvg />
-                Generate
+                {isSending ? (
+                  <Spinner color="white" size={30} />
+                ) : (
+                  <>
+                    <GradientAISvg /> Generate
+                  </>
+                )}
               </Button>
 
               <Input
                 className="p-3 px-10  w-full !h-[45px]"
-                placeholder="pile of white rubik cubes in a red room, wes anderson style 
+                placeholder="pile of white rubik cubes in a red room, wes anderson style
 "
+                ref={inputRef}
               />
-            </div>
+            </form>
 
             <div className="flex  lg:flex-row flex-col gap-4">
               <div className="flex flex-col gap-4">
@@ -63,7 +126,7 @@ function Page() {
                 </div>
 
                 <Button
-                  variant={'authx'}
+                  variant="authx"
                   className="  flex
                w-[200px] !h-[45px]  items-center gap-3 text-lg  "
                 >
@@ -72,7 +135,12 @@ function Page() {
               </div>
 
               <div className="">
-                <img src={'/magic.svg'} />
+                <Image
+                  src={imageURL || '/magic.svg'}
+                  alt="magic-ai"
+                  width={500}
+                  height={400}
+                />
               </div>
             </div>
           </div>

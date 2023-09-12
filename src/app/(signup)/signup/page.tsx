@@ -45,8 +45,9 @@ const registerSchema = yup
       .string()
       .required('Please enter a password')
       .matches(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,20}$/,
-        'Password must be between 8 and 20 characters long, contain at least one letter and one digit, and can include special characters.'
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d_.@$!%#?&]{8,1000}$/
+        ,
+        'Password must be at least 8 characters long, contain at least one letter and one digit, and can include special characters.'
       ),
     'referral-id': yup.string().nullable(),
     agreeTerms: yup
