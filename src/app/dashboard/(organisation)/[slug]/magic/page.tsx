@@ -7,15 +7,51 @@ import Image from 'next/image';
 import React, { useRef, useState } from 'react';
 import { RadioGroup } from './components/Radiogroup';
 import Spinner from '@/components/spinner';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 function Page() {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [isSending, setIsSending] = useState(false);
+  const [isSendingGenerateRequest, setIsSendingGenerateRequest] =
+    useState(false);
+  const [isUploadingToS3, setIsUploadingToS3] = useState(false);
   const [imageURL, setImageURL] = useState('');
 
-  async function handleGenerateAPI(inputs: string) {
+  async function handleImageUploadToS3() {
+    // Check filename extension
+    try {
+      if (!imageURL) return;
+
+      // Fetch Upload url
+      const response = await fetch(
+        `/api/preSignedUrl?fileName=${imageURL}`
+      ).catch(err => console.log(err));
+      const data = await response?.json();
+      const { url } = data as { url: string };
+
+      // PUT file to s3 bucket
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'image/*'
+        },
+        body: imageURL
+      }).catch(err => {
+        setIsUploadingToS3(false);
+        console.log(err);
+      });
+
+      const imageUrl = url.split('?')[0];
+      console.log({ imageUrl });
+    } catch (error) {
+      setIsUploadingToS3(false);
+    }
+  }
+
+  // recursively try to generate image
+  async function handleImageGenerateAPI(
+    inputs: string
+  ): Promise<AxiosResponse | null> {
     const API_TOKEN = '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';
     const headers = { Authorization: `Bearer ${API_TOKEN}` };
     const API_URL =
@@ -29,11 +65,12 @@ function Page() {
         responseType: 'arraybuffer'
       });
     } catch (err) {
-      if (err instanceof AxiosError && err.code === '503') {
+      if (err instanceof AxiosError && err.response?.status === 503) {
         console.log('retrying');
-        await handleGenerateAPI(inputs);
+        return handleImageGenerateAPI(inputs);
       } else {
         console.log(err);
+        return null;
       }
     }
   }
@@ -43,17 +80,20 @@ function Page() {
 
     if (!inputs) return;
 
-    setIsSending(true);
+    setIsSendingGenerateRequest(true);
 
-    const response = await handleGenerateAPI(inputs);
+    const response = await handleImageGenerateAPI(inputs);
 
-    if (!response) return;
+    if (!response) {
+      setIsSendingGenerateRequest(false);
+      return;
+    }
 
     const blob = new Blob([response.data], { type: 'image/jpeg' });
     const img = URL.createObjectURL(blob);
 
     setImageURL(img);
-    setIsSending(false);
+    setIsSendingGenerateRequest(false);
   }
 
   return (
@@ -95,11 +135,11 @@ function Page() {
             >
               <Button
                 className={`showcase-1-btn  flex w-[200px] !h-[45px]  items-center gap-3 text-lg rounded-lg pr-8 font-semibold text-white ${
-                  isSending ? 'cursor-not-allowed' : ''
+                  isSendingGenerateRequest ? 'cursor-not-allowed' : ''
                 }}`}
                 type="submit"
               >
-                {isSending ? (
+                {isSendingGenerateRequest ? (
                   <Spinner color="white" size={30} />
                 ) : (
                   <>
@@ -129,6 +169,7 @@ function Page() {
                   variant="authx"
                   className="  flex
                w-[200px] !h-[45px]  items-center gap-3 text-lg  "
+                  onClick={handleImageUploadToS3}
                 >
                   Save
                 </Button>
@@ -140,6 +181,7 @@ function Page() {
                   alt="magic-ai"
                   width={500}
                   height={400}
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </div>
             </div>
