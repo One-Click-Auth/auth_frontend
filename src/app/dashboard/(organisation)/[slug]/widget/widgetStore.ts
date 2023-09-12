@@ -528,7 +528,7 @@ const setInitialState = (data: OrgObject) => {
     widgetBoxRadius: data.widget.widget_border.radius,
     widgetBorderWidth: data.widget.widget_border.width
   };
-
+ 
   initialConsentState = {
     tncURL: data.tnc_url ?? '',
     ppURL: data.pp_url ?? ''

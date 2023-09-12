@@ -14,7 +14,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useOrgData, useUserData } from './widgetStore'; //import zustand store to store and update org data
+import { OrgData, useOrgData, useUserData } from './widgetStore'; //import zustand store to store and update org data
 import github from './github-mark.svg';
 import microsoft from './microsoft.svg';
 import google from './google.svg';
@@ -791,7 +791,7 @@ export default function Widget() {
       if (response.status === 200) {
         setShowSocial(true);
 
-        const orgData = (await response.json()) as any;
+        const orgData = (await response.json()) as OrgData;
 
         const { org_token, ...rest } = orgData;
         const data = rest.data;
