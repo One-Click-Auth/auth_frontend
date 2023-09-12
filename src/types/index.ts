@@ -7,6 +7,12 @@ export type ApiResponse = {
   detail?: string;
 };
 
+declare global {
+  interface Window {
+    gtag: any;
+  }
+}
+
 export type UserResponse = {
   is_pool: boolean;
   fa2: boolean;
