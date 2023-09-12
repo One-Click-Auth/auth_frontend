@@ -9,6 +9,8 @@ import { useAuth } from '@/Providers/AuthContext';
 import { OrgObject } from '../widgetStore';
 import '@total-typescript/ts-reset';
 import { useParams } from 'next/navigation';
+import { Spinnaker } from 'next/font/google';
+import Spinner from '@/components/spinner';
 
 type FooterProps = {
   reset: () => void;
@@ -30,21 +32,31 @@ export function WidgetFooter({ reset }: FooterProps) {
     greeting,
     inputBorderColor,
     inputBoxRadius,
+    buttonBorderColor,
+    buttonRadius,
+    buttonBorderWidth,
     widgetBorderWidth,
     widgetBoxRadius,
     widgetBorderColor,
-    social,
     ppURL,
     tncURL,
     hostURL,
     callbackURL,
+    social,
     redirectURL,
     logoImage,
     color,
+    color1,
     color2,
-    color3,
+    color9,
     widgetBgColor,
-    widgetColor
+    widgetBgColor2,
+    widgetBgColor3,
+    shadowColor,
+    widgetColor,
+    widgetColor2,
+    nameFontColor,
+    greetingFontColor
   } = useWidgetStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [s3ImageUrl, setS3ImageUrl] = useState(logoImage);
@@ -57,6 +69,7 @@ export function WidgetFooter({ reset }: FooterProps) {
   const widgetObj: OrgObject = {
     name: displayName,
     host: hostURL,
+    social: social,
     widget: {
       name: displayName,
       logo_url: s3ImageUrl,
@@ -71,17 +84,28 @@ export function WidgetFooter({ reset }: FooterProps) {
         color: widgetBorderColor.hex,
         width: widgetBorderWidth
       },
+      button: {
+        radius: buttonRadius,
+        bc: buttonBorderColor.hex,
+        width: buttonBorderWidth
+      },
       color0: color.hex,
-      color1: color2.hex,
-      color2: color3.hex,
+      color1: color1.hex,
+      color2: color2.hex,
       color3: widgetBgColor.hex,
+      color4: widgetBgColor2.hex,
+      color5: widgetBgColor3.hex,
       color6: widgetColor.hex,
-      social
+      color7: widgetColor2.hex,
+      color8: shadowColor.hex,
+      color9: color9.hex,
+      color10: nameFontColor.hex,
+      color11: greetingFontColor.hex
     }
   };
 
   if (callbackURL) widgetObj.callback_url = callbackURL;
-  if (redirectURL) widgetObj.redirect_url = redirectURL;
+  if (redirectURL) widgetObj.widget.redirect_url = redirectURL;
   if (tncURL) widgetObj.tnc_url = tncURL;
   if (ppURL) widgetObj.pp_url = ppURL;
 
@@ -96,7 +120,7 @@ export function WidgetFooter({ reset }: FooterProps) {
   // Save methods
   async function putObject() {
     try {
-      console.log(JSON.stringify(widgetObj));
+      // console.log(JSON.stringify(widgetObj));
       const res = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
         method: 'PUT',
         headers: {
@@ -144,7 +168,7 @@ export function WidgetFooter({ reset }: FooterProps) {
         // PUT file to s3 bucket
         const res = await fetch(url, {
           method: 'PUT',
-          headers: {
+          headers: { 
             'Content-Type': contentType
           },
           body: logo
@@ -184,6 +208,7 @@ export function WidgetFooter({ reset }: FooterProps) {
 
   // Call methods according to active tab
   const handleSave = async () => {
+    if (isLoading) return;
     setIsLoading(true);
     // Attemp to upload logo only if it has been changed
     if (!checkLogoEquality(logo, prevLogo)) {
@@ -205,7 +230,7 @@ export function WidgetFooter({ reset }: FooterProps) {
   };
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-5">
       <span className="basis-3/5 text-slate-400 text-sm border rounded-lg pt-2 px-3">
         Save the new widget Settings for this Organization{' '}
       </span>
@@ -221,8 +246,15 @@ export function WidgetFooter({ reset }: FooterProps) {
         className="bg-accent hover:bg-accent/80 basis-1/5"
         disabled={isLoading}
       >
-        {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-        Save
+        {isLoading ? (
+          <div className="flex flex-row gap-1 items-center">
+            <Spinner size={16} color="green" />
+
+            <span>Saving...</span>
+          </div>
+        ) : (
+          'Save'
+        )}
       </Button>
     </div>
   );

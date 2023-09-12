@@ -20,13 +20,13 @@ export default function EstCostCard() {
 
   if (data) {
     if (data.DDoS) {
-      price += 10;
+      price += 5;
     }
     if (data.bot_det) {
       price += 15;
     }
     if (data.brute_force) {
-      price += 5;
+      price += 10;
     }
     if (data.breach_pass_det) {
       price += 25;
@@ -35,16 +35,28 @@ export default function EstCostCard() {
       price += 25;
     }
     if (data.consent) {
-      price += 15;
+      price += 5;
     }
     if (data.callbacks) {
       price += 20;
     }
-    // if (data.rtm) {
-    //   price += 75
-    // }
+    if (data.rtm) {
+      price += 75;
+    }
     if (data.passwordless) {
       price += 35;
+    }
+    if (data.email_val) {
+      price += 0;
+    }
+    if (data.custom_email) {
+      price += 0;
+    }
+    if (data.social_sign) {
+      price += 0;
+    }
+    if (data.ipat) {
+      price += 125;
     }
   }
 

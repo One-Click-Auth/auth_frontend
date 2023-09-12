@@ -8,11 +8,11 @@ import {
   SecuritySVG,
   SettingsSVG,
   UpgradeAndPlansSVG,
-  TeamAndMembersSVG,
   ServicesSVG,
   WidgetSettingSVG,
   SupportSVG,
-  GenSettingsSVG
+  WebhookSvg,
+  MagicSvg
 } from '@/assets/sidebarSVGs/sidebarSVGs';
 import FlitchcoinSVG from '@/assets/sidebarSVGs/flitchcoin.svg';
 import { ChevronsLeft, ChevronsRight, Menu, X } from 'lucide-react';
@@ -25,11 +25,7 @@ import { useAuth } from '@/Providers/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import useOrgData, { Organization } from '../orgDataStore';
 import { Skeleton } from '@/components/ui/Skeleton';
-import {
-  OrgObject,
-  useWidgetStore
-} from '../(organisation)/[slug]/widget/widgetStore';
-import { toColor } from 'react-color-palette';
+
 import { getOrgData } from '@/lib/utils';
 import { FaUsersLine } from 'react-icons/fa6';
 
@@ -251,6 +247,28 @@ export const SidebarOrg = () => {
                 </span>
                 {open ? <span>Services</span> : ''}
               </Link>
+              <Link
+                href={`/dashboard/${slug}/settings/webhooks`}
+                className={`hover:bg-white hover:bg-opacity-40 ${
+                  open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
+                } mb-4 rounded-md flex items-center space-x-2`}
+              >
+                <span>
+                  <WebhookSvg />
+                </span>
+                {open ? <span>Webhooks</span> : ''}
+              </Link>
+              <Link
+                href={`/dashboard/${slug}/magic`}
+                className={`hover:bg-white hover:bg-opacity-40 ${
+                  open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
+                } mb-4 rounded-md flex items-center space-x-2`}
+              >
+                <span>
+                  <MagicSvg />
+                </span>
+                {open ? <span>Magic</span> : ''}
+              </Link>
             </div>
 
             <Link
@@ -275,7 +293,7 @@ export const SidebarOrg = () => {
               </span>
               {open ? <span>Manage API keys</span> : ''}
             </Link>
-            <Link
+            {/* <Link
               href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
@@ -285,9 +303,9 @@ export const SidebarOrg = () => {
                 <TeamAndMembersSVG />
               </span>
               {open ? <span>Team & Members</span> : ''}
-            </Link>
+            </Link> */}
             <Link
-              href={'#'}
+              href={`/dashboard/${slug}/upgrade&plans`}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
@@ -319,7 +337,7 @@ export const SidebarOrg = () => {
               </span>
               {open ? <span>Support</span> : ''}
             </Link>
-            <Link
+            {/* <Link
               href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
@@ -329,7 +347,7 @@ export const SidebarOrg = () => {
                 <GenSettingsSVG />
               </span>
               {open ? <span>Settings</span> : ''}
-            </Link>
+            </Link> */}
             <Link href={'/dashboard'} className="mx-auto my-6">
               <Button
                 className={` bg-accent text-black text-sm ${

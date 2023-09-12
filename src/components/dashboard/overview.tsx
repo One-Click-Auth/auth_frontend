@@ -1,78 +1,63 @@
-"use client"
+'use client';
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
-
-const data = [
-  {
-    name: "Jan",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Feb",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Mar",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Apr",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "May",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Jun",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Jul",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Aug",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Sep",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Oct",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Nov",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-  {
-    name: "Dec",
-    total: Math.floor(Math.random() * 100000) + 100000,
-  },
-]
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
+import useOrgData, { Organization } from '../../app/dashboard/orgDataStore';
 
 export function Overview() {
+  const formatTick = (value: any) => {
+    const date = new Date(value);
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    return `${month} ${year}`;
+  };
+  const orgData = useOrgData(state => state.manageOrgData);
+  const result = Object.entries(orgData.past_month_api_calls)
+    .map(([month, calls]) => ({ month, calls }))
+    .splice(0, 12);
+  console.log(result);
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
+      <BarChart data={result}>
         <XAxis
-          dataKey="name"
+          dataKey="month"
           stroke="#888888"
           fontSize={12}
           tickLine={false}
           axisLine={false}
+          interval={0}
+          tickFormatter={formatTick}
         />
         <YAxis
           stroke="#888888"
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `${value}`}
+          tickFormatter={value => `${value}`}
         />
-        <Bar dataKey="total" fill="#adfa1d" radius={[4, 4, 0, 0]} />
+        <Tooltip
+          contentStyle={{
+            background: 'grey',
+            opacity: '0.9',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '4px',
+            color: 'black'
+          }}
+          animationDuration={200}
+        />
+        <Bar
+          dataKey="calls"
+          fill="#adfa1d"
+          radius={[4, 4, 0, 0]}
+          className="hover:none"
+        />
       </BarChart>
     </ResponsiveContainer>
-  )
+  );
 }

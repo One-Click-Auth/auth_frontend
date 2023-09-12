@@ -6,26 +6,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap');
 
 @layer utilities {
+  /* most of the time it is recommended to use Shadcn ScrollArea instead of this. */
+  .subtle-scrollbar::-webkit-scrollbar {
+    @apply w-[6px] h-[8px];
+  }
 
-    /* most of the time it is recommended to use Shadcn ScrollArea instead of this. */
-    .subtle-scrollbar::-webkit-scrollbar {
-      @apply  w-[6px] h-[8px]
-    }
+  .subtle-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-neutral-200 rounded-full;
+  }
 
-    .subtle-scrollbar::-webkit-scrollbar-thumb {
-      @apply  bg-neutral-200 rounded-full
-    }
+  .showcase-1-btn {
+    background: linear-gradient(270deg, #ff4fe3 0%, #000 100%);
+  }
 
   @variants responsive {
     /* Hide scrollbar for Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar {
-        display: none;
+      display: none;
     }
 
     /* Hide scrollbar for IE, Edge and Firefox */
     .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
     }
   }
 }

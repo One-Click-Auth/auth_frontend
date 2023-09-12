@@ -16,49 +16,66 @@ import {
 } from '@/assets/Svg/Account/Account';
 import { cn } from '@/lib/utils';
 import { useWidgetStore } from '../widgetStore';
-
+import { Input } from '@/components/ui/Input';
 export function WidgetPreview() {
   const {
     button2Status,
     button3Status,
+    widget2Status,
     color,
+    color1,
     color2,
-    color3,
+    color9,
     social,
     logoImage,
     displayName,
     greeting,
     inputBorderColor,
+    buttonBorderColor,
     widgetColor,
-    inputBoxRadius
+    widgetColor2,
+    inputBoxRadius,
+    buttonRadius,
+    buttonBorderWidth,
+    nameFontColor,
+    greetingFontColor
   } = useWidgetStore();
-  
+
   const socialValues = Object.values(social);
-  const show = socialValues.includes(true);
+  const show = socialValues.length > 0;
 
   // Method to determine if button color is solid or gradient
-  const updateButtonColor = () => {
+  const updateButtonBg = () => {
     if (!button2Status && !button3Status) {
       return color.hex;
     }
 
     if (button2Status && button3Status) {
-      return `linear-gradient(to right, ${color.hex}, ${color2.hex}, ${color3.hex})`;
+      return `linear-gradient(to right, ${color.hex}, ${color1.hex}, ${color2.hex})`;
     }
 
     if (button2Status || button3Status) {
       if (!button2Status) {
-        return `linear-gradient(to right, ${color.hex}, ${color3.hex})`;
+        return `linear-gradient(to right, ${color.hex}, ${color2.hex},${color2.hex})`;
       }
-      return `linear-gradient(to right, ${color.hex}, ${color2.hex})`;
+      return `linear-gradient(to right, ${color.hex}, ${color1.hex},${color1.hex})`;
     }
   };
 
-  const [buttonBackground, setButtonBackground] = useState(updateButtonColor());
+  // const updateButtonTextColor = ()=>{
+  //     return ` ${color4.hex} `
+  // }
+
+  const [buttonBackground, setButtonBackground] = useState(updateButtonBg());
+  // const [buttonTextColor, setButtonTextColor] = useState(`${color9.hex}`);
 
   useEffect(() => {
-    setButtonBackground(updateButtonColor());
-  }, [color, color2, color3, button2Status, button3Status]);
+    setButtonBackground(updateButtonBg());
+  }, [color, color1, color2, button2Status, button3Status]);
+
+  // useEffect(() => {
+  //   setButtonTextColor(`${color9.hex}`);
+  // }, [color9]);
 
   return (
     <div className="space-y-10">
@@ -67,58 +84,67 @@ export function WidgetPreview() {
           <AvatarImage src={logoImage} alt="Organisation Logo" />
           <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
         </Avatar>
-        <h1 className="text-lg font-medium text-center break-words w-44 mt-0.5 mb-1.5">
+        <h1
+          className="text-lg font-medium text-center break-words w-44 mt-0.5 mb-1.5"
+          style={{ color: nameFontColor.hex }}
+        >
           {displayName}
         </h1>
-        <small className="text-[0.6rem] w-44 break-words text-center">
+        <small
+          style={{ color: greetingFontColor.hex }}
+          className="text-[0.6rem] w-44 break-words text-center"
+        >
           {greeting}
         </small>
       </div>
+
       <div className="flex flex-col gap-8 items-center">
-        <div className="relative">
-          <label
-            style={{
-              backgroundColor: widgetColor.hex,
-              color: inputBorderColor.hex
-            }}
-            htmlFor="email"
-            className="form-label text-[0.6rem] absolute translate-x-3 translate-y-[-7px] bg-white px-1"
-          >
-            Your Email
-          </label>
-          <input
-            name="username"
+        <div className="flex flex-col">
+          {/* <Input
+            name="email"
             id="email"
             type="text"
+            placeholder='Email'
             style={{
               borderRadius: Number(inputBoxRadius),
               borderColor: inputBorderColor.hex,
-              backgroundColor: widgetColor.hex
+              background: 'transparent'
             }}
-            className="w-44 px-4 py-0.5 border disabled:bg-primary"
+            className="w-44 px-4 py-0.5 border-[1.4px] disabled:bg-primary"
             disabled
+          /> */}
+          <Input
+            name="newpass"
+            id="newPass"
+            style={{
+              borderRadius: Number(inputBoxRadius),
+              borderColor: inputBorderColor.hex,
+              background: 'transparent'
+            }}
+            className="w-44  placeholder:text-sm border-[1.4px] px-4 h-[2rem] py-0 focus-visible:ring-0 bg-transparent disabled:bg-primary"
+            placeholder="Email"
           />
         </div>
         <Button
-          style={{ background: buttonBackground }}
-          className={cn('w-44 h-8 text-white', !show && 'mb-3')}
+          style={{
+            background: buttonBackground,
+            color: color9.hex,
+            borderRadius: Number(buttonRadius),
+            borderWidth: Number(buttonBorderWidth),
+            borderColor: buttonBorderColor.hex
+          }}
+          className={cn('w-44 h-8', !show && 'mb-3')}
         >
           <span className="ml-6">Go !!</span>
           <ChevronRightIcon className="ml-3" />
         </Button>
         {show && (
           <>
-            <div className="relative w-full">
+            <div className="relative w-full ">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-black border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span
-                  style={{ backgroundColor: widgetColor.hex }}
-                  className="bg-background px-2 text-black"
-                >
-                  or
-                </span>
+                <span className="px-2">or</span>
+                <span className="w-full border-black border-t" />
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-evenly gap-y-4 w-full">

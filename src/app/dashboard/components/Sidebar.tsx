@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import {
   OrgnaizationSvg,
-  SettingSvg,
   SupportSvg
 } from '../../../assets/Svg/Account/Account';
 import { ChevronsLeft, ChevronsRight, Menu, X, Instagram } from 'lucide-react';
-// import { } from 'lucide-react';
+
 import Link from 'next/link';
+import { useAuth } from '@/Providers/AuthContext';
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -34,7 +34,7 @@ export const Sidebar = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
+  // const { update } = useAuth()
   return (
     <div
       className={` flex flex-col flex-shrink-0 items-center transition-all text-white bg-black  ${
@@ -43,6 +43,7 @@ export const Sidebar = () => {
           : `sm:w-[4rem] w-0 ${isSmall < 640 ? 'h-[50px] overflow-hidden' : ''}`
       } sm:min-h-[100vh]`}
     >
+      {/* <button onClick={() => update()}>Update</button> */}
       {isSmall < 640 ? (
         <div className="flex flex-col  justify-center absolute  top-0, left-0 h-[50px] w-[100vw] pl-2 bg-black">
           <button
@@ -103,7 +104,7 @@ export const Sidebar = () => {
             }`}
           >
             <Link
-              href={'/dashboard/support'}
+              href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
@@ -113,7 +114,7 @@ export const Sidebar = () => {
               </span>
               {open ? <span>Support</span> : ''}
             </Link>
-            <Link
+            {/* <Link
               href={'#'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
@@ -123,7 +124,7 @@ export const Sidebar = () => {
                 <SettingSvg />
               </span>
               {open ? <span>Settings</span> : ''}
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ import Support from './support/page';
 import AccountIndex from '../components/Index';
 import AddOrganization from './add-organization/page';
 import KeysCard from './keys/page';
-
+import NewOrgRequest from './new-organization/page';
 function Account() {
   const location = usePathname();
 
@@ -16,6 +16,8 @@ function Account() {
         <AccountIndex />
       ) : location === '/dashboard/support' ? (
         <Support />
+      ) : location === '/dashboard/new-organization' ? (
+        <NewOrgRequest />
       ) : location === '/dashboard/add-organization' ? (
         <AddOrganization />
       ) : location === '/dashboard/keys' ? (

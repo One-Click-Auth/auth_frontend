@@ -23,7 +23,11 @@ const OrganisationDashboard = () => {
             providing a seamless and personalized email experience for your
             users.
           </p>
-          <Switch disabled />
+          <SettingSwitch
+            id="custom_email"
+            name="Custom Email Address"
+            price={null}
+          />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -38,7 +42,7 @@ const OrganisationDashboard = () => {
             registration and login process, enhancing user convenience and
             streamlining the onboarding experience.
           </p>
-          <Switch disabled />
+          <SettingSwitch id="social_sign" name="Social Sign-On" price={null} />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -56,7 +60,7 @@ const OrganisationDashboard = () => {
             verification by requiring users to provide a time-sensitive,
             one-time password in addition to their regular credentials.
           </p>
-          <SettingSwitch id="fa2" name="MFA" />
+          <SettingSwitch id="fa2" name="MFA" price="$25.00" />
         </CardContent>
       </Card>
       <Card className="shadow-none">
