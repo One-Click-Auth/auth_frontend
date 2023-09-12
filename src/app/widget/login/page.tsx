@@ -14,7 +14,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useOrgData, useUserData } from './widgetStore'; //import zustand store to store and update org data
+import { OrgData, useOrgData, useUserData } from './widgetStore'; //import zustand store to store and update org data
 import github from './github-mark.svg';
 import microsoft from './microsoft.svg';
 import google from './google.svg';
@@ -48,21 +48,21 @@ export default function Widget() {
   //state variables for loading
   const [loading1, setLoading1] = useState(true); //loading before the widget appears
   const [loading2, setLoading2] = useState(false); //loading in the widget go button for subsequent reqs
-  const [loading3, setLoading3] = useState(false); //loading in mfa request button
+  // const [loading3, setLoading3] = useState(false); //loading in mfa request button
   //state variables for erros
   const [err, setErr] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   // state variable to show password input box
-  const [showpassField, setShowPassField] = useState(false);
+  // const [showpassField, setShowPassField] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   //state variables to show certain messages
   const [message, setMessage] = useState('');
   const [showMsg, setShowMsg] = useState(false);
-  const [showMore, setShowMore] = useState(false);
+  // const [showMore, setShowMore] = useState(false);
   //state varibale to show MFA activation panel where QR code along with an MFA code input field will be shown
-  const [showMfaActivation, setShowMfaActivation] = useState(false);
+  // const [showMfaActivation, setShowMfaActivation] = useState(false);
 
   //state variable to show the OTP input modal if a user has already enabled MFA
   const [showMfaPopup, setShowMfaPopup] = useState(false);
@@ -71,11 +71,11 @@ export default function Widget() {
   //state variable to show and hide social login
   const [showSocial, setShowSocial] = useState(false);
   //state varibale to show the enable mfa link to take the user input whether he wants to enable mfa or not
-  const [showEnableMfaLink, setShowEnableMfaLink] = useState(false);
+  // const [showEnableMfaLink, setShowEnableMfaLink] = useState(false);
   // state varibale to store whether the user has selected enable mfa or not
-  const [enableUserMfa, setEnablUsereMfa] = useState(false);
+  // const [enableUserMfa, setEnablUsereMfa] = useState(false);
   //state variable to set whether user is activating Mfa in process or at the end of the login/signup process
-  const [mfaInProcess, setMfaInProcess] = useState(false);
+  // const [mfaInProcess, setMfaInProcess] = useState(false);
   // state varibale to store the value of email typed by the user
   const [email, setEmail] = useState('');
 
@@ -89,7 +89,7 @@ export default function Widget() {
   //state variable to store mfa code
 
   //state variable to set encoded qr code
-  const [qr, setQr] = useState('');
+  // const [qr, setQr] = useState('');
   //state variable to chnage the button actions
   // const [buttonAction, setButtonAction] = useState('');
   // const [btnAction, setBtnAction] = useState<ButtonAction>();
@@ -791,7 +791,7 @@ export default function Widget() {
       if (response.status === 200) {
         setShowSocial(true);
 
-        const orgData = (await response.json()) as any;
+        const orgData = (await response.json()) as OrgData;
 
         const { org_token, ...rest } = orgData;
         const data = rest.data;
@@ -1298,7 +1298,7 @@ export default function Widget() {
       ) : (
         <div
           style={bgStyle}
-          className="w-[100vw] h-[100vh] min-h-fit flex items-center justify-center"
+          className="w-[100vw] h-[100vh] min-h-fit flex items-center justify-center relative"
         >
           <Card
             className="h-fit  w-[390px] max-w-[90vw] max-h-[90vh] pt-14 pb-10 px-4"
@@ -1354,6 +1354,7 @@ export default function Widget() {
                         </p>
                       </div>
                     </div>
+                    <button className="relative top-0">Reset</button>
                   </div>
                 ) : showMfaPopup ? (
                   <>
@@ -1404,6 +1405,7 @@ export default function Widget() {
                           )}
                         </Button>
                       </div>
+                      <button className="relative top-0">Reset</button>
                     </div>
                   </>
                 ) : showNewPassword ? (
@@ -1468,6 +1470,7 @@ export default function Widget() {
                         )}
                       </Button>
                     </div>
+                    <button className="relative top-0">Reset</button>
                   </div>
                 ) : showPassword ? (
                   <div className="flex flex-col gap-8">
@@ -1539,6 +1542,7 @@ export default function Widget() {
                         </Button>
                       </div>
                     </div>
+                    <button className="relative top-0">Reset</button>
                   </div>
                 ) : (
                   <>
