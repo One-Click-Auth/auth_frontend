@@ -67,6 +67,7 @@ function Page() {
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === 503) {
         console.log('retrying');
+        await new Promise(resolve => setTimeout(resolve, 2500)); // Introduce a delay between retries
         return handleImageGenerateAPI(inputs);
       } else {
         console.log(err);
