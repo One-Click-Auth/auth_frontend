@@ -19,4 +19,4 @@ RUN npm i sharp
 RUN npm run build
 EXPOSE 3000
 # Start the Next.js application using npm start
-CMD ["npm", "start"]
+CMD ["node", ".next/standalone/server.js"]
