@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { ReactNode, useEffect } from 'react';
 import EstCostCard from './components/est-cost-card';
 import { usePathname, useParams } from 'next/navigation';
-import useOrgData, { Organization } from '../../../orgDataStore';
+import useOrgData from '../../../orgDataStore';
 
 export default function SettingLayout({ children }: { children: ReactNode }) {
   const orgData = useOrgData(state => state.manageOrgData);

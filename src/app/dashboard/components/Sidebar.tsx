@@ -5,10 +5,9 @@ import {
   OrgnaizationSvg,
   SupportSvg
 } from '../../../assets/Svg/Account/Account';
-import { ChevronsLeft, ChevronsRight, Menu, X, Instagram } from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, Menu, X } from 'lucide-react';
 
 import Link from 'next/link';
-import { useAuth } from '@/Providers/AuthContext';
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true);

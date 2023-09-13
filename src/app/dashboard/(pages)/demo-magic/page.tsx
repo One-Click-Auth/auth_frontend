@@ -1,8 +1,6 @@
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Switch } from '@/components/ui/Switch';
-import { Slider } from '@/components/ui/slider';
-import Image from 'next/image';
 import React from 'react';
 import { RadioGroup } from './components/Radiogroup';
 

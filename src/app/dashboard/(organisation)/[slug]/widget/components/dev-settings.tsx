@@ -23,7 +23,6 @@ import {
 import { useWidgetStore, Social } from '../widgetStore';
 import SocialSignInPopup from './SocialSignInPopup';
 import { Dialog, DialogTrigger } from '@/components/ui/Dialog';
-import { useEffect } from 'react';
 type SocialList = {
   [key: string]: {
     name: string;

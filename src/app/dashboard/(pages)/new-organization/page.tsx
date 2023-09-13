@@ -1,8 +1,6 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
-import { Minus, Plus, PlusIcon } from 'lucide-react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/Providers/AuthContext';
 
 import Image from 'next/image';

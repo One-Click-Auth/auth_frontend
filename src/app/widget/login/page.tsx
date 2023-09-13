@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 'use client';
-import { QRCodeSVG } from 'qrcode.react';
 import OtpInput from 'react-otp-input';
 import {
-  decryptCode,
   testPass,
   passMsg,
   testOTP,
@@ -20,13 +18,11 @@ import microsoft from './microsoft.svg';
 import google from './google.svg';
 import discord from './discord.svg';
 import Spinner from '@/components/spinner';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { Label } from '@/components/ui/Label';
 import { MdEmail } from 'react-icons/md';
-import { FaPaperPlane } from 'react-icons/fa';
 import { VscEye, VscEyeClosed } from 'react-icons/vsc';
 import { PasswordCheck } from './components/PasswodCheck';
 import { useToast } from '@/components/ui/use-toast';
@@ -1354,7 +1350,7 @@ export default function Widget() {
                         </p>
                       </div>
                     </div>
-                    <button className="relative top-0">Reset</button>
+                    {/* <button className="relative top-0">Reset</button> */}
                   </div>
                 ) : showMfaPopup ? (
                   <>
@@ -1405,7 +1401,7 @@ export default function Widget() {
                           )}
                         </Button>
                       </div>
-                      <button className="relative top-0">Reset</button>
+                      {/* <button className="relative top-0">Reset</button> */}
                     </div>
                   </>
                 ) : showNewPassword ? (
@@ -1470,7 +1466,7 @@ export default function Widget() {
                         )}
                       </Button>
                     </div>
-                    <button className="relative top-0">Reset</button>
+                    {/* <button className="relative top-0">Reset</button> */}
                   </div>
                 ) : showPassword ? (
                   <div className="flex flex-col gap-8">
@@ -1542,7 +1538,7 @@ export default function Widget() {
                         </Button>
                       </div>
                     </div>
-                    <button className="relative top-0">Reset</button>
+                    {/* <button className="relative top-0">Reset</button> */}
                   </div>
                 ) : (
                   <>

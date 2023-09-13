@@ -5,7 +5,6 @@ import { ColourInput } from './colour-input';
 import { useWidgetStore } from '../widgetStore';
 import { Button } from '@/components/ui/Button';
 import { Plus } from 'lucide-react';
-import { useEffect } from 'react';
 
 export function WidgetCustom() {
   const {

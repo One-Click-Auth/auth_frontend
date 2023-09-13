@@ -7,15 +7,8 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import {
-  AddItemSvg,
-  BillingSvg,
-  CloudSvg,
-  GithubSvg,
-  InviteSvg,
   LogOutSvg,
-  ProfileItemSvg,
-  SettingsSvg,
-  TeamSvg
+  ProfileItemSvg
 } from '@/assets/Svg/Account/DropDown';
 import { useAuth } from '@/Providers/AuthContext';
 import { signOut } from 'next-auth/react';

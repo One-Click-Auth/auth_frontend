@@ -2,7 +2,6 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import { LanguageSwitcher } from './components/language-switcher';
 import { WidgetPreview } from './components/widget-preview';
 import WidgetBranding from './components/widget-branding';
 import { RefObject, useEffect, useRef, useState } from 'react';

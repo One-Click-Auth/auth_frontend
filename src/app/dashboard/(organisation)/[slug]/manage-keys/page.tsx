@@ -8,11 +8,9 @@ import { ClipboardCopy } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
-
-import Spinner from '@/components/spinner';
 import { PasswordDialogue } from '@/app/dashboard/components/PasswordDialgue';
-import { Dialog } from '@radix-ui/react-dialog';
-import { DialogTrigger } from '@/components/ui/Dialog';
+
+import {Dialog, DialogTrigger } from '@/components/ui/Dialog';
 type Key = { keyValue: string };
 function InputWithButtons({ keyValue }: Key) {
   const handleCopy = () => {

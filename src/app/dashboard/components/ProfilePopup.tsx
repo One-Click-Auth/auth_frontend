@@ -1,12 +1,10 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from '@/components/ui/Dialog';
 import CryptoJS from 'crypto-js';
 import { Separator } from '@/components/ui/seperator';
@@ -15,13 +13,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
 import { useToast } from '@/components/ui/use-toast';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/Providers/AuthContext';
 import OTPInput from 'react-otp-input';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft, Plus } from 'lucide-react';
-import { IconBase } from 'react-icons/lib';
-import { useSearchParams } from 'next/navigation';
 
 function ProfilePopup() {
   const { user, token } = useAuth();

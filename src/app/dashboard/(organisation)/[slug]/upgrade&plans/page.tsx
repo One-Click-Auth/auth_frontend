@@ -6,7 +6,7 @@ import Image from 'next/image';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
-import useOrgData, { Organization } from '../../../orgDataStore';
+import { Organization } from '../../../orgDataStore';
 // import { Subscript } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';

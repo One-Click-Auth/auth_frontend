@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { getOrgData } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import React, { use, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const WebhookForm = () => {
   const [inputUrl, setInputUrl] = useState('');

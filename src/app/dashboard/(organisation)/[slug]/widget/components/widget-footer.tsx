@@ -4,12 +4,10 @@ import { Button } from '@/components/ui/Button';
 import { updateStoreWithFetch, useWidgetStore } from '../widgetStore';
 import { useToast } from '@/components/ui/use-toast';
 import { useEffect, useState } from 'react';
-import { Icons } from '@/components/icons';
 import { useAuth } from '@/Providers/AuthContext';
 import { OrgObject } from '../widgetStore';
 import '@total-typescript/ts-reset';
 import { useParams } from 'next/navigation';
-import { Spinnaker } from 'next/font/google';
 import Spinner from '@/components/spinner';
 
 type FooterProps = {
@@ -156,7 +154,7 @@ export function WidgetFooter({ reset }: FooterProps) {
         const splitName = logo?.name.split('.');
         const fileExtension = splitName?.slice(-1);
         const contentType =
-          fileExtension[0] === 'svg' ? 'image/svg+xml' : 'image/*';
+        fileExtension[0] === 'svg' ? 'image/svg+xml' : 'image/*';
 
         // Fetch Upload url
         const response = await fetch(

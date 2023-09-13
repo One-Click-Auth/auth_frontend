@@ -1,25 +1,17 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
-import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
+  Card
 } from '@/components/ui/card';
 import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem
 } from '@/components/ui/command';
 import {

@@ -1,6 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Image from 'next/image';
-import { Switch } from '@/components/ui/Switch';
 import { AiCloudSpark } from '@/assets/Svg/Account/Account';
 import { Button } from '@/components/ui/Button';
 import { SettingSwitch } from '../components/setting-switch';

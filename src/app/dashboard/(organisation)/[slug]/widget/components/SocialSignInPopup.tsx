@@ -1,27 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from '@/components/ui/Dialog';
 
-import { QRCodeSVG } from 'qrcode.react';
 import { useToast } from '@/components/ui/use-toast';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/Providers/AuthContext';
-import OTPInput from 'react-otp-input';
 import { Button } from '@/components/ui/Button';
-import { ArrowLeft, Plus } from 'lucide-react';
-import { IconBase } from 'react-icons/lib';
+import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/Input';
 import { useParams } from 'next/navigation';
 import Spinner from '@/components/spinner';
 import { updateStoreWithFetch, useWidgetStore } from '../widgetStore';
-import { spawn } from 'child_process';
 
 function SocialSignInPopup({ socialName }: { socialName: string }) {
   const { toast } = useToast();

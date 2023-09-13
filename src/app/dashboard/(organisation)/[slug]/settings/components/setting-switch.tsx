@@ -4,7 +4,6 @@ import { Switch } from '@/components/ui/Switch';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/Providers/AuthContext';
-import { Organization } from '@/app/dashboard/orgDataStore';
 import { useToast } from '@/components/ui/use-toast';
 import {
   AlertDialog,
@@ -14,7 +13,6 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { getOrgData } from '@/lib/utils';

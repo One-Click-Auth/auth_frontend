@@ -8,7 +8,6 @@ import {
   SecuritySVG,
   SettingsSVG,
   UpgradeAndPlansSVG,
-  TeamAndMembersSVG,
   ServicesSVG,
   WidgetSettingSVG,
   SupportSVG,
@@ -25,11 +24,8 @@ import { useAuth } from '@/Providers/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import useOrgData, { Organization } from '../orgDataStore';
 import { Skeleton } from '@/components/ui/Skeleton';
-import {
-  OrgObject,
-  useWidgetStore
-} from '../(organisation)/[slug]/widget/widgetStore';
-import { toColor } from 'react-color-palette';
+
+
 import { getOrgData } from '@/lib/utils';
 import { FaUsersLine } from 'react-icons/fa6';
 
