@@ -3,12 +3,8 @@
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Switch } from '@/components/ui/Switch';
-<<<<<<< HEAD:src/app/dashboard/(pages)/demo-magic/page.tsx
-import React from 'react';
-=======
 import Image from 'next/image';
 import React, { useRef, useState } from 'react';
->>>>>>> 9ea44d5debb59f313486eb113716ccc64e0d22bf:src/app/dashboard/(organisation)/[slug]/magic/page.tsx
 import { RadioGroup } from './components/Radiogroup';
 import Spinner from '@/components/spinner';
 import axios, { AxiosError, AxiosResponse } from 'axios';
