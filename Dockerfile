@@ -15,6 +15,7 @@ ENV _ACCESS_KEY_ID=AKIA2UWUTT7W5HXUYIVJ
 ENV _S3_BUCKET=openauthx
 ENV _S3_REGION=ap-south-1
 ENV _SECRET_ACCESS_KEY=BPqAxqwZVO7bgQd5+A8JAB74JFgaGJDPcD5B1LFu
+RUN npm i sharp
 RUN npm run build
 EXPOSE 3000
 # Start the Next.js application using npm start

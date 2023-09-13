@@ -11,7 +11,8 @@ import {
   ServicesSVG,
   WidgetSettingSVG,
   SupportSVG,
-  WebhookSvg
+  WebhookSvg,
+  MagicSvg
 } from '@/assets/sidebarSVGs/sidebarSVGs';
 import FlitchcoinSVG from '@/assets/sidebarSVGs/flitchcoin.svg';
 import { ChevronsLeft, ChevronsRight, Menu, X } from 'lucide-react';
@@ -24,7 +25,6 @@ import { useAuth } from '@/Providers/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import useOrgData, { Organization } from '../orgDataStore';
 import { Skeleton } from '@/components/ui/Skeleton';
-
 
 import { getOrgData } from '@/lib/utils';
 import { FaUsersLine } from 'react-icons/fa6';
@@ -257,6 +257,17 @@ export const SidebarOrg = () => {
                   <WebhookSvg />
                 </span>
                 {open ? <span>Webhooks</span> : ''}
+              </Link>
+              <Link
+                href={`/dashboard/${slug}/magic`}
+                className={`hover:bg-white hover:bg-opacity-40 ${
+                  open ? 'ml-20 pl-8 w-[65%] py-2 ' : 'p-2'
+                } mb-4 rounded-md flex items-center space-x-2`}
+              >
+                <span>
+                  <MagicSvg />
+                </span>
+                {open ? <span>Magic</span> : ''}
               </Link>
             </div>
 
