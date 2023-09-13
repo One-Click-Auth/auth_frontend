@@ -1,9 +1,7 @@
 'use client'
 import React from 'react';
 import { AccountDropdown } from './Dropdown';
-import { Switch } from '@/components/ui/Switch';
 import Link from 'next/link';
-import { useAuth } from '@/Providers/AuthContext';
 function AccountNav() {
   // const {update} = useAuth();
 

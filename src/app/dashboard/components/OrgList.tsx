@@ -5,9 +5,6 @@ import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { SearchBy } from './searchBy';
 import { OrgTable } from './orgTable';
-import { Slider } from '@/components/ui/slider';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PricingPage from './PricingPage';
 
 function OrgList() {
   const router = useRouter();

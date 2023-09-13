@@ -8,7 +8,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import useOrgData, { Organization } from '../../app/dashboard/orgDataStore';
+import useOrgData from '../../app/dashboard/orgDataStore';
 
 export function Overview() {
   const formatTick = (value: any) => {
