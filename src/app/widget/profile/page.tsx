@@ -147,7 +147,7 @@ export default function WidgetProfile() {
       );
 
       const userData = (await response.json()) as UserProfileData;
-
+      console.log(userData.data.partner.org_id);
       setUsername(userData.data.partner.org_id.full_name);
       setImage(userData.data.partner.org_id.img);
       setEmail(userData.email);
