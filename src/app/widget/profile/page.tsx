@@ -19,7 +19,7 @@ import { useToast } from '@/components/ui/use-toast';
 import SkeletonProfile from './profileSkeleton';
 import Profile from './ProfileTab';
 import Security from './SecurityTab';
-import { getAccessToken } from './utils';
+import { decryptToken } from './utils';
 //profile image
 //username
 //password
@@ -30,6 +30,7 @@ export default function WidgetProfile() {
   const code = searchParams.get('code');
   const org_id = searchParams.get('org_id');
   const redirect_url = searchParams.get('redirect_url');
+  const ac_token = searchParams.get('ac');
 
   const { set_user_token, user_token } = useToken();
   //to fetch the org token from the store
@@ -95,7 +96,7 @@ export default function WidgetProfile() {
   }
 
   async function getUserToken() {
-    const token = getAccessToken(code ? code : '');
+    const token = decryptToken(ac_token ? ac_token : '');
 
     try {
       const response = await fetch(
@@ -110,6 +111,9 @@ export default function WidgetProfile() {
           }
         }
       );
+      if (response.status === 406) {
+        throw new Error('Some error occured with the request');
+      }
       const data = (await response.json()) as string;
       set_user_token(data);
       return data;

@@ -25,7 +25,8 @@ import { IoCloudUpload } from 'react-icons/io5';
 import { create } from 'zustand';
 import { toast } from '@/components/ui/use-toast';
 import Spinner from '@/components/spinner';
-import { getAccessToken } from './utils';
+import { decryptToken } from './utils';
+import { decode } from 'punycode';
 
 //Profile Component
 export default function Profile() {
@@ -37,6 +38,7 @@ export default function Profile() {
   const code = searchParams.get('code');
   const org_id = searchParams.get('org_id');
   const redirect_url = searchParams.get('redirect_url');
+  const ac_token = searchParams.get('redirect_url');
 
   //from widget store
   // const setOrgData = useOrgData(state => state.setOrgData);
@@ -95,10 +97,10 @@ export default function Profile() {
       return;
     }
     setLoading2(true);
-    const token = getAccessToken(code ? code : '');
+    const token = decryptToken(ac_token ? ac_token : '');
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/widget/settings?full_name=${username}&&code=${code}&&Access_token=${token}&&redirect_url=${redirect_url}`,
+        `https://api.trustauthx.com/user/me/widget/settings?full_name=${username}&code=${code}&Access_token=${token}&redirect_url=${redirect_url}`,
         {
           method: 'GET',
           headers: {
@@ -150,9 +152,9 @@ export default function Profile() {
       } else {
         await uploadImageToS3();
       }
-      const token = getAccessToken(code ? code : '');
+      const token = decryptToken(ac_token ? ac_token : '');
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/widget/settings?img=${image}&&code=${code}&&Access_token=${token}&&redirect_url=${redirect_url}`,
+        `https://api.trustauthx.com/user/me/widget/settings?img=${image}&code=${code}&Access_token=${token}&redirect_url=${redirect_url}`,
         {
           method: 'GET',
           headers: {
