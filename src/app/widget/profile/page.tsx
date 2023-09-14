@@ -19,7 +19,7 @@ import { useToast } from '@/components/ui/use-toast';
 import SkeletonProfile from './profileSkeleton';
 import Profile from './ProfileTab';
 import Security from './SecurityTab';
-
+import { getAccessToken } from './utils';
 //profile image
 //username
 //password
@@ -94,22 +94,8 @@ export default function WidgetProfile() {
     }
   }
 
-  const getAccessToken = (): string => {
-    const cookies = document.cookie.split(';');
-    let token = '';
-    for (const cookie of cookies) {
-      // split the cookie into name and value
-      const [key, value] = cookie.split('=');
-      // if the key matches code, return the value
-      if (key === code) {
-        token = value;
-      }
-    }
-    return token;
-  };
-
   async function getUserToken() {
-    const token = getAccessToken();
+    const token = getAccessToken(code ? code : '');
 
     try {
       const response = await fetch(
@@ -133,7 +119,6 @@ export default function WidgetProfile() {
       throw new Error(errMsg);
     }
   }
-  // "solved the reading undefined error in fetching userData in widget/profile"
   async function getUserDetails(userToken: string) {
     try {
       const response = await fetch(
@@ -163,6 +148,7 @@ export default function WidgetProfile() {
       throw new Error(errMsg);
     }
   }
+
   async function getUserData() {
     // console.log('user_token:', user_token);
     try {
@@ -175,6 +161,7 @@ export default function WidgetProfile() {
           }
         }
       );
+      //code=607
 
       const userData = (await response.json()) as UserProfileData;
       const org_id = Object.keys(userData.data.partner)[0];
