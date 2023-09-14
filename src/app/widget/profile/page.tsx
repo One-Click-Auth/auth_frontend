@@ -133,7 +133,7 @@ export default function WidgetProfile() {
       throw new Error(errMsg);
     }
   }
-
+  // "solved the reading undefined error in fetching userData in widget/profile"
   async function getUserDetails(userToken: string) {
     try {
       const response = await fetch(
@@ -147,13 +147,15 @@ export default function WidgetProfile() {
       );
 
       const userData = (await response.json()) as UserProfileData;
-      console.log(userData.data.partner.org_id);
-      setUsername(userData.data.partner.org_id.full_name);
-      setImage(userData.data.partner.org_id.img);
-      setEmail(userData.email);
-      setPassword(userData.data.partner.org_id.password);
-      setMfa(userData.data.partner.org_id.fa2);
+      const org_id = Object.keys(userData.data.partner)[0];
+      console.log(userData.data.partner[org_id]);
       setUserData(userData);
+      setUsername(userData.data.partner[org_id].full_name);
+      setImage(userData.data.partner[org_id].img);
+      setEmail(userData.email);
+      setPassword(userData.data.partner[org_id].password);
+      setMfa(userData.data.partner[org_id].fa2);
+
       return;
     } catch (error) {
       const errMsg = (error as Error).message;
@@ -175,13 +177,14 @@ export default function WidgetProfile() {
       );
 
       const userData = (await response.json()) as UserProfileData;
-
-      setUsername(userData.data.partner.org_id.full_name);
-      setImage(userData.data.partner.org_id.img);
-      setEmail(userData.email);
-      setPassword(userData.data.partner.org_id.password);
-      setMfa(userData.data.partner.org_id.fa2);
+      const org_id = Object.keys(userData.data.partner)[0];
+      console.log(userData.data.partner[org_id]);
       setUserData(userData);
+      setUsername(userData.data.partner[org_id].full_name);
+      setImage(userData.data.partner[org_id].img);
+      setEmail(userData.email);
+      setPassword(userData.data.partner[org_id].password);
+      setMfa(userData.data.partner[org_id].fa2);
       return;
     } catch (error) {
       const errMsg = (error as Error).message;
