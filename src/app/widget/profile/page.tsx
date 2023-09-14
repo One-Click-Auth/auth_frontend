@@ -39,8 +39,7 @@ export default function WidgetProfile() {
   const org_id = searchParams.get('org_id');
   const redirect_url = searchParams.get('redirect_url');
 
-  const set_user_token = useToken(state => state.set_user_token);
-  const user_token = useToken(state => state.user_token);
+  const { set_user_token, user_token } = useToken();
   //to fetch the org token from the store
   //  const storeOrg_token = useOrgData(state => state.org_token);
   //to fetch the org data from the store
@@ -71,6 +70,9 @@ export default function WidgetProfile() {
         return;
       });
   }, []);
+  useEffect(() => {
+    console.log(user_token);
+  }, [user_token]);
 
   async function fetchOrgDetails() {
     try {
@@ -141,6 +143,7 @@ export default function WidgetProfile() {
   }
 
   async function getUserData() {
+    console.log('user_token:', user_token);
     try {
       const response = await fetch(
         `https://api.trustauthx.com/user/me/auth/data?userToken=${user_token}`,
