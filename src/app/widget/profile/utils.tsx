@@ -1,14 +1,13 @@
 export const getAccessToken = (code: string): string => {
   const cookies = document.cookie.split(';');
-  let token = '';
   for (const cookie of cookies) {
     // split the cookie into name and value
     const [key, value] = cookie.split('=');
     // if the key matches code, return the value
-    if (key === code) {
-      token = value;
+    if (key.trim() === code) {
+      console.log(value);
+      return value;
     }
   }
-  console.log(token);
-  return token;
+  return 'could not get Access_token';
 };
