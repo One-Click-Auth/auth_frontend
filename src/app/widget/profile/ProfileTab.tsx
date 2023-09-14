@@ -102,11 +102,11 @@ export default function Profile() {
       const response = await fetch(
         `https://api.trustauthx.com/user/me/widget/settings?full_name=${username}&code=${code}&Access_token=${token}&redirect_url=${redirect_url}`,
         {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json',
-            accept: 'application/json'
-          }
+          method: 'GET'
+          // headers: {
+          //   'content-type': 'application/json',
+          //   accept: 'application/json'
+          // }
         }
       );
       if (response.status === 307 || response.status === 200) {
@@ -156,11 +156,11 @@ export default function Profile() {
       const response = await fetch(
         `https://api.trustauthx.com/user/me/widget/settings?img=${image}&code=${code}&Access_token=${token}&redirect_url=${redirect_url}`,
         {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json',
-            accept: 'application/json'
-          }
+          method: 'GET'
+          // headers: {
+          //   'content-type': 'application/json',
+          //   accept: 'application/json'
+          // }
         }
       );
       if (response.status === 307 || response.status === 200) {
