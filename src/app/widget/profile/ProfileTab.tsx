@@ -69,11 +69,13 @@ export default function Profile() {
       );
 
       const userData = (await response.json()) as UserProfileData;
-
-      setUsername(userData.data.partner.org_id.full_name);
-      setImage(userData.data.partner.org_id.img);
-      setEmail(userData.email);
+      const org_id = Object.keys(userData.data.partner)[0];
+      console.log(userData.data.partner[org_id]);
       setUserData(userData);
+      setUsername(userData.data.partner[org_id].full_name);
+      setImage(userData.data.partner[org_id].img);
+      setEmail(userData.email);
+      return;
       return;
     } catch (error) {
       const errMsg = (error as Error).message;
