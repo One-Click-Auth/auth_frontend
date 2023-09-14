@@ -9,5 +9,6 @@ export const getAccessToken = (code: string): string => {
       token = value;
     }
   }
+  console.log(token);
   return token;
 };
