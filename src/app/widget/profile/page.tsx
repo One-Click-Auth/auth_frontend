@@ -165,7 +165,7 @@ export default function WidgetProfile() {
     // console.log('user_token:', user_token);
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth/data?userToken=${user_token}`,
+        `https://api.trustauthx.com/user/me/auth/data?UserToken=${user_token}`,
         {
           method: 'GET',
           headers: {
