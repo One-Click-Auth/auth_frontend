@@ -137,7 +137,7 @@ export default function WidgetProfile() {
   async function getUserDetails(userToken: string) {
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth/data?userToken=${userToken}`,
+        `https://api.trustauthx.com/user/me/auth/data?UserToken=${userToken}`,
         {
           method: 'GET',
           headers: {
