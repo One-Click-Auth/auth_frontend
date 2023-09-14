@@ -19,7 +19,7 @@ import { useToast } from '@/components/ui/use-toast';
 import SkeletonProfile from './profileSkeleton';
 import Profile from './ProfileTab';
 import Security from './SecurityTab';
-import { decryptToken } from './utils';
+import { getAccessToken } from './utils';
 //profile image
 //username
 //password
@@ -30,7 +30,7 @@ export default function WidgetProfile() {
   const code = searchParams.get('code');
   const org_id = searchParams.get('org_id');
   const redirect_url = searchParams.get('redirect_url');
-  const ac_token = searchParams.get('ac');
+  // const ac_token = searchParams.get('ac');
 
   const { set_user_token, user_token } = useToken();
   //to fetch the org token from the store
@@ -96,18 +96,17 @@ export default function WidgetProfile() {
   }
 
   async function getUserToken() {
-    const token = decryptToken(ac_token ? ac_token : '');
+    const token = getAccessToken(code ? code : '');
 
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/get/user-token?code=${code}`,
+        `https://api.trustauthx.com/user/me/get/user-token?code=${code}&Access_token=${token}`,
         {
           method: 'GET',
 
           headers: {
             'Content-Type': 'application/json',
-            accept: 'application/json',
-            Access_token: token
+            accept: 'application/json'
           }
         }
       );

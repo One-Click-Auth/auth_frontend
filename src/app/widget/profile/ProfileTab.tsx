@@ -25,7 +25,7 @@ import { IoCloudUpload } from 'react-icons/io5';
 import { create } from 'zustand';
 import { toast } from '@/components/ui/use-toast';
 import Spinner from '@/components/spinner';
-import { decryptToken } from './utils';
+import { getAccessToken } from './utils';
 import { decode } from 'punycode';
 
 //Profile Component
@@ -97,7 +97,7 @@ export default function Profile() {
       return;
     }
     setLoading2(true);
-    const token = decryptToken(ac_token ? ac_token : '');
+    const token = getAccessToken(code ? code : '');
     try {
       const response = await fetch(
         `https://api.trustauthx.com/user/me/widget/settings?full_name=${username}&code=${code}&Access_token=${token}&redirect_url=${redirect_url}`,
@@ -152,7 +152,7 @@ export default function Profile() {
       } else {
         await uploadImageToS3();
       }
-      const token = decryptToken(ac_token ? ac_token : '');
+      const token = getAccessToken(code ? code : '');
       const response = await fetch(
         `https://api.trustauthx.com/user/me/widget/settings?img=${image}&code=${code}&Access_token=${token}&redirect_url=${redirect_url}`,
         {
