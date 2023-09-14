@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 // export const getAccessToken = (code: string): string => {
 //   const cookies = document.cookie.split(';');
 //   for (const cookie of cookies) {
