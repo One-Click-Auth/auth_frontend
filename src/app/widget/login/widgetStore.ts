@@ -43,7 +43,7 @@ export type Social = {
     CLIENT_SECRET?: string;
   };
 };
- export interface Data {
+export interface Data {
   breach_pass_det: boolean;
   m2m: boolean;
   secret_m: boolean;
@@ -68,7 +68,7 @@ export type Social = {
   social: Social; // Update this type to match the actual structure of the "social" property
   widget: Widget;
   callback_url: string;
-} 
+}
 
 export interface OrgData {
   org_token: string;
@@ -145,16 +145,16 @@ export interface UserProfileData {
 }
 
 interface ProfileData_strore {
-  data:UserProfileData,
-  setProfileData: ( data: UserProfileData) => void;
+  data: UserProfileData;
+  setProfileData: (data: UserProfileData) => void;
 }
 
 const sampleProfileData: UserProfileData = {
-  email: "",
+  email: '',
   data: {
     partner: {
-      "": {
-        uid: "",
+      '': {
+        uid: '',
         img: 'https://openauthx.s3.ap-south-1.amazonaws.com/Group+39554+(1).svg',
         m2m: null,
         secret_m: null,
@@ -169,30 +169,30 @@ const sampleProfileData: UserProfileData = {
         booking: null,
         phone_fa2: null,
         forbidden: false,
-        full_name: "",
+        full_name: '',
         password: true,
         reg_date_utc: 0,
         social: {},
         others: null,
-        act: null,
-      },
-    },
+        act: null
+      }
+    }
   },
   fa2: false,
   email_verified: false,
-  ip: "",
+  ip: '',
   otp: null,
-  host: "",
+  host: '',
   scope: 0,
   pass_trial: 0,
   otp_trial: 0,
   exp: 0,
   time_limit: 0,
-  alt_id: "",
-  org_id: "",
-  validity: "",
-  api_key: "",
-  api_secret: "",
+  alt_id: '',
+  org_id: '',
+  validity: '',
+  api_key: '',
+  api_secret: '',
   reset_password: false,
   new_password: null,
   reset_totp: false,
@@ -209,71 +209,82 @@ const sampleProfileData: UserProfileData = {
   social_sign: false,
   SSO: {},
   widget: {
-    name: "",
-    logo_url: "https://openauthx.s3.ap-south-1.amazonaws.com/78f9802728f3132332091655a4498552_79-2.gif",
+    name: '',
+    logo_url:
+      'https://openauthx.s3.ap-south-1.amazonaws.com/78f9802728f3132332091655a4498552_79-2.gif',
     social: {},
-    redirect_url: "",
+    redirect_url: ''
   },
-  callback_url: "",
+  callback_url: ''
 };
 // to be used in the widget/profile
-export const useUserProfileData = create<ProfileData_strore>(set=>({
-  data:sampleProfileData,
-  setProfileData:(data: UserProfileData) =>
-  set((state) => ({
-    data: { ...data }
-  }))
-}))
+export const useUserProfileData = create<ProfileData_strore>(set => ({
+  data: sampleProfileData,
+  setProfileData: (data: UserProfileData) =>
+    set(state => ({
+      data: { ...data }
+    }))
+}));
 
 interface ProfileSlice {
-  email:string,
-  setEmail:(email:string)=>void,
-  username:string,
-  setUsername:(username:string)=>void,
-  image:string | null ,
-  setImage:(image:string |null)=>void
+  email: string;
+  setEmail: (email: string) => void;
+  username: string;
+  setUsername: (username: string) => void;
+  image: string | null;
+  setImage: (image: string | null) => void;
 }
 interface SecuritySlice {
-  mfa:boolean,
-  setMfa:(mfa:boolean)=>void
-  password:boolean,
-  setPassword:(password:boolean)=>void
+  mfa: boolean;
+  setMfa: (mfa: boolean) => void;
+  password: boolean;
+  setPassword: (password: boolean) => void;
 }
 
 type ProfileState = {
-  username:string,
-  image:string | null,
-  email:string 
-}
+  username: string;
+  image: string | null;
+  email: string;
+};
 
-const initialProfileState:ProfileState = {
-  username:'None',
-  email:'anyone@gmail.com',
-  image:'https://openauthx.s3.ap-south-1.amazonaws.com/Group+39554+(1).svg'
-}
+const initialProfileState: ProfileState = {
+  username: 'None',
+  email: 'anyone@gmail.com',
+  image: 'https://openauthx.s3.ap-south-1.amazonaws.com/Group+39554+(1).svg'
+};
 type SecurityState = {
-  mfa:boolean,
-  password:boolean
-}
-const initialSecurityState:SecurityState={
-  mfa:false,
-  password:false
-}
-export const profileStateCreator: StateCreator<ProfileSlice> = (set) => ({
+  mfa: boolean;
+  password: boolean;
+};
+const initialSecurityState: SecurityState = {
+  mfa: false,
+  password: false
+};
+export const profileStateCreator: StateCreator<ProfileSlice> = set => ({
   ...initialProfileState,
-  setEmail: (email)=> set((state) => ({ ...state, email })),
-  setUsername: (username) => set((state) => ({ ...state, username })),
-  setImage: (image) => set((state) => ({ ...state, image })),
+  setEmail: email => set(state => ({ ...state, email })),
+  setUsername: username => set(state => ({ ...state, username })),
+  setImage: image => set(state => ({ ...state, image }))
 });
 
-export const securityStateCreator: StateCreator<SecuritySlice> = (set) => ({
+export const securityStateCreator: StateCreator<SecuritySlice> = set => ({
   ...initialSecurityState,
-  setMfa: (mfa) => set((state) => ({ ...state, mfa })),
-  setPassword: (password) => set((state) => ({ ...state, password })),
+  setMfa: mfa => set(state => ({ ...state, mfa })),
+  setPassword: password => set(state => ({ ...state, password }))
 });
 
 export const useProfileStore = create(profileStateCreator);
 export const useSecurityStore = create(securityStateCreator);
+
+type UseToken = {
+  user_token: string;
+  set_user_token: (token: string) => void;
+};
+
+export const useToken = create<UseToken>(set => ({
+  user_token: '',
+  set_user_token: (token: string) => set(() => ({ user_token: token }))
+}));
 
 const socialDefaults: Social = {
   github: {

@@ -8,25 +8,17 @@ import {
   UserProfileData,
   useUserProfileData,
   useProfileStore,
-  useSecurityStore
+  useSecurityStore,
+  useToken
 } from '../login/widgetStore';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSearchParams } from 'next/navigation';
-import { create } from 'zustand';
+
 import { useToast } from '@/components/ui/use-toast';
 import SkeletonProfile from './profileSkeleton';
 import Profile from './ProfileTab';
 import Security from './SecurityTab';
-type UseToken = {
-  user_token: string;
-  set_user_token: (token: string) => void;
-};
-
-const useToken = create<UseToken>(set => ({
-  user_token: '',
-  set_user_token: (token: string) => set(() => ({ user_token: token }))
-}));
 
 //profile image
 //username
@@ -58,7 +50,7 @@ export default function WidgetProfile() {
   useEffect(() => {
     fetchOrgDetails()
       .then(() => getUserToken())
-      .then(() => getUserData())
+      .then(userToken => getUserDetails(userToken))
       .then(() => setLoading1(false))
       .catch(error => {
         const errMsg = (error as Error).message;
@@ -134,7 +126,7 @@ export default function WidgetProfile() {
       );
       const data = (await response.json()) as string;
       set_user_token(data);
-      return;
+      return data;
     } catch (error) {
       console.log(error);
       const errMsg = (error as Error).message;
@@ -142,8 +134,35 @@ export default function WidgetProfile() {
     }
   }
 
+  async function getUserDetails(userToken: string) {
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth/data?userToken=${userToken}`,
+        {
+          method: 'GET',
+          headers: {
+            accept: 'application/json'
+          }
+        }
+      );
+
+      const userData = (await response.json()) as UserProfileData;
+
+      setUsername(userData.data.partner.org_id.full_name);
+      setImage(userData.data.partner.org_id.img);
+      setEmail(userData.email);
+      setPassword(userData.data.partner.org_id.password);
+      setMfa(userData.data.partner.org_id.fa2);
+      setUserData(userData);
+      return;
+    } catch (error) {
+      const errMsg = (error as Error).message;
+      console.log(error);
+      throw new Error(errMsg);
+    }
+  }
   async function getUserData() {
-    console.log('user_token:', user_token);
+    // console.log('user_token:', user_token);
     try {
       const response = await fetch(
         `https://api.trustauthx.com/user/me/auth/data?userToken=${user_token}`,
