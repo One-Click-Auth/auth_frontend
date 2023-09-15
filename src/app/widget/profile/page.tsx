@@ -50,8 +50,8 @@ export default function WidgetProfile() {
 
   useEffect(() => {
     fetchOrgDetails()
-      .then(() => getUserToken())
-      .then(userToken => getUserDetails(userToken))
+      // .then(() => getUserToken())
+      // .then(userToken => getUserDetails(userToken))
       .then(() => setLoading1(false))
       .catch(error => {
         const errMsg = (error as Error).message;
@@ -63,9 +63,6 @@ export default function WidgetProfile() {
         return;
       });
   }, []);
-  useEffect(() => {
-    console.log(user_token);
-  }, [user_token]);
 
   async function fetchOrgDetails() {
     try {

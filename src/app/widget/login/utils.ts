@@ -7,9 +7,9 @@ export const decryptCode = (mfa: string): string => {
 };
 //to test input password string
 export const testPass = (password: string): boolean => {
-  return !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,1000}$/.test(
-    password
-  );
+  // /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,1000}$/
+
+  return !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/.test(password);
 };
 //correct password msg
 export const passMsg =
@@ -17,7 +17,7 @@ export const passMsg =
 
 //to test input OTP
 export const testOTP = (otp: string): boolean => {
-  //OTP should be 6 digits long and all the digits should not be
+  //OTP should be 6 digits long and all the digits should not be 0
   return !/^(?!.*000000)\d{6}$/.test(otp);
 };
 

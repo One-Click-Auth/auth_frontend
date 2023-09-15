@@ -2,12 +2,7 @@
 
 'use client';
 import OtpInput from 'react-otp-input';
-import {
-  testPass,
-  passMsg,
-  testOTP,
-  convertToApproxTime
-} from './utils';
+import { testPass, passMsg, testOTP, convertToApproxTime } from './utils';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -26,6 +21,7 @@ import { MdEmail } from 'react-icons/md';
 import { VscEye, VscEyeClosed } from 'react-icons/vsc';
 import { PasswordCheck } from './components/PasswodCheck';
 import { useToast } from '@/components/ui/use-toast';
+import { string } from 'yup';
 export default function Widget() {
   //store function to set the org data in the store. It takes two arguments org token and org data.
   const setOrgData = useOrgData(state => state.setOrgData);
@@ -136,12 +132,13 @@ export default function Widget() {
         }
       );
 
-      const data = (await response.json()) as any;
+      const data = (await response.json()) as {
+        detail?: string;
+        user_token: string;
+      };
       setLoading2(false);
 
       if (data.detail) {
-        //show the message of password already set
-        // setErrMsg(data.detail);
         toast({
           title: 'Invalid Passsword',
           description: data.detail,
@@ -149,7 +146,7 @@ export default function Widget() {
         });
         return;
       }
-      const { user_token, msg } = data;
+      const { user_token } = data;
       setLoading2(false);
       if (response.status === 200) {
         setCurrentUserToken(user_token);
