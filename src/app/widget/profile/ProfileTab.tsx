@@ -23,38 +23,28 @@ import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 import { useSearchParams } from 'next/navigation';
 import { IoCloudUpload } from 'react-icons/io5';
 import { create } from 'zustand';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import Spinner from '@/components/spinner';
 import { getAccessToken } from './utils';
 import { decode } from 'punycode';
 
 //Profile Component
 export default function Profile() {
-  // type logoImage = string
-  // type setLogoImage = (logoImage: string) => void;
-  // type setLogo = (logo: File | undefined) => void;
-  // type logo = URL;
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
   const org_id = searchParams.get('org_id');
   const redirect_url = searchParams.get('redirect_url');
-  const ac_token = searchParams.get('redirect_url');
 
   //from widget store
   // const setOrgData = useOrgData(state => state.setOrgData);
   const setUserData = useUserProfileData(state => state.setProfileData);
   const userData = useUserProfileData(state => state.data);
-
-  // const userPartnerdata = userData.data.partner.org_id
-  //created in this file only
   const { set_user_token, user_token } = useToken();
 
   const [loading1, setLoading1] = useState<boolean>(false);
   const [loading2, setLoading2] = useState<boolean>(false);
-
-  const [s3ImageUrl, setS3ImageUrl] = useState('');
   const [imageFile, setImageFile] = useState<File>();
-  const [imagePrev, setImagePrev] = useState<string>('');
   const [imageUrl, setImageUrl] = useState('');
   const { username, image, email, setUsername, setImage, setEmail } =
     useProfileStore();
@@ -79,7 +69,6 @@ export default function Profile() {
       setImage(userData.data.partner[org_id].img);
       setEmail(userData.email);
       return;
-      return;
     } catch (error) {
       const errMsg = (error as Error).message;
       console.log(error);
@@ -92,35 +81,61 @@ export default function Profile() {
       toast({
         variant: 'destructive',
         title: 'Error!',
-        description: `please put a username`
+        description: `please put a username first`
       });
       return;
     }
     setLoading2(true);
-    const token = getAccessToken(code ? code : '');
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/widget/settings?full_name=${username}&code=${code}&Access_token=${token}&redirect_url=${redirect_url}`,
+        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
         {
-          method: 'GET'
-          // headers: {
-          //   'content-type': 'application/json',
-          //   accept: 'application/json'
-          // }
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            Upd: {
+              full_name: username
+            }
+          })
         }
       );
-      if (response.status === 307 || response.status === 200) {
+      const data = (await response.json()) as {
+        detail?: string;
+        user_token: string;
+      };
+      const token = data.user_token;
+      if (token) {
+        set_user_token(token);
+      }
+      if (data.detail) {
+        toast({
+          title: 'Error',
+          description: data.detail,
+          variant: 'destructive'
+        });
+        setLoading2(false);
+        return;
+      }
+      if (response.status === 200) {
         toast({
           variant: 'success',
           title: 'Success!',
-          description: 'Profile Updated successfully'
+          description: 'Username Updated successfully'
         });
         setLoading2(false);
-        await getUserData();
+        getUserData();
+        return;
+      } else if (response.status !== 200) {
+        toast({
+          variant: 'destructive',
+          title: 'Error!',
+          description: `Some error occured with the request`
+        });
+        setLoading2(false);
         return;
       }
-      setLoading2(false);
-      return;
     } catch (error) {
       console.log(error);
       const errMsg = (error as Error).message;
@@ -130,6 +145,7 @@ export default function Profile() {
         description: `${errMsg}`
       });
       setLoading2(false);
+      return;
     }
   }
   //to save profile image
@@ -152,18 +168,38 @@ export default function Profile() {
       } else {
         await uploadImageToS3();
       }
-      const token = getAccessToken(code ? code : '');
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/widget/settings?img=${image}&code=${code}&Access_token=${token}&redirect_url=${redirect_url}`,
+        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
         {
-          method: 'GET'
-          // headers: {
-          //   'content-type': 'application/json',
-          //   accept: 'application/json'
-          // }
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            Upd: {
+              img: image
+            }
+          })
         }
       );
-      if (response.status === 307 || response.status === 200) {
+      const data = (await response.json()) as {
+        detail?: string;
+        user_token: string;
+      };
+      const token = data.user_token;
+      if (token) {
+        set_user_token(token);
+      }
+      if (data.detail) {
+        toast({
+          title: 'Error',
+          description: data.detail,
+          variant: 'destructive'
+        });
+        setLoading1(false);
+        return;
+      }
+      if (response.status === 200) {
         toast({
           variant: 'success',
           title: 'Success!',
@@ -224,6 +260,7 @@ export default function Profile() {
         }
       }
     } catch (error) {
+      console.log(error);
       throw new Error('some error occured with request');
     }
   }

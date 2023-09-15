@@ -11,31 +11,47 @@ import {
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Separator } from '@/components/ui/separator';
-import { useOrgData, useSecurityStore, useToken } from '../login/widgetStore';
-
+import {
+  UserProfileData,
+  useUserProfileData,
+  useOrgData,
+  useSecurityStore,
+  useToken
+} from '../login/widgetStore';
 import { PasswordCheck } from '../login/components/PasswodCheck';
 import OTPInput from 'react-otp-input';
 import { QRCodeSVG } from 'qrcode.react';
-import { create } from 'zustand';
 import { Dialog, DialogTrigger } from '@/components/ui/Dialog';
 import { CodeDialogue } from './codeDialogue';
+import { useToast } from '@/components/ui/use-toast';
+import {
+  testPass,
+  testOTP,
+  decryptCode,
+  convertToApproxTime
+} from '../login/utils';
+import { data } from 'autoprefixer';
+import Spinner from '@/components/spinner';
 
 //Security Component
 export default function Security() {
+  const { toast } = useToast();
   const { set_user_token, user_token } = useToken();
-
   const { password, mfa, setPassword, setMfa } = useSecurityStore();
   const storeOrgData = useOrgData(state => state.data);
+  const setUserData = useUserProfileData(state => state.setProfileData);
   const [pass, setPass] = useState('');
   const [otp, setOtp] = useState('');
   const [otp2, setOtp2] = useState('');
-  // const [loading1, setLoading1] = useState(false)
-  // const [loading2, setLoading2] = useState(false)
+  const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [showChecks, setShowChecks] = useState<boolean>(false);
   const [showQr, setShowQr] = useState(false);
-  const [showMfa, setShowMfa] = useState(false);
-  const [loading1, setLoading1] = useState(false);
-  // const [disabled1, setDisabled1] = useState(false);
+  const [qrCode, setQrCode] = useState('');
+
+  const [mfaCode, setMfaCode] = useState(''); //text code for mfa activation by using code
+  const [showMfa, setShowMfa] = useState(false); //to show and hide the mfa activation section
+  const [disabled1, setDisabled1] = useState(true);
 
   useEffect(() => {
     if (pass.length > 0) {
@@ -43,29 +59,285 @@ export default function Security() {
     } else {
       setShowChecks(false);
     }
+    if (!testPass(pass)) {
+      setDisabled1(false);
+    } else {
+      setDisabled1(true);
+    }
   }, [pass]);
 
-  async function registerMfa() {
-    setOtp2('');
-    setOtp('');
-    setShowMfa(state => !state);
-    setShowQr(true);
+  useEffect(() => {
+    if (!testOTP(otp)) {
+      handleMfa(true, otp);
+    }
+  }, [otp]);
+
+  useEffect(() => {
+    if (!testOTP(otp2)) {
+      handleMfa(false, otp2);
+    }
+  }, [otp2]);
+
+  async function mfaRequest() {
+    setLoading2(true);
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            switch_mfa: true
+          })
+        }
+      );
+
+      const data = (await response.json()) as {
+        detail?: string;
+        user_token: string;
+        mfa_code: string;
+      };
+      setLoading2(false);
+      if (data.detail) {
+        toast({
+          title: 'Error!',
+          description: data.detail,
+          variant: 'destructive'
+        });
+        return;
+      }
+      if (data.user_token) {
+        set_user_token(data.user_token);
+      }
+      if (response.status === 203 || response.status == 200) {
+        const code = decryptCode(data.mfa_code);
+        setQrCode(code);
+        setOtp('');
+        setShowMfa(true);
+        setShowQr(true);
+        console.log(code);
+        return;
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Some error occured with the request',
+        variant: 'destructive'
+      });
+      console.log(error);
+      setLoading2(false);
+      return;
+    }
+  }
+  async function handleMfa(action: boolean, totp: string) {
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            totp: totp,
+            switch_mfa: action
+          })
+        }
+      );
+      const data = (await response.json()) as any;
+      if (data.detail) {
+        toast({
+          title: 'Error!',
+          description: data.detail,
+          variant: 'destructive'
+        });
+        return;
+      }
+      if (data.user_token) {
+        set_user_token(data.user_token);
+      }
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          description: action
+            ? 'MFA Successfully Activated.'
+            : 'MFA disabled Successfully.'
+        });
+        setOtp('');
+        setOtp2('');
+        setShowMfa(false);
+        setShowQr(false);
+        getUserData();
+      } else if (response.status === 402) {
+        //for incorrect otp
+        const msg =
+          data.msg +
+          ',  ' +
+          (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
+
+        toast({
+          variant: 'destructive',
+          description: msg
+        });
+        return;
+      } else if (response.status === 429) {
+        //when maximum tries for otp has been reached by the user
+        const timeRegex = /(\d+):(\d+):(\d+\.\d+)/;
+        const matches = data.detail?.match(timeRegex);
+        const time = convertToApproxTime(matches[0]);
+        const msg = `maximum tries reached! Try again after ${
+          time || 'some time'
+        }`;
+        toast({
+          variant: 'destructive',
+          description: msg
+        });
+        setOtp('');
+        setOtp2('');
+        setShowMfa(false);
+        setShowQr(false);
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: 'destructive',
+        title: 'Error!',
+        description: 'Some error occured with the request'
+      });
+      return;
+    }
   }
   async function disableMfa() {
     setOtp('');
     setOtp2('');
-    setShowMfa(state => !state);
+    setShowMfa(true);
     setShowQr(false);
   }
-  // async function passwordRequest(){
+  // async function forgotMfa(){
+  //   try {
+  //     const response = await fetch(
+  //       `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
+  //       {
+  //         method: 'PUT',
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         },
+  //         body: JSON.stringify({
+  //           "forget_totp": true
+  //         })
+  //       }
+  //     );
+  //     const data = (await response.json()) as any;
+  //     if(data.detail){
+  //       toast({
+  //         title: 'Error!',
+  //         description: data.detail,
+  //         variant: 'destructive'
+  //       });
+  //       return;
+  //     }
+  //     if(data.user_token){
+  //       set_user_token(data.user_token);
+  //     }
+  //     if( response.status === 200){
+  //       toast({
+  //         variant:'success',
+  //         description:'MFA removed successfully. You can request for mfa again.'
+  //      })
+  //     }
 
+  //   } catch (error) {
+
+  //   }
   // }
+
+  async function newPasswordRequest() {
+    setLoading1(true);
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            new_user_password: pass
+          })
+        }
+      );
+      const data = (await response.json()) as {
+        detail?: string;
+        user_token: string;
+      };
+      const token = data.user_token;
+      if (token) {
+        set_user_token(token);
+      }
+      if (data.detail) {
+        toast({
+          title: 'Error',
+          description: data.detail,
+          variant: 'destructive'
+        });
+        setLoading1(false);
+        return;
+      }
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success!',
+          description: 'Password set successfully'
+        });
+        setLoading1(false);
+        setPass('');
+        getUserData();
+        return;
+      }
+    } catch (error) {
+      setLoading1(false);
+      const errMsg = (error as Error).message;
+      toast({
+        description: `${errMsg}`,
+        variant: 'destructive'
+      });
+      return;
+    }
+  }
+
+  async function getUserData() {
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth/data?userToken=${user_token}`,
+        {
+          method: 'GET',
+          headers: {
+            accept: 'application/json'
+          }
+        }
+      );
+
+      const userData = (await response.json()) as UserProfileData;
+      const org_id = Object.keys(userData.data.partner)[0];
+      console.log(userData.data.partner[org_id]);
+      setUserData(userData);
+      setPassword(userData.data.partner[org_id].password);
+      setMfa(userData.data.partner[org_id].fa2);
+      return;
+    } catch (error) {
+      const errMsg = (error as Error).message;
+      console.log(error);
+      throw new Error(errMsg);
+    }
+  }
 
   const otpInputStyle = {
     borderRadius: '0.5rem',
     border: '1.3px solid',
     borderColor: `black`,
-    // "!w-10 h-10 border bg-transparent text-center rounded-xl"
     background: 'transparent',
     height: '2.2rem',
     width: '2.2rem'
@@ -122,7 +394,8 @@ export default function Security() {
             <Button
               variant={'black'}
               className="w-full sm:w-[140px] sm:min-w-[140px]"
-              disabled={password || loading1}
+              disabled={password || loading1 || disabled1}
+              onClick={newPasswordRequest}
             >
               Save Update
             </Button>
@@ -162,10 +435,18 @@ export default function Security() {
                     ) : (
                       <Button
                         variant={'black'}
+                        disabled={loading2}
                         className="w-full sm:w-[140px] sm:min-w-[140px]"
-                        onClick={registerMfa}
+                        onClick={mfaRequest}
                       >
-                        Enable MFA
+                        {loading2 ? (
+                          <div className="flex gap-2 items-center text-gray-400">
+                            <Spinner size={15} color="gray" />
+                            <span>...requesting</span>
+                          </div>
+                        ) : (
+                          'Enable MFA'
+                        )}
                       </Button>
                     )}
                   </>
@@ -196,7 +477,7 @@ export default function Security() {
 
                 <div className={` ${showQr ? '' : 'hidden'} `}>
                   <QRCodeSVG
-                    value="https://kqwhjskqwjhqkwjshedwqed=wswq"
+                    value={qrCode}
                     className="mt-4 sm:mt-0"
                     size={120}
                   />
