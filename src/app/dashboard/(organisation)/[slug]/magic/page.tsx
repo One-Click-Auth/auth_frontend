@@ -15,6 +15,9 @@ function Page() {
   const [isSendingGenerateRequest, setIsSendingGenerateRequest] =
     useState(false);
   const [isUploadingToS3, setIsUploadingToS3] = useState(false);
+  const [apiURL, setApiURL] = useState(
+    'https://api-inference.huggingface.co/models/moonlightnexus/RealityCreation'
+  );
   let blob: Blob | null = null;
   const [imageURL, setImageURL] = useState('');
 
@@ -54,15 +57,14 @@ function Page() {
   ): Promise<AxiosResponse | null> {
     const API_TOKEN = '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';
     const headers = { Authorization: `Bearer ${API_TOKEN}` };
-    const API_URL =
-      'https://api-inference.huggingface.co/models/moonlightnexus/RealityCreation';
 
     try {
       return await axios.post(
-        API_URL,
+        apiURL,
         { inputs },
         {
-          headers: headers
+          headers: headers,
+          responseType: 'arraybuffer'
         }
       );
     } catch (err) {
@@ -123,7 +125,7 @@ function Page() {
             className="border-dashed border-2
            border-[#9747FF] p-7 rounded-lg"
           >
-            <RadioGroup />
+            <RadioGroup setApiURL={setApiURL} apiURL={apiURL} />
           </div>
 
           <div className=" flex flex-col mt-14 gap-11">
