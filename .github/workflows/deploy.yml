@@ -9,8 +9,38 @@ jobs:
   deploy_dev:
     name: Build and Deploy to Dev
     runs-on: ubuntu-latest
-
+   
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image with secrets as build args
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_SECRET: ${{ secrets.DOCKER_SECRET }}
+          PORT: ${{ secrets.PORT }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          _ACCESS_KEY_ID: ${{ secrets._ACCESS_KEY_ID }}
+          _S3_BUCKET: ${{ secrets._S3_BUCKET }}
+          _S3_REGION: ${{ secrets._S3_REGION }}
+          _SECRET_ACCESS_KEY: ${{ secrets._SECRET_ACCESS_KEY }}
+        run: |
+          echo $DOCKER_SECRET | docker login docker.io/internal-trustauthx:latest -u $DOCKER_USERNAME --password-stdin
+
+          # Build the Docker image with build arguments
+          docker build \
+            --build-arg PORT=${PORT} \
+            --build-arg NEXTAUTH_SECRET=${NEXTAUTH_SECRET} \
+            --build-arg NEXTAUTH_URL=${NEXTAUTH_URL} \
+            --build-arg ACCESS_KEY_ID=${_ACCESS_KEY_ID} \
+            --build-arg S3_BUCKET=${_S3_BUCKET} \
+            --build-arg S3_REGION=${_S3_REGION} \
+            --build-arg SECRET_ACCESS_KEY=${_SECRET_ACCESS_KEY} \
+            -t my-nextjs-app .
+          docker tag my-nextjs-app:latest moonlightnexus/internal-trustauthx:latest
+          docker push moonlightnexus/internal-trustauthx:latest
+
       - name: Deploy to Dev using SSH
         env:
           AWS_EC2_PEM: ${{ secrets.AWS_EC2_DEV_PEM }}
@@ -21,12 +51,9 @@ jobs:
 
           cat << 'EOF' > deploy_script.sh
            #!/bin/bash
-           cd /home/ubuntu/auth_frontend
-           sudo git pull
-           sudo docker build -t auth:latest .
            sudo docker stop nextjs || true
            sudo docker rm nextjs || true
-           sudo docker run -d --name nextjs -p 3000:3000 auth:latest
+           sudo docker run -d --name nextjs -p 3000:3000 moonlightnexus/internal-trustauthx
           EOF
 
           scp -o StrictHostKeyChecking=no -i private.pem deploy_script.sh ${AWS_EC2_USERNAME}@${AWS_EC2_PUBLIC_IP}:~/deploy_script.sh
