@@ -26,7 +26,13 @@ jobs:
           SECRET_ACCESS_KEY: ${{ secrets._SECRET_ACCESS_KEY }}
         run: |
           echo $DOCKER_SECRET | docker login docker.io -u $DOCKER_USERNAME --password-stdin
-          docker pull moonlightnexus/internal-trustauthx
+      
+      - name: Pull Docker image if exists
+        continue-on-error: true
+        run: docker pull moonlightnexus/internal-trustauthx:latest
+     
+      - name: Build Docker image with secrets as build args
+        run: |
           # Build the Docker image with build arguments
           docker build \
             --build-arg NEXTAUTH_SECRET=${NEXTAUTH_SECRET} \
