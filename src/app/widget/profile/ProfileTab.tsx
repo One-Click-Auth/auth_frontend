@@ -22,11 +22,8 @@ import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 
 import { useSearchParams } from 'next/navigation';
 import { IoCloudUpload } from 'react-icons/io5';
-import { create } from 'zustand';
 import { useToast } from '@/components/ui/use-toast';
 import Spinner from '@/components/spinner';
-import { getAccessToken } from './utils';
-import { decode } from 'punycode';
 
 //Profile Component
 export default function Profile() {

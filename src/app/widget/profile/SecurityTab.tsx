@@ -30,9 +30,8 @@ import {
   decryptCode,
   convertToApproxTime
 } from '../login/utils';
-import { data } from 'autoprefixer';
 import Spinner from '@/components/spinner';
-
+import { AiFillCloseCircle } from 'react-icons/ai';
 //Security Component
 export default function Security() {
   const { toast } = useToast();
@@ -43,13 +42,15 @@ export default function Security() {
   const [pass, setPass] = useState('');
   const [otp, setOtp] = useState('');
   const [otp2, setOtp2] = useState('');
-  const [loading1, setLoading1] = useState(false);
-  const [loading2, setLoading2] = useState(false);
+  const [loading1, setLoading1] = useState(false); //for password
+  const [loading2, setLoading2] = useState(false); //for mfa
+  const [loading3, setLoading3] = useState(false); //for forgot mfa
+
   const [showChecks, setShowChecks] = useState<boolean>(false);
   const [showQr, setShowQr] = useState(false);
   const [qrCode, setQrCode] = useState('');
 
-  const [mfaCode, setMfaCode] = useState(''); //text code for mfa activation by using code
+  const [mfaCode, setMfaCode] = useState<string | null>(''); //text code for mfa activation by using code
   const [showMfa, setShowMfa] = useState(false); //to show and hide the mfa activation section
   const [disabled1, setDisabled1] = useState(true);
 
@@ -114,6 +115,8 @@ export default function Security() {
       if (response.status === 203 || response.status == 200) {
         const code = decryptCode(data.mfa_code);
         setQrCode(code);
+        const url = new URL(code);
+        setMfaCode(url.searchParams.get('secret'));
         setOtp('');
         setShowMfa(true);
         setShowQr(true);
@@ -216,43 +219,50 @@ export default function Security() {
     setShowMfa(true);
     setShowQr(false);
   }
-  // async function forgotMfa(){
-  //   try {
-  //     const response = await fetch(
-  //       `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
-  //       {
-  //         method: 'PUT',
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         },
-  //         body: JSON.stringify({
-  //           "forget_totp": true
-  //         })
-  //       }
-  //     );
-  //     const data = (await response.json()) as any;
-  //     if(data.detail){
-  //       toast({
-  //         title: 'Error!',
-  //         description: data.detail,
-  //         variant: 'destructive'
-  //       });
-  //       return;
-  //     }
-  //     if(data.user_token){
-  //       set_user_token(data.user_token);
-  //     }
-  //     if( response.status === 200){
-  //       toast({
-  //         variant:'success',
-  //         description:'MFA removed successfully. You can request for mfa again.'
-  //      })
-  //     }
 
-  //   } catch (error) {
-
-  //   }
-  // }
+  async function forgotMfa() {
+    try {
+      const response = await fetch(
+        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            forget_totp: true
+          })
+        }
+      );
+      const data = (await response.json()) as any;
+      if (data.detail) {
+        toast({
+          title: 'Error!',
+          description: data.detail,
+          variant: 'destructive'
+        });
+        return;
+      }
+      if (data.user_token) {
+        set_user_token(data.user_token);
+      }
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          description:
+            'MFA removed successfully. You can request for mfa again.'
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: 'destructive',
+        title: 'Error!',
+        description: 'Some error occured with the request'
+      });
+      return;
+    }
+  }
 
   async function newPasswordRequest() {
     setLoading1(true);
@@ -416,6 +426,9 @@ export default function Security() {
                         ? 'Scan the QR and Enter the OTP from your Authentication App to Turn on MFA'
                         : 'Enter OTP from your Authentication App to Turn off MFA'}
                     </p>
+                    <button onClick={() => setShowMfa(false)} className="">
+                      <AiFillCloseCircle />
+                    </button>
                   </>
                 ) : (
                   <>
@@ -424,14 +437,24 @@ export default function Security() {
                         ? 'Multi Factor authentication (MFA) is enabled'
                         : 'Multi Factor authentication (MFA) is disabled'}
                     </p>
+
                     {mfa ? (
-                      <Button
-                        variant={'black'}
-                        className="w-full sm:w-[140px] sm:min-w-[140px]"
-                        onClick={disableMfa}
-                      >
-                        Disable MFA
-                      </Button>
+                      <div className="space-y-4 sm:space-x-4 sm:space-y-0">
+                        <Button
+                          variant={'black'}
+                          className="w-full sm:w-[140px] sm:min-w-[140px]"
+                          onClick={disableMfa}
+                        >
+                          Disable MFA
+                        </Button>
+                        <Button
+                          variant={'destructive'}
+                          className="w-full sm:w-[140px] sm:min-w-[140px]"
+                          onClick={forgotMfa}
+                        >
+                          Forgot MFA
+                        </Button>
+                      </div>
                     ) : (
                       <Button
                         variant={'black'}
@@ -452,14 +475,15 @@ export default function Security() {
                   </>
                 )}
               </div>
+
               <div
-                className={` ${
+                className={`${
                   !showMfa
                     ? 'h-0 overflow-hidden'
                     : showQr
-                    ? 'h-[240px] sm:h-[160px]'
-                    : 'h-[`100px] mt-6'
-                } flex flex-col-reverse flecx-wrap sm:flex-row items-center w-full  p-0 gap-4 sm:gap-20 sm:mt-4`}
+                    ? 'h-[230px] sm:h-[160px]'
+                    : 'h-[`100px] '
+                } flex flex-col-reverse flecx-wrap sm:flex-row items-center w-full  p-0 gap-4 sm:gap-20 sm:mt-4 relative`}
               >
                 <div>
                   <OTPInput
@@ -475,17 +499,17 @@ export default function Security() {
                   {/* {!showQr?<Button className='rounded-full bg-[#004B6A] text-white font-normal hover px-6 h-6 mt-4 hover:bg-slate-400'>Forgot Mfa</Button>:''} */}
                 </div>
 
-                <div className={` ${showQr ? '' : 'hidden'} `}>
+                <div className={` ${showQr ? '' : ''} `}>
                   <QRCodeSVG
                     value={qrCode}
                     className="mt-4 sm:mt-0"
                     size={120}
                   />
                   <Dialog>
-                    <DialogTrigger className=" rounded-full bg-[#004B6A] text-white font-normal hover px-6 h-6 mt-4 hover:bg-slate-400  ">
+                    <DialogTrigger className=" rounded-full bg-[#004B6A] text-white font-normal hover px-6 h-6 mt-4 hover:bg-slate-400 ">
                       Use code
                     </DialogTrigger>
-                    <CodeDialogue code="wjkdehqkjdhqkj" />
+                    <CodeDialogue code={mfaCode} />
                   </Dialog>
                 </div>
               </div>

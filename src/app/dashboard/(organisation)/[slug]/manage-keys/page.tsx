@@ -10,7 +10,8 @@ import { useAuth } from '@/Providers/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { PasswordDialogue } from '@/app/dashboard/components/PasswordDialgue';
 
-import {Dialog, DialogTrigger } from '@/components/ui/Dialog';
+import { Dialog, DialogTrigger } from '@/components/ui/Dialog';
+
 type Key = { keyValue: string };
 function InputWithButtons({ keyValue }: Key) {
   const handleCopy = () => {
@@ -22,7 +23,7 @@ function InputWithButtons({ keyValue }: Key) {
     <div className="flex justify-center flex-wrap w-full items-center space-x-2 tracking-wide">
       <Input
         type={show ? 'text' : 'password'}
-        disabled
+        readOnly
         value={keyValue}
         className="bg-transparent appearance-none border-2 border-gray-200 rounded max-w-[80%] sm:max-w-[65%] w-full min-w-fit py-2 px-3 text-black leading-tight focus:outline-none focus:border-black"
       />
