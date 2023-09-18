@@ -44,7 +44,7 @@ export default function WidgetProfile() {
   const { username, image, email, setUsername, setImage, setEmail } =
     useProfileStore();
   const { password, mfa, setPassword, setMfa } = useSecurityStore();
-  const [loading1, setLoading1] = useState(false);
+  const [loading1, setLoading1] = useState(true);
 
   const { toast } = useToast();
 
