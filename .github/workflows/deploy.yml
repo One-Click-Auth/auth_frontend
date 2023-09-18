@@ -15,29 +15,32 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker image with secrets as build args
-        continue-on-error: true
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_SECRET: ${{ secrets.DOCKER_SECRET }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-          _ACCESS_KEY_ID: ${{ secrets._ACCESS_KEY_ID }}
-          _S3_BUCKET: ${{ secrets._S3_BUCKET }}
-          _S3_REGION: ${{ secrets._S3_REGION }}
-          _SECRET_ACCESS_KEY: ${{ secrets._SECRET_ACCESS_KEY }}
+          ACCESS_KEY_ID: ${{ secrets._ACCESS_KEY_ID }}
+          S3_BUCKET: ${{ secrets._S3_BUCKET }}
+          S3_REGION: ${{ secrets._S3_REGION }}
+          SECRET_ACCESS_KEY: ${{ secrets._SECRET_ACCESS_KEY }}
         run: |
-          echo $DOCKER_SECRET | docker login docker.io/moonlightnexus/internal-trustauthx:latest -u $DOCKER_USERNAME --password-stdin
+          echo $DOCKER_SECRET | docker login docker.io -u $DOCKER_USERNAME --password-stdin
       
+      - name: Pull Docker image if exists
+        continue-on-error: true
+        run: docker pull moonlightnexus/internal-trustauthx:latest
+     
       - name: Build Docker image with secrets as build args
         run: |
           # Build the Docker image with build arguments
           docker build \
             --build-arg NEXTAUTH_SECRET=${NEXTAUTH_SECRET} \
             --build-arg NEXTAUTH_URL=${NEXTAUTH_URL} \
-            --build-arg _ACCESS_KEY_ID=${_ACCESS_KEY_ID} \
-            --build-arg _S3_BUCKET=${_S3_BUCKET} \
-            --build-arg _S3_REGION=${_S3_REGION} \
-            --build-arg _SECRET_ACCESS_KEY=${_SECRET_ACCESS_KEY} \
+            --build-arg ACCESS_KEY_ID=${ACCESS_KEY_ID} \
+            --build-arg S3_BUCKET=${S3_BUCKET} \
+            --build-arg S3_REGION=${S3_REGION} \
+            --build-arg SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY} \
             -t my-nextjs-app .
           docker tag my-nextjs-app:latest moonlightnexus/internal-trustauthx:latest
           docker push moonlightnexus/internal-trustauthx:latest
