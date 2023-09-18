@@ -44,14 +44,14 @@ export default function WidgetProfile() {
   const { username, image, email, setUsername, setImage, setEmail } =
     useProfileStore();
   const { password, mfa, setPassword, setMfa } = useSecurityStore();
-  const [loading1, setLoading1] = useState(true);
+  const [loading1, setLoading1] = useState(false);
 
   const { toast } = useToast();
 
   useEffect(() => {
     fetchOrgDetails()
-      // .then(() => getUserToken())
-      // .then(userToken => getUserDetails(userToken))
+      .then(() => getUserToken())
+      .then(userToken => getUserDetails(userToken))
       .then(() => setLoading1(false))
       .catch(error => {
         const errMsg = (error as Error).message;

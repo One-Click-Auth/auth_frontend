@@ -21,7 +21,6 @@ import { MdEmail } from 'react-icons/md';
 import { VscEye, VscEyeClosed } from 'react-icons/vsc';
 import { PasswordCheck } from './components/PasswodCheck';
 import { useToast } from '@/components/ui/use-toast';
-import { string } from 'yup';
 export default function Widget() {
   //store function to set the org data in the store. It takes two arguments org token and org data.
   const setOrgData = useOrgData(state => state.setOrgData);
@@ -44,17 +43,13 @@ export default function Widget() {
   //state variables for erros
   const [err, setErr] = useState(false);
   const [errMsg, setErrMsg] = useState('');
-  // state variable to show password input box
-  // const [showpassField, setShowPassField] = useState(false);
+
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   //state variables to show certain messages
   const [message, setMessage] = useState('');
   const [showMsg, setShowMsg] = useState(false);
-  // const [showMore, setShowMore] = useState(false);
-  //state varibale to show MFA activation panel where QR code along with an MFA code input field will be shown
-  // const [showMfaActivation, setShowMfaActivation] = useState(false);
 
   //state variable to show the OTP input modal if a user has already enabled MFA
   const [showMfaPopup, setShowMfaPopup] = useState(false);
@@ -62,12 +57,7 @@ export default function Widget() {
   const [showMsgPanel, setShowMsgPanel] = useState(false);
   //state variable to show and hide social login
   const [showSocial, setShowSocial] = useState(false);
-  //state varibale to show the enable mfa link to take the user input whether he wants to enable mfa or not
-  // const [showEnableMfaLink, setShowEnableMfaLink] = useState(false);
-  // state varibale to store whether the user has selected enable mfa or not
-  // const [enableUserMfa, setEnablUsereMfa] = useState(false);
-  //state variable to set whether user is activating Mfa in process or at the end of the login/signup process
-  // const [mfaInProcess, setMfaInProcess] = useState(false);
+
   // state varibale to store the value of email typed by the user
   const [email, setEmail] = useState('');
 
@@ -80,11 +70,7 @@ export default function Widget() {
   const [currentUserToken, setCurrentUserToken] = useState('');
   //state variable to store mfa code
 
-  //state variable to set encoded qr code
-  // const [qr, setQr] = useState('');
   //state variable to chnage the button actions
-  // const [buttonAction, setButtonAction] = useState('');
-  // const [btnAction, setBtnAction] = useState<ButtonAction>();
   const [mfaBtnAction, setMfaBtnAction] = useState<MfaActions>();
   const [newPassBtnAction, setNewPassBtnAction] = useState<NewPassActions>();
   const [passBtnAction, setPassBtnAction] = useState<PassActions>();
