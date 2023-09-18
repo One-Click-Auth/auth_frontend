@@ -7,12 +7,33 @@ on:
     branches: [ "dev-branch" ]
 
 jobs:
-
-  build:
-
+  deploy_dev:
+    name: Build and Deploy to Dev
     runs-on: ubuntu-latest
-
+   
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image with secrets as build args
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_SECRET: ${{ secrets.DOCKER_SECRET }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          ACCESS_KEY_ID: ${{ secrets._ACCESS_KEY_ID }}
+          S3_BUCKET: ${{ secrets._S3_BUCKET }}
+          S3_REGION: ${{ secrets._S3_REGION }}
+          SECRET_ACCESS_KEY: ${{ secrets._SECRET_ACCESS_KEY }}
+        run: |
+          echo ${{ secrets.DOCKER_SECRET }} | docker login -u moonlightnexus --password-stdin
+
+          # Build the Docker image with build arguments
+          docker build \
+            --build-arg NEXTAUTH_SECRET=${NEXTAUTH_SECRET} \
+            --build-arg NEXTAUTH_URL=${NEXTAUTH_URL} \
+            --build-arg ACCESS_KEY_ID=${ACCESS_KEY_ID} \
+            --build-arg S3_BUCKET=${S3_BUCKET} \
+            --build-arg S3_REGION=${S3_REGION} \
+            --build-arg SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY} \
+            -t my-nextjs-app .
