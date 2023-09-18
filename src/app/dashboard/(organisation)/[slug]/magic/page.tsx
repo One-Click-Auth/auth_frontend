@@ -15,37 +15,34 @@ function Page() {
   const [isSendingGenerateRequest, setIsSendingGenerateRequest] =
     useState(false);
   const [isUploadingToS3, setIsUploadingToS3] = useState(false);
-  const [apiURL, setApiURL] = useState(
-    'https://api-inference.huggingface.co/models/moonlightnexus/RealityCreation'
-  );
-  let blob: Blob | null = null;
   const [imageURL, setImageURL] = useState('');
 
   async function handleImageUploadToS3() {
     // Check filename extension
     try {
-      if (!imageURL || !blob) return;
+      if (!imageURL) return;
 
       // Fetch Upload url
       const response = await fetch(
-        `/api/preSignedUrl?fileName=${imageURL}.jpeg`
+        `/api/preSignedUrl?fileName=${imageURL}`
       ).catch(err => console.log(err));
       const data = await response?.json();
       const { url } = data as { url: string };
 
       // PUT file to s3 bucket
-      await fetch(url, {
+      const res = await fetch(url, {
         method: 'PUT',
         headers: {
           'Content-Type': 'image/*'
         },
-        body: blob
+        body: imageURL
       }).catch(err => {
         setIsUploadingToS3(false);
         console.log(err);
       });
 
-      console.log({ url });
+      const imageUrl = url.split('?')[0];
+      console.log({ imageUrl });
     } catch (error) {
       setIsUploadingToS3(false);
     }
@@ -57,19 +54,20 @@ function Page() {
   ): Promise<AxiosResponse | null> {
     const API_TOKEN = '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';
     const headers = { Authorization: `Bearer ${API_TOKEN}` };
+    const API_URL =
+      'https://api-inference.huggingface.co/models/moonlightnexus/RealityCreation';
+
+    const prompt = JSON.stringify({ inputs });
 
     try {
-      return await axios.post(
-        apiURL,
-        { inputs },
-        {
-          headers: headers,
-          responseType: 'arraybuffer'
-        }
-      );
+      return await axios.post(API_URL, prompt, {
+        headers: headers,
+        responseType: 'arraybuffer'
+      });
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === 503) {
-        await new Promise(resolve => setTimeout(resolve, 7000)); // Introduce a delay between retries
+        console.log('retrying');
+        await new Promise(resolve => setTimeout(resolve, 2500)); // Introduce a delay between retries
         return handleImageGenerateAPI(inputs);
       } else {
         console.log(err);
@@ -92,7 +90,7 @@ function Page() {
       return;
     }
 
-    blob = new Blob([response.data], { type: 'image/jpeg' });
+    const blob = new Blob([response.data], { type: 'image/jpeg' });
     const img = URL.createObjectURL(blob);
 
     setImageURL(img);
@@ -125,7 +123,7 @@ function Page() {
             className="border-dashed border-2
            border-[#9747FF] p-7 rounded-lg"
           >
-            <RadioGroup setApiURL={setApiURL} apiURL={apiURL} />
+            <RadioGroup />
           </div>
 
           <div className=" flex flex-col mt-14 gap-11">
@@ -174,15 +172,11 @@ function Page() {
                w-[200px] !h-[45px]  items-center gap-3 text-lg  "
                   onClick={handleImageUploadToS3}
                 >
-                  {isUploadingToS3 ? (
-                    <Spinner color="white" size={30} />
-                  ) : (
-                    'Save'
-                  )}
+                  Save
                 </Button>
               </div>
 
-              <div>
+              <div className="">
                 <Image
                   src={imageURL || '/magic.svg'}
                   alt="magic-ai"
