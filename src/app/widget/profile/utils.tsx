@@ -9,13 +9,9 @@ export const getAccessToken = (code: string): string => {
       return value;
     }
   }
-  return 'could not get Access_token';
+  throw new Error('Token not found');
 };
-// export const decryptToken = (token: string): string => {
-//   const bytes = CryptoJS.AES.decrypt(token, 'asjdhkasjdh');
-//   const decoded = bytes.toString(CryptoJS.enc.Utf8);
-//   return decoded;
-// };
+
 export function isImageUrl(url: string) {
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'];
   const lowerUrl = url.toLowerCase();

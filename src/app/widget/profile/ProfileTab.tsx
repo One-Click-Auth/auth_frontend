@@ -102,6 +102,7 @@ export default function Profile() {
         detail?: string;
         user_token: string;
       };
+      console.log(data, data.user_token);
       const token = data.user_token;
       if (token) {
         set_user_token(token);
@@ -250,9 +251,10 @@ export default function Profile() {
         detail?: string;
         user_token: string;
       };
-      const token = data.user_token;
-      if (token) {
-        set_user_token(token);
+      console.log(data, data.user_token);
+
+      if (data.user_token) {
+        set_user_token(data.user_token);
       }
       if (data.detail) {
         toast({

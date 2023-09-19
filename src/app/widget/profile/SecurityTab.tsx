@@ -112,6 +112,7 @@ export default function Security() {
       if (data.user_token) {
         set_user_token(data.user_token);
       }
+      console.log(data.user_token);
       if (response.status === 203 || response.status == 200) {
         const code = decryptCode(data.mfa_code);
         setQrCode(code);
@@ -158,9 +159,11 @@ export default function Security() {
         });
         return;
       }
+      console.log(data, data.user_token);
       if (data.user_token) {
         set_user_token(data.user_token);
       }
+
       if (response.status === 200) {
         toast({
           variant: 'success',
@@ -243,6 +246,7 @@ export default function Security() {
         });
         return;
       }
+      console.log(data, data.user_token);
       if (data.user_token) {
         set_user_token(data.user_token);
       }

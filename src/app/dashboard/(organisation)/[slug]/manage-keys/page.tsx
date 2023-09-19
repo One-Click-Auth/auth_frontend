@@ -59,7 +59,7 @@ export default function KeysCard() {
 
   const [loading, setLoading] = useState(false);
 
-  async function generateKeys(pass: string) {
+  async function generateKeys() {
     setLoading(true);
     try {
       const response = await fetch(
@@ -72,7 +72,7 @@ export default function KeysCard() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            password: pass
+            password: null
           })
         }
       );

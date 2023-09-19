@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/Dialog';
-import CryptoJS from 'crypto-js';
+// import CryptoJS from 'crypto-js';
 import { Separator } from '@/components/ui/seperator';
 import { ProfileItemSvg } from '@/assets/Svg/Account/DropDown';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -36,26 +36,26 @@ function ProfilePopup() {
 
   const { toast } = useToast();
 
-  const decryptCode = (mfa: string): string => {
-    const bytes = CryptoJS.AES.decrypt(mfa, 'asjdhkasjdh');
-    const decoded = bytes.toString(CryptoJS.enc.Utf8);
+  // const decryptCode = (mfa: string): string => {
+  //   const bytes = CryptoJS.AES.decrypt(mfa,  process.env.NEXT_PUBLIC_AES_KEY?process.env.NEXT_PUBLIC_AES_KEY:'');
+  //   const decoded = bytes.toString(CryptoJS.enc.Utf8);
 
-    return decoded;
-  };
+  //   return decoded;
+  // };
 
   const url = 'https://api.trustauthx.com/fa2url';
 
-  useEffect(() => {
-    if (otpTurnOn.length === 6) {
-      checkOTP();
-    }
-  }, [otpTurnOn]);
+  // useEffect(() => {
+  //   if (otpTurnOn.length === 6) {
+  //     checkOTP();
+  //   }
+  // }, [otpTurnOn]);
 
-  useEffect(() => {
-    if (otpTurnOff.length === 6) {
-      deleteOTP();
-    }
-  }, [otpTurnOff]);
+  // useEffect(() => {
+  //   if (otpTurnOff.length === 6) {
+  //     deleteOTP();
+  //   }
+  // }, [otpTurnOff]);
 
   const scrollToSecurity = () => {
     setAccountButton(false);
@@ -81,87 +81,87 @@ function ProfilePopup() {
     }
   };
 
-  async function checkOTP() {
-    const headers = {
-      accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
+  // async function checkOTP() {
+  //   const headers = {
+  //     accept: 'application/json',
+  //     Authorization: `Bearer ${token}`,
+  //     'Content-Type': 'application/json'
+  //   };
 
-    const requestBody = {
-      otp: otpTurnOn
-    };
+  //   const requestBody = {
+  //     otp: otpTurnOn
+  //   };
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(requestBody)
-    });
+  //   const response = await fetch(url, {
+  //     method: 'POST',
+  //     headers: headers,
+  //     body: JSON.stringify(requestBody)
+  //   });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   }
 
-    const data: any = await response.json();
+  //   const data: any = await response.json();
 
-    data.is_ok &&
-      toast({
-        variant: 'success',
-        title: 'Succesful',
-        description: data.msg,
-        style: {
-          left: 0
-        }
-      });
-  }
+  //   data.is_ok &&
+  //     toast({
+  //       variant: 'success',
+  //       title: 'Succesful',
+  //       description: data.msg,
+  //       style: {
+  //         left: 0
+  //       }
+  //     });
+  // }
 
-  async function deleteOTP() {
-    const headers = {
-      accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
+  // async function deleteOTP() {
+  //   const headers = {
+  //     accept: 'application/json',
+  //     Authorization: `Bearer ${token}`,
+  //     'Content-Type': 'application/json'
+  //   };
 
-    const requestBody = {
-      otp: otpTurnOff
-    };
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(requestBody)
-    });
+  //   const requestBody = {
+  //     otp: otpTurnOff
+  //   };
+  //   const response = await fetch(url, {
+  //     method: 'POST',
+  //     headers: headers,
+  //     body: JSON.stringify(requestBody)
+  //   });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   }
 
-    const data: any = await response.json();
+  //   const data: any = await response.json();
 
-    data.is_ok &&
-      toast({
-        variant: 'destructive',
-        title: 'Otp removed',
-        description: data.msg,
-        style: {
-          left: 0
-        }
-      });
-  }
+  //   data.is_ok &&
+  //     toast({
+  //       variant: 'destructive',
+  //       title: 'Otp removed',
+  //       description: data.msg,
+  //       style: {
+  //         left: 0
+  //       }
+  //     });
+  // }
 
-  function getQrCode() {
-    const headers = {
-      accept: 'application/json',
-      Authorization: `Bearer ${token}`
-    };
+  // function getQrCode() {
+  //   const headers = {
+  //     accept: 'application/json',
+  //     Authorization: `Bearer ${token}`
+  //   };
 
-    fetch(url, {
-      method: 'GET',
-      headers: headers
-    })
-      .then(response => response.json())
-      .then(data => setQr(decryptCode(data as string)))
-      .catch(error => console.error('Error:', error));
-  }
+  //   fetch(url, {
+  //     method: 'GET',
+  //     headers: headers
+  //   })
+  //     .then(response => response.json())
+  //     .then(data => setQr(decryptCode(data as string)))
+  //     .catch(error => console.error('Error:', error));
+  // }
 
   function MFASwitcher() {
     return (
@@ -178,7 +178,7 @@ function ProfilePopup() {
           <Button
             onClick={() => {
               setShowMFAOn(true);
-              getQrCode();
+              // getQrCode();
             }}
             variant={'authx'}
           >
@@ -331,18 +331,19 @@ function ProfilePopup() {
           <DialogHeader className="mt-10">
             <DialogTitle className="text-3xl">Security </DialogTitle>
             <DialogDescription className="text-lg">
-              For everything security related
+              Not available
             </DialogDescription>
           </DialogHeader>
         </div>
-        <PopupSubSection name="Multi Factor Authentication" />
+        {/* <p>Not Available</p> */}
+        {/* <PopupSubSection name="Multi Factor Authentication" />
 
         <div className="flex-1 gap-3 relative flex-col py-10 mx-4 px-6 items-center border  justify-center flex mt-5">
           <MFA />
         </div>
 
         <PopupSubSection name="Password" />
-        <PopupSubSection name="Danger" />
+        <PopupSubSection name="Danger" /> */}
       </div>
     </DialogContent>
   );
