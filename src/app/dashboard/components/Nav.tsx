@@ -5,19 +5,28 @@ import Link from 'next/link';
 import { useAuth } from '@/Providers/AuthContext';
 
 function AccountNav() {
-  const { update, expires } = useAuth();
+  const { update } = useAuth();
 
   useEffect(() => {
-    if (!expires) return;
+    let expires = localStorage.getItem('expires');
 
-    const timeDifference = expires * 1000 - Date.now();
-    console.log('expires', expires);
+    if (!expires) {
+      expires = String(Date.now() + 1000 * 60 * 59);
+      localStorage.setItem('expires', expires);
+    }
+
+    const timeDifference = Number(expires) - Date.now();
+
+    if (timeDifference < 0) update();
+
     const timeout = setTimeout(() => {
+      console.log('updating');
+      localStorage.setItem('expires', String(Date.now() + 1000 * 60 * 59));
       update();
     }, timeDifference);
 
     return () => clearTimeout(timeout);
-  }, [expires]);
+  }, []);
 
   return (
     <div className="flex  items-center justify-end min-w-max sticky top-0 mr-4">
