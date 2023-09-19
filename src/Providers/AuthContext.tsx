@@ -11,7 +11,6 @@ export interface IUser {
 export type AuthContextType = {
   user?: IUser;
   token?: string;
-  expires?: number;
   update: () => void;
 };
 const authContext = createContext<AuthContextType>({ update: () => null });
@@ -32,7 +31,6 @@ export function AuthContext({
       // @ts-ignore
       token: session?.token?.access_token,
       // @ts-ignore
-      expires: session?.token?.exp,
       update
     }),
     [session, update]
