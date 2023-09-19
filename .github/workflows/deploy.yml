@@ -24,6 +24,7 @@ jobs:
           S3_BUCKET: ${{ secrets._S3_BUCKET }}
           S3_REGION: ${{ secrets._S3_REGION }}
           SECRET_ACCESS_KEY: ${{ secrets._SECRET_ACCESS_KEY }}
+          NEXT_PUBLIC_AES_KEY: ${{ secrets.NEXT_PUBLIC_AES_KEY }}
         run: |
           echo ${{ secrets.DOCKER_SECRET }} | docker login -u moonlightnexus --password-stdin
 
@@ -36,6 +37,7 @@ jobs:
             --build-arg S3_BUCKET=${S3_BUCKET} \
             --build-arg S3_REGION=${S3_REGION} \
             --build-arg SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY} \
+            --build-arg NEXT_PUBLIC_AES_KEY=${NEXT_PUBLIC_AES_KEY} \
             -t my-nextjs-app .
           docker tag my-nextjs-app:latest moonlightnexus/internal-trustauthx:latest
           docker push moonlightnexus/internal-trustauthx:latest
