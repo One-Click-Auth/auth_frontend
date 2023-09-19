@@ -33,7 +33,7 @@ export const Sidebar = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  // const { update } = useAuth()
+
   return (
     <div
       className={` flex flex-col flex-shrink-0 items-center transition-all text-white bg-black  ${

@@ -18,7 +18,7 @@ function Page() {
   const [apiURL, setApiURL] = useState(
     'https://api-inference.huggingface.co/models/moonlightnexus/RealityCreation'
   );
-  let blob: Blob | null = null;
+  const [blob, setBlob] = useState<Blob>(new Blob());
   const [imageURL, setImageURL] = useState('');
 
   async function handleImageUploadToS3() {
@@ -92,7 +92,7 @@ function Page() {
       return;
     }
 
-    blob = new Blob([response.data], { type: 'image/jpeg' });
+    setBlob(new Blob([response.data], { type: 'image/jpeg' }));
     const img = URL.createObjectURL(blob);
 
     setImageURL(img);
