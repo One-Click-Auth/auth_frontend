@@ -224,6 +224,7 @@ export default function Security() {
   }
 
   async function forgotMfa() {
+    setLoading3(true);
     try {
       const response = await fetch(
         `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
@@ -238,6 +239,8 @@ export default function Security() {
         }
       );
       const data = (await response.json()) as any;
+      setLoading3(false);
+
       if (data.detail) {
         toast({
           title: 'Error!',
@@ -257,6 +260,7 @@ export default function Security() {
           description: 'MFA removed. Please check your email to confirm.'
         });
         setMfa(false);
+        return;
       }
     } catch (error) {
       console.log(error);
@@ -265,6 +269,7 @@ export default function Security() {
         title: 'Error!',
         description: 'Some error occured with the request'
       });
+      setLoading3(false);
       return;
     }
   }
@@ -432,7 +437,15 @@ export default function Security() {
                           className="w-full sm:w-[140px] sm:min-w-[140px]"
                           onClick={forgotMfa}
                         >
-                          Forgot MFA
+                          {' '}
+                          {loading3 ? (
+                            <div className="flex gap-2 items-center text-gray-400">
+                              <Spinner size={15} color="gray" />
+                              <span>...requesting</span>
+                            </div>
+                          ) : (
+                            'Forgot MFA'
+                          )}
                         </Button>
                       </div>
                     ) : (
