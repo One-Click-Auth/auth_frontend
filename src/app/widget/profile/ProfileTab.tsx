@@ -102,9 +102,10 @@ export default function Profile() {
         detail?: string;
         user_token: string;
       };
-      console.log(data, data.user_token);
+
       const token = data.user_token;
       if (token) {
+        // console.log(data, data.user_token);
         set_user_token(token);
       }
       if (data.detail) {
@@ -251,9 +252,9 @@ export default function Profile() {
         detail?: string;
         user_token: string;
       };
-      console.log(data, data.user_token);
 
       if (data.user_token) {
+        // console.log(data, data.user_token);
         set_user_token(data.user_token);
       }
       if (data.detail) {
@@ -272,7 +273,7 @@ export default function Profile() {
           description: 'Profile picture updated successfully'
         });
         setLoading1(false);
-        getUserData();
+        // getUserData();
         return;
       }
       return;

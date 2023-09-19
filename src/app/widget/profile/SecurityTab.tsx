@@ -159,7 +159,7 @@ export default function Security() {
         });
         return;
       }
-      console.log(data, data.user_token);
+      // console.log(data, data.user_token);
       if (data.user_token) {
         set_user_token(data.user_token);
       }
@@ -246,7 +246,7 @@ export default function Security() {
         });
         return;
       }
-      console.log(data, data.user_token);
+      // console.log(data, data.user_token);
       if (data.user_token) {
         set_user_token(data.user_token);
       }
