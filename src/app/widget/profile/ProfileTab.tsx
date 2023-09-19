@@ -24,6 +24,7 @@ import { useSearchParams } from 'next/navigation';
 import { IoCloudUpload } from 'react-icons/io5';
 import { useToast } from '@/components/ui/use-toast';
 import Spinner from '@/components/spinner';
+import { isImageUrl } from './utils';
 
 //Profile Component
 export default function Profile() {
@@ -49,7 +50,7 @@ export default function Profile() {
   async function getUserData() {
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth/data?userToken=${user_token}`,
+        `https://api.trustauthx.com/user/me/auth/data?UserToken=${user_token}`,
         {
           method: 'GET',
           headers: {
@@ -60,7 +61,6 @@ export default function Profile() {
 
       const userData = (await response.json()) as UserProfileData;
       const org_id = Object.keys(userData.data.partner)[0];
-      console.log(userData.data.partner[org_id]);
       setUserData(userData);
       setUsername(userData.data.partner[org_id].full_name);
       setImage(userData.data.partner[org_id].img);
@@ -72,7 +72,7 @@ export default function Profile() {
       throw new Error(errMsg);
     }
   }
-
+  //to update username
   async function updateUsername() {
     if (username.length === 0 || username === 'None') {
       toast({
@@ -146,25 +146,92 @@ export default function Profile() {
     }
   }
   //to save profile image
-  async function updateProfileImage() {
-    setLoading1(true);
-    try {
-      if (!imageFile) {
-        if (imageUrl) {
-          setImage(imageUrl);
+  async function handleImageUpdate() {
+    if (!imageFile) {
+      if (imageUrl) {
+        if (isImageUrl(imageUrl)) {
+          updateImage(imageUrl);
+          return;
         } else {
           toast({
             variant: 'destructive',
             title: 'Error!',
-            description: `Please add a file or URL first`
+            description: `Please add a valid image URL`
           });
-          setLoading1(false);
-
           return;
         }
       } else {
-        await uploadImageToS3();
+        toast({
+          variant: 'destructive',
+          title: 'Error!',
+          description: `Please add a file or URL first`
+        });
+        return;
       }
+    } else {
+      uploadImageToS3()
+        .then(imageUrl => {
+          if (imageUrl) {
+            updateImage(imageUrl);
+          }
+        })
+        .catch(error => {
+          toast({
+            variant: 'destructive',
+            title: 'Error!',
+            description: error
+          });
+        });
+      return;
+    }
+  }
+
+  async function uploadImageToS3() {
+    // Check filename extension
+    try {
+      if (imageFile) {
+        const splitName = imageFile?.name.split('.');
+        const fileExtension = splitName?.slice(-1);
+        const contentType =
+          fileExtension[0] === 'svg' ? 'image/svg+xml' : 'image/*';
+
+        // Fetch Upload url
+        const response = await fetch(
+          `/api/preSignedUrl?fileName=${imageFile?.name}`
+        );
+        const data = await response?.json();
+        const { url } = data as { url: string };
+        // PUT file to s3 bucket
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': contentType
+          },
+          body: imageFile
+        }).catch(err => {
+          console.log(err);
+          throw new Error('some error occured with the request');
+        });
+
+        if (res.status === 200) {
+          const imageUrl = url.split('?')[0];
+          setImage(imageUrl);
+          return imageUrl;
+        }
+
+        if (res?.status === 500 || res?.status === 404) {
+          throw new Error('some error occured with request');
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error('some error occured with request');
+    }
+  }
+  //request to save image
+  async function updateImage(url: string) {
+    setLoading1(true);
+    try {
       const response = await fetch(
         `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
         {
@@ -174,7 +241,7 @@ export default function Profile() {
           },
           body: JSON.stringify({
             Upd: {
-              img: image
+              img: url
             }
           })
         }
@@ -203,7 +270,7 @@ export default function Profile() {
           description: 'Profile picture updated successfully'
         });
         setLoading1(false);
-        await getUserData();
+        getUserData();
         return;
       }
       return;
@@ -217,48 +284,6 @@ export default function Profile() {
       });
       setLoading1(false);
       return;
-    }
-  }
-
-  async function uploadImageToS3() {
-    // Check filename extension
-    try {
-      if (imageFile) {
-        const splitName = imageFile?.name.split('.');
-        const fileExtension = splitName?.slice(-1);
-        const contentType =
-          fileExtension[0] === 'svg' ? 'image/svg+xml' : 'image/*';
-
-        // Fetch Upload url
-        const response = await fetch(
-          `/api/preSignedUrl?fileName=${imageFile?.name}`
-        ).catch(err => console.log(err));
-        const data = await response?.json();
-        const { url } = data as { url: string };
-        // PUT file to s3 bucket
-        const res = await fetch(url, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': contentType
-          },
-          body: imageFile
-        }).catch(err => {
-          console.log(err);
-          throw new Error('some error occured with the request');
-        });
-
-        if (res?.status === 200) {
-          const imageUrl = url.split('?')[0];
-          setImage(imageUrl);
-        }
-
-        if (res?.status === 500 || res?.status === 404) {
-          throw new Error('some error occured with request');
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      throw new Error('some error occured with request');
     }
   }
 
@@ -318,7 +343,7 @@ export default function Profile() {
               variant={'black'}
               className="w-full sm:w-[140px] sm:min-w-[140px]"
               disabled={loading1}
-              onClick={updateProfileImage}
+              onClick={handleImageUpdate}
             >
               {loading1 ? (
                 <div className="flex gap-2 items-center text-gray-400">

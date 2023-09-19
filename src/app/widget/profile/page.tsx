@@ -20,10 +20,6 @@ import SkeletonProfile from './profileSkeleton';
 import Profile from './ProfileTab';
 import Security from './SecurityTab';
 import { getAccessToken } from './utils';
-//profile image
-//username
-//password
-//mfa
 
 export default function WidgetProfile() {
   const searchParams = useSearchParams();
@@ -33,11 +29,6 @@ export default function WidgetProfile() {
   // const ac_token = searchParams.get('ac');
 
   const { set_user_token, user_token } = useToken();
-  //to fetch the org token from the store
-  //  const storeOrg_token = useOrgData(state => state.org_token);
-  //to fetch the org data from the store
-  //  const storeOrgData = useOrgData(state => state.data);
-  //to set the org Data
   const setOrgData = useOrgData(state => state.setOrgData);
   const setUserData = useUserProfileData(state => state.setProfileData);
   const UserData = useUserProfileData(state => state.data);
@@ -141,37 +132,6 @@ export default function WidgetProfile() {
       setPassword(userData.data.partner[org_id].password);
       setMfa(userData.data.partner[org_id].fa2);
 
-      return;
-    } catch (error) {
-      const errMsg = (error as Error).message;
-      console.log(error);
-      throw new Error(errMsg);
-    }
-  }
-
-  async function getUserData() {
-    // console.log('user_token:', user_token);
-    try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth/data?UserToken=${user_token}`,
-        {
-          method: 'GET',
-          headers: {
-            accept: 'application/json'
-          }
-        }
-      );
-      //code=607
-
-      const userData = (await response.json()) as UserProfileData;
-      const org_id = Object.keys(userData.data.partner)[0];
-      console.log(userData.data.partner[org_id]);
-      setUserData(userData);
-      setUsername(userData.data.partner[org_id].full_name);
-      setImage(userData.data.partner[org_id].img);
-      setEmail(userData.email);
-      setPassword(userData.data.partner[org_id].password);
-      setMfa(userData.data.partner[org_id].fa2);
       return;
     } catch (error) {
       const errMsg = (error as Error).message;

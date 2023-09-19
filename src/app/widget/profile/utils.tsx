@@ -16,3 +16,9 @@ export const getAccessToken = (code: string): string => {
 //   const decoded = bytes.toString(CryptoJS.enc.Utf8);
 //   return decoded;
 // };
+export function isImageUrl(url: string) {
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'];
+  const lowerUrl = url.toLowerCase();
+
+  return imageExtensions.some(extension => lowerUrl.endsWith(extension));
+}

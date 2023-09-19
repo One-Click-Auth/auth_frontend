@@ -166,7 +166,7 @@ export default function Security() {
           variant: 'success',
           description: action
             ? 'MFA Successfully Activated.'
-            : 'MFA disabled Successfully.'
+            : 'MFA disabled. Please check your email to confirm.'
         });
         setOtp('');
         setOtp2('');
@@ -249,8 +249,7 @@ export default function Security() {
       if (response.status === 200) {
         toast({
           variant: 'success',
-          description:
-            'MFA removed successfully. You can request for mfa again.'
+          description: 'MFA removed. Please check your email to confirm.'
         });
       }
     } catch (error) {
@@ -321,7 +320,7 @@ export default function Security() {
   async function getUserData() {
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth/data?userToken=${user_token}`,
+        `https://api.trustauthx.com/user/me/auth/data?UserToken=${user_token}`,
         {
           method: 'GET',
           headers: {
@@ -499,7 +498,7 @@ export default function Security() {
                   {/* {!showQr?<Button className='rounded-full bg-[#004B6A] text-white font-normal hover px-6 h-6 mt-4 hover:bg-slate-400'>Forgot Mfa</Button>:''} */}
                 </div>
 
-                <div className={` ${showQr ? '' : ''} `}>
+                <div className={` ${showQr ? '' : 'hidden'} `}>
                   <QRCodeSVG
                     value={qrCode}
                     className="mt-4 sm:mt-0"
