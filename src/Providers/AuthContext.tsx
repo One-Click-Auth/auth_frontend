@@ -8,8 +8,13 @@ export interface IUser {
   full_name: string;
   email: string;
 }
-export type AuthContextType = { user?: IUser; token?: string ,update:() => void};
-const authContext = createContext<AuthContextType>({update:() => null});
+export type AuthContextType = {
+  user?: IUser;
+  token?: string;
+  expires?: number;
+  update: () => void;
+};
+const authContext = createContext<AuthContextType>({ update: () => null });
 
 export function AuthContext({
   session,
@@ -19,16 +24,18 @@ export function AuthContext({
   children: React.ReactNode;
 }) {
   // const user = useMemo(() => session.token)
-  const {update} = useSession()
+  const { update } = useSession();
   const values: AuthContextType = useMemo(
     () => ({
       // @ts-ignore
       user: session?.token?.user ?? {},
       // @ts-ignore
       token: session?.token?.access_token,
+      // @ts-ignore
+      expires: session?.token?.exp,
       update
     }),
-    [session,update]
+    [session, update]
   );
   return (
     <authContext.Provider value={{ ...values }}>
