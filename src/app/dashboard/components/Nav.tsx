@@ -1,13 +1,24 @@
-'use client'
-import React from 'react';
+'use client';
+import React, { useEffect } from 'react';
 import { AccountDropdown } from './Dropdown';
 import Link from 'next/link';
-function AccountNav() {
-  // const {update} = useAuth();
+import { useAuth } from '@/Providers/AuthContext';
 
-  // setInterval(()=>{
-  //   update()
-  // },60000)
+function AccountNav() {
+  const { update, expires } = useAuth();
+
+  useEffect(() => {
+    if (!expires) return;
+
+    const timeDifference = expires * 1000 - Date.now();
+    console.log('expires', expires);
+    const timeout = setTimeout(() => {
+      update();
+    }, timeDifference);
+
+    return () => clearTimeout(timeout);
+  }, [expires]);
+
   return (
     <div className="flex  items-center justify-end min-w-max sticky top-0 mr-4">
       <div className="flex items-center gap-8 ">
