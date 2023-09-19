@@ -1,7 +1,10 @@
 import CryptoJS from 'crypto-js';
 //to decrypt mfa code
 export const decryptCode = (mfa: string): string => {
-  const bytes = CryptoJS.AES.decrypt(mfa, 'asjdhkasjdh');
+  const bytes = CryptoJS.AES.decrypt(
+    mfa,
+    process.env.NEXT_PUBLIC_AES_KEY ? process.env.NEXT_PUBLIC_AES_KEY : ''
+  );
   const decoded = bytes.toString(CryptoJS.enc.Utf8);
   return decoded;
 };

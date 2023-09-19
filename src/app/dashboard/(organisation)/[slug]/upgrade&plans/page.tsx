@@ -74,7 +74,7 @@ function UpgradeAndPlansPage() {
     }
   }
   //to cancel the subscription
-  async function cancelSub(pass: string) {
+  async function cancelSub() {
     setLoading2(true);
     try {
       const response = await fetch(`https://api.trustauthx.com/subscriptions`, {
@@ -86,8 +86,7 @@ function UpgradeAndPlansPage() {
         },
         body: JSON.stringify({
           org_id: slug,
-          password: pass
-          // totp: 0
+          password: null
         })
       });
       if (response.status === 401) {

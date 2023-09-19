@@ -21,6 +21,7 @@ import { MdEmail } from 'react-icons/md';
 import { VscEye, VscEyeClosed } from 'react-icons/vsc';
 import { PasswordCheck } from './components/PasswodCheck';
 import { useToast } from '@/components/ui/use-toast';
+import { IoArrowBackCircleSharp } from 'react-icons/io5';
 export default function Widget() {
   //store function to set the org data in the store. It takes two arguments org token and org data.
   const setOrgData = useOrgData(state => state.setOrgData);
@@ -256,129 +257,6 @@ export default function Widget() {
       return;
     }
   };
-  //function to handle when user is given a choice to activate the mfa
-
-  // const userMfaRequest = async () => {
-  //   setLoading3(true);
-  //   setErr(false);
-
-  //   console.log(currentUserToken);
-  //   try {
-  //     const res = await fetch(
-  //       `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-  //       {
-  //         method: 'PUT',
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         },
-  //         body: JSON.stringify({
-  //           switch_mfa: true
-  //         })
-  //       }
-  //     );
-
-  //     const resData = (await res.json()) as any;
-  //     setLoading3(false);
-  //     if (res.status === 203) {
-  //       setShowMsg(false);
-  //       setShowMsgPanel(false);
-  //       setCurrentUserToken(resData.user_token);
-  //       setQr(decryptCode(resData.mfa_code));
-  //       setShowEnableMfaLink(false);
-  //       console.log(mfaInProcess);
-  //       if (mfaInProcess === true) {
-  //         setBtnAction(ButtonAction.MfaActivationLogin);
-
-  //         setButtonAction('mfa-activation-login');
-  //       } else if (mfaInProcess === false) {
-  //         setBtnAction(ButtonAction.MfaActivationSignup);
-
-  //         setButtonAction('mfa-activation-signup');
-  //       }
-  //       setShowMfaActivation(true);
-  //       return;
-  //     }
-  //   } catch (error) {
-  //     setLoading3(false);
-
-  //     return console.log(
-  //       'some error occured in sending the request for mfa code',
-  //       error
-  //     );
-  //   }
-  // };
-  //function to be called when a user has to activate MFA
-  // const handleMFActivation = async (login: boolean) => {
-  //   setErr(false);
-  //   setShowMsg(false);
-  //   setLoading2(true);
-
-  //   if (testOTP(otp)) {
-  //     setErrMsg('Please put a valid OTP');
-  //     setLoading2(false);
-  //     return setErr(true);
-  //   }
-  //   try {
-  //     const response = await fetch(
-  //       `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-  //       {
-  //         method: 'PUT',
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         },
-  //         body: JSON.stringify({
-  //           totp: otp,
-  //           switch_mfa: true
-  //         })
-  //       }
-  //     );
-  //     const data = (await response.json()) as any;
-  //     setLoading2(false);
-  //     console.log(data);
-  //     const { user_token } = data;
-  //     if (response.status === 200) {
-  //       setCurrentUserToken(user_token);
-
-  //       //if the the mfa activation is coming from the login loop
-  //       if (login) {
-  //         setLoading2(false);
-  //         setMessage('MFA Successfully Activated!');
-  //         setShowMsg(true);
-  //         setShowMfaActivation(false);
-  //         setTimeout(() => setShowMsg(false), 3000);
-  //         handleSubmit();
-  //         return;
-  //       } else {
-  //         setMessage('MFA Successfully Activated! Check your Email.');
-  //         setShowMsgPanel(true);
-  //         return setShowMsg(true);
-  //       }
-  //     } else if (response.status === 402) {
-  //       setCurrentUserToken(data.user_token);
-  //       const msg =
-  //         data.msg +
-  //         ',  ' +
-  //         (data.trials < 5 ? `${data.trials} trials remaining` : 'last trial');
-  //       setErrMsg(msg);
-  //       return setErr(true);
-  //       //when maximum tries for otp has been reached by the user
-  //     } else if (response.status === 429) {
-  //       const timeRegex = /(\d+):(\d+):(\d+\.\d+)/;
-  //       const matches = data.detail?.match(timeRegex);
-  //       const time = convertToApproxTime(matches[0]);
-  //       setErrMsg(
-  //         `maximum tries reached! Try again after ${time || 'some time'}`
-  //       );
-  //       return setErr(true);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoading2(false);
-  //     //errors which are not handled
-  //     setErrMsg(`Some error occured in request`);
-  //     return setErr(true);
-  //   }
-  // };
 
   //function to handle submit mfa
   const handleMFA = async () => {
@@ -1151,7 +1029,10 @@ export default function Widget() {
   };
 
   const reset = () => {
-    location.reload();
+    setShowPassword(false);
+    setShowMfaPopup(false);
+    setShowMsgPanel(false);
+    setShowNewPassword(false);
   };
   //function to show mfa popup for login with password and mfa after a user puts in password and hits the button
   const showMfaPopupForLogin = () => {
@@ -1277,12 +1158,19 @@ export default function Widget() {
       ) : (
         <div
           style={bgStyle}
-          className="w-[100vw] h-[100vh] min-h-fit flex items-center justify-center relative"
+          className="w-[100vw] h-[100vh] min-h-fit flex items-center justify-center"
         >
           <Card
-            className="h-fit  w-[390px] max-w-[90vw] max-h-[90vh] pt-14 pb-10 px-4"
+            className="h-fit  w-[390px] max-w-[90vw] max-h-[90vh] pt-14 pb-10 px-4 relative"
             style={cardStyle}
           >
+            <button className="absolute top-4" onClick={reset}>
+              <IoArrowBackCircleSharp
+                size={30}
+                color={widget.color11}
+                opacity={0.5}
+              />
+            </button>
             <CardContent>
               <div className="space-y-10 flex-1 h-full justify-center flex flex-col">
                 {showMsgPanel ? (
@@ -1296,10 +1184,6 @@ export default function Widget() {
                         />
                         <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
                       </Avatar>
-                      {/* <Avatar className="w-16 relative h-16 -left-6 z-10 ">
-                           <AvatarImage src={'https://github.com/shadcn.png'} width={80} alt="Organisation Logo" className='rounded-full' />
-                           <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
-                         </Avatar> */}
                     </div>
 
                     <div className="flex flex-col gap-8  ">
@@ -1333,7 +1217,6 @@ export default function Widget() {
                         </p>
                       </div>
                     </div>
-                    {/* <button className="relative top-0">Reset</button> */}
                   </div>
                 ) : showMfaPopup ? (
                   <>
@@ -1384,7 +1267,6 @@ export default function Widget() {
                           )}
                         </Button>
                       </div>
-                      {/* <button className="relative top-0">Reset</button> */}
                     </div>
                   </>
                 ) : showNewPassword ? (
@@ -1449,7 +1331,6 @@ export default function Widget() {
                         )}
                       </Button>
                     </div>
-                    {/* <button className="relative top-0">Reset</button> */}
                   </div>
                 ) : showPassword ? (
                   <div className="flex flex-col gap-8">
