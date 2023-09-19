@@ -38,7 +38,9 @@ export default function WidgetProfile() {
   const [loading1, setLoading1] = useState(true);
 
   const { toast } = useToast();
-
+  useEffect(() => {
+    console.log('USER TOKEN UPDATED BY zustand', user_token);
+  }, [user_token]);
   useEffect(() => {
     fetchOrgDetails()
       .then(() => getUserToken())
