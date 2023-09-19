@@ -41,6 +41,7 @@ export default function WidgetProfile() {
   useEffect(() => {
     console.log('USER TOKEN UPDATED BY zustand', user_token);
   }, [user_token]);
+
   useEffect(() => {
     fetchOrgDetails()
       .then(() => getUserToken())
