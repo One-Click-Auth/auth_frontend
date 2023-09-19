@@ -175,7 +175,7 @@ export default function Security() {
         setOtp2('');
         setShowMfa(false);
         setShowQr(false);
-        getUserData();
+        setMfa(action);
       } else if (response.status === 402) {
         //for incorrect otp
         const msg =
@@ -251,10 +251,12 @@ export default function Security() {
         set_user_token(data.user_token);
       }
       if (response.status === 200) {
+        setMfa(false);
         toast({
           variant: 'success',
           description: 'MFA removed. Please check your email to confirm.'
         });
+        setMfa(false);
       }
     } catch (error) {
       console.log(error);
@@ -307,7 +309,8 @@ export default function Security() {
         });
         setLoading1(false);
         setPass('');
-        getUserData();
+        // getUserData();
+        setPassword(true);
         return;
       }
     } catch (error) {
@@ -318,32 +321,6 @@ export default function Security() {
         variant: 'destructive'
       });
       return;
-    }
-  }
-
-  async function getUserData() {
-    try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth/data?UserToken=${user_token}`,
-        {
-          method: 'GET',
-          headers: {
-            accept: 'application/json'
-          }
-        }
-      );
-
-      const userData = (await response.json()) as UserProfileData;
-      const org_id = Object.keys(userData.data.partner)[0];
-      console.log(userData.data.partner[org_id]);
-      setUserData(userData);
-      setPassword(userData.data.partner[org_id].password);
-      setMfa(userData.data.partner[org_id].fa2);
-      return;
-    } catch (error) {
-      const errMsg = (error as Error).message;
-      console.log(error);
-      throw new Error(errMsg);
     }
   }
 

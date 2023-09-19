@@ -235,8 +235,8 @@ interface ProfileSlice {
   setImage: (image: string | null) => void;
 }
 interface SecuritySlice {
-  mfa: boolean;
-  setMfa: (mfa: boolean) => void;
+  mfa: boolean | null;
+  setMfa: (mfa: boolean | null) => void;
   password: boolean;
   setPassword: (password: boolean) => void;
 }
@@ -253,7 +253,7 @@ const initialProfileState: ProfileState = {
   image: 'https://openauthx.s3.ap-south-1.amazonaws.com/Group+39554+(1).svg'
 };
 type SecurityState = {
-  mfa: boolean;
+  mfa: boolean | null;
   password: boolean;
 };
 const initialSecurityState: SecurityState = {
@@ -269,7 +269,7 @@ export const profileStateCreator: StateCreator<ProfileSlice> = set => ({
 
 export const securityStateCreator: StateCreator<SecuritySlice> = set => ({
   ...initialSecurityState,
-  setMfa: mfa => set(state => ({ ...state, mfa })),
+  setMfa: (mfa: boolean | null) => set(state => ({ ...state, mfa })),
   setPassword: password => set(state => ({ ...state, password }))
 });
 

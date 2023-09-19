@@ -47,31 +47,6 @@ export default function Profile() {
   const { username, image, email, setUsername, setImage, setEmail } =
     useProfileStore();
 
-  async function getUserData() {
-    try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth/data?UserToken=${user_token}`,
-        {
-          method: 'GET',
-          headers: {
-            accept: 'application/json'
-          }
-        }
-      );
-
-      const userData = (await response.json()) as UserProfileData;
-      const org_id = Object.keys(userData.data.partner)[0];
-      setUserData(userData);
-      setUsername(userData.data.partner[org_id].full_name);
-      setImage(userData.data.partner[org_id].img);
-      setEmail(userData.email);
-      return;
-    } catch (error) {
-      const errMsg = (error as Error).message;
-      console.log(error);
-      throw new Error(errMsg);
-    }
-  }
   //to update username
   async function updateUsername() {
     if (username.length === 0 || username === 'None') {
@@ -124,7 +99,7 @@ export default function Profile() {
           description: 'Username Updated successfully'
         });
         setLoading2(false);
-        getUserData();
+        // getUserData();
         return;
       } else if (response.status !== 200) {
         toast({
