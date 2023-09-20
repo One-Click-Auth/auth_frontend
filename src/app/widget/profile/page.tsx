@@ -39,28 +39,28 @@ export default function WidgetProfile() {
   const { username, image, email, setUsername, setImage, setEmail } =
     useProfileStore();
   const { password, mfa, setPassword, setMfa } = useSecurityStore();
-  const [loading1, setLoading1] = useState(false);
+  const [loading1, setLoading1] = useState(true);
   const router = useRouter();
   const { toast } = useToast();
   useEffect(() => {
     console.log('USER TOKEN UPDATED BY zustand', user_token);
   }, [user_token]);
 
-  // useEffect(() => {
-  //   fetchOrgDetails()
-  //     .then(() => getUserToken())
-  //     .then(userToken => getUserDetails(userToken))
-  //     .then(() => setLoading1(false))
-  //     .catch(error => {
-  //       const errMsg = (error as Error).message;
-  //       toast({
-  //         title: 'Error!',
-  //         description: `${errMsg}`,
-  //         variant: 'destructive'
-  //       });
-  //       return;
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetchOrgDetails()
+      .then(() => getUserToken())
+      .then(userToken => getUserDetails(userToken))
+      .then(() => setLoading1(false))
+      .catch(error => {
+        const errMsg = (error as Error).message;
+        toast({
+          title: 'Error!',
+          description: `${errMsg}`,
+          variant: 'destructive'
+        });
+        return;
+      });
+  }, []);
 
   async function fetchOrgDetails() {
     try {
