@@ -21,7 +21,7 @@ export function CodeDialogue({ code }: PasswordDialogueProp) {
     <DialogContent>
       <div className="flex flex-col items-center py-4 sm:px-10 gap-y-5">
         <Label className="mb-2" htmlFor="code">
-          Use the code
+          Paste this code in your authenticator
         </Label>
         <div className="w-full flex flex-ro">
           <Input
@@ -40,17 +40,6 @@ export function CodeDialogue({ code }: PasswordDialogueProp) {
             <IoCopy />
           </button>
         </div>
-
-        <Button variant="black" className="w-[240px] mt-4 ">
-          {loading ? (
-            <div className="flex flex-row gap-2 items-center">
-              <Spinner size={16} color="gray" />
-              <span>Processing...</span>
-            </div>
-          ) : (
-            'Done'
-          )}
-        </Button>
       </div>
     </DialogContent>
   );
