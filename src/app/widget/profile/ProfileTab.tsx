@@ -127,6 +127,7 @@ export default function Profile() {
     if (!imageFile) {
       if (imageUrl) {
         if (isImageUrl(imageUrl)) {
+          setImage(imageUrl);
           updateImage(imageUrl);
           return;
         } else {
@@ -192,7 +193,6 @@ export default function Profile() {
 
         if (res.status === 200) {
           const imageUrl = url.split('?')[0];
-          setImage(imageUrl);
           return imageUrl;
         }
 

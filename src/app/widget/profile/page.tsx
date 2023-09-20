@@ -13,13 +13,16 @@ import {
 } from '../login/widgetStore';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useSearchParams } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 
 import { useToast } from '@/components/ui/use-toast';
 import SkeletonProfile from './profileSkeleton';
 import Profile from './ProfileTab';
 import Security from './SecurityTab';
 import { getAccessToken } from './utils';
+import { IoArrowBackOutline } from 'react-icons/io5';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useRouter } from 'next/navigation';
 
 export default function WidgetProfile() {
   const searchParams = useSearchParams();
@@ -30,13 +33,14 @@ export default function WidgetProfile() {
 
   const { set_user_token, user_token } = useToken();
   const setOrgData = useOrgData(state => state.setOrgData);
+  const storeOrgData = useOrgData(state => state.data);
   const setUserData = useUserProfileData(state => state.setProfileData);
   const UserData = useUserProfileData(state => state.data);
   const { username, image, email, setUsername, setImage, setEmail } =
     useProfileStore();
   const { password, mfa, setPassword, setMfa } = useSecurityStore();
   const [loading1, setLoading1] = useState(true);
-
+  const router = useRouter();
   const { toast } = useToast();
   useEffect(() => {
     console.log('USER TOKEN UPDATED BY zustand', user_token);
@@ -142,15 +146,40 @@ export default function WidgetProfile() {
       throw new Error(errMsg);
     }
   }
+  function returnToOrg() {
+    return router.push(
+      `https://api.trustauthx.com/user/me/widget/settings?code=${code}&UserToken=${user_token}&redirect_url=${redirect_url}`
+    );
+  }
 
   return (
     <div className="h-screen w-screen flex justify-center items-center">
       <div className="h-fit min-h-[80vh] w-[90vw]  md:w-[80vw] lg:w-[70vw] border-2 border-slate-300 rounded-md text-center p-2">
-        <div className="flex flex-col justify-center items-start pt-4 px-4">
-          <h1 className="text-2xl font-medium">Settings</h1>
-          <p className="text-sm text-muted-foreground">
-            Make changes to your account
-          </p>
+        <div className="flex  flex-col-reverse sm:flex-row   sm:justify-between">
+          <div className="flex flex-col justify-center items-start pt-4 px-4">
+            <h1 className="text-2xl font-medium">Settings</h1>
+            <p className="text-sm text-muted-foreground">
+              Make changes to your account
+            </p>
+          </div>
+          <button
+            className="flex flex-row items-center gap-1 group"
+            onClick={returnToOrg}
+          >
+            <IoArrowBackOutline
+              size={20}
+              className="group-hover:-translate-x-1 transition-transform"
+            />
+            <span>Return to {storeOrgData.widget.name}</span>
+            <Avatar>
+              <AvatarImage
+                src={storeOrgData.widget.logo_url}
+                alt="@shadcn"
+                className="w-8 rounded-full"
+              />
+              <AvatarFallback>Logo</AvatarFallback>
+            </Avatar>
+          </button>
         </div>
         <Separator className="my-4" />
         <ScrollArea className="h-[70vh]">
