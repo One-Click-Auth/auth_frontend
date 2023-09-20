@@ -254,12 +254,10 @@ export default function Security() {
         set_user_token(data.user_token);
       }
       if (response.status === 200) {
-        setMfa(false);
         toast({
           variant: 'success',
           description: 'MFA removed. Please check your email to confirm.'
         });
-        setMfa(false);
         return;
       }
     } catch (error) {
@@ -485,7 +483,7 @@ export default function Security() {
                     value={showQr ? otp : otp2}
                     onChange={showQr ? setOtp : setOtp2}
                     numInputs={6}
-                    inputType="text"
+                    inputType="tel"
                     renderSeparator={<span></span>}
                     renderInput={props => <input {...props} />}
                   />

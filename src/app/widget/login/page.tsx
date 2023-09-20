@@ -21,7 +21,8 @@ import { MdEmail } from 'react-icons/md';
 import { VscEye, VscEyeClosed } from 'react-icons/vsc';
 import { PasswordCheck } from './components/PasswodCheck';
 import { useToast } from '@/components/ui/use-toast';
-import { IoArrowBackCircleSharp } from 'react-icons/io5';
+import { IoArrowBackCircle } from 'react-icons/io5';
+
 export default function Widget() {
   //store function to set the org data in the store. It takes two arguments org token and org data.
   const setOrgData = useOrgData(state => state.setOrgData);
@@ -56,8 +57,7 @@ export default function Widget() {
   const [showMfaPopup, setShowMfaPopup] = useState(false);
   //state variable to show and hide dead end message panel
   const [showMsgPanel, setShowMsgPanel] = useState(false);
-  //state variable to show and hide social login
-  const [showSocial, setShowSocial] = useState(false);
+  const [showBack, setShowBack] = useState(false);
 
   // state varibale to store the value of email typed by the user
   const [email, setEmail] = useState('');
@@ -75,10 +75,21 @@ export default function Widget() {
   const [mfaBtnAction, setMfaBtnAction] = useState<MfaActions>();
   const [newPassBtnAction, setNewPassBtnAction] = useState<NewPassActions>();
   const [passBtnAction, setPassBtnAction] = useState<PassActions>();
+  const [disabled1, setDisabled1] = useState(true);
+  const [showChecks, setShowChecks] = useState<boolean>(false);
 
-  //checkbox varibale
-  const [checked, setChecked] = useState(false);
-  const [selectedSocial, setSelectedSocial] = useState('');
+  useEffect(() => {
+    if (newPass.length > 0) {
+      setShowChecks(true);
+    } else {
+      setShowChecks(false);
+    }
+    if (!testPass(newPass)) {
+      setDisabled1(false);
+    } else {
+      setDisabled1(true);
+    }
+  }, [newPass]);
 
   //search the url for the param org_id to fetch details for that org
   const searchParams = useSearchParams();
@@ -646,7 +657,7 @@ export default function Widget() {
         return router.push('https://www.trustauthx.com');
       }
       if (response.status === 200) {
-        setShowSocial(true);
+        // setShowSocial(true);
 
         const orgData = (await response.json()) as OrgData;
 
@@ -732,6 +743,7 @@ export default function Widget() {
       setCurrentUserToken(user_token);
       //handling the response when the status code is 202, email is not verified that means signup
       //203 code will come only when strict mfa is true from org
+      setShowBack(true);
       if (response.status === 202 || response.status === 203) {
         if (response.status === 203) {
           // setQr(decryptCode(mfa_code));
@@ -936,37 +948,6 @@ export default function Widget() {
             if (userInfo.fa2 === null || userInfo.fa2 === false) {
               //when user has not activated MFA yet, because the org enabled strict mfa after the user signed up
               //user will have to activate the mfa first and then proceed to login if password is set
-              // try {
-              //   const res = await fetch(
-              //     `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
-              //     {
-              //       method: 'PUT',
-              //       headers: {
-              //         'Content-Type': 'application/json'
-              //       },
-              //       body: JSON.stringify({
-              //         switch_mfa: true
-              //       })
-              //     }
-              //   );
-
-              //   const resData = (await res.json()) as any;
-              //   if (res.status === 203) {
-              //     setCurrentUserToken(resData.user_token);
-              //     setQr(decryptCode(resData.mfa_code));
-              //     setBtnAction(ButtonAction.MfaActivationLogin);
-
-              //     setButtonAction('mfa-activation-login');
-              //     setShowMfaActivation(true);
-              //     return;
-              //   }
-              // } catch (error) {
-              //   setLoading2(false);
-
-              //   return console.log(
-              //     'some error occured in sending the request for  mfa code',
-              //     error
-              //   );
               // }
               return;
             } else if (userInfo.fa2 === true) {
@@ -1029,10 +1010,14 @@ export default function Widget() {
   };
 
   const reset = () => {
+    setPass('');
+    setNewPass('');
+    setOtp('');
     setShowPassword(false);
     setShowMfaPopup(false);
     setShowMsgPanel(false);
     setShowNewPassword(false);
+    setShowBack(false);
   };
   //function to show mfa popup for login with password and mfa after a user puts in password and hits the button
   const showMfaPopupForLogin = () => {
@@ -1140,7 +1125,7 @@ export default function Widget() {
     borderRadius: '0.75rem',
     border: '1.3px solid',
     borderColor: ` ${widget.input_border.color}`,
-    // "!w-10 h-10 border bg-transparent text-center rounded-xl"
+    // border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500
     background: 'transparent',
     height: '2.5rem',
     width: '2.5rem'
@@ -1164,13 +1149,14 @@ export default function Widget() {
             className="h-fit  w-[390px] max-w-[90vw] max-h-[90vh] pt-14 pb-10 px-4 relative"
             style={cardStyle}
           >
-            <button className="absolute top-4" onClick={reset}>
-              <IoArrowBackCircleSharp
-                size={30}
-                color={widget.color11}
-                opacity={0.5}
-              />
-            </button>
+            {showBack && (
+              <button
+                className="absolute top-4 opacity-50 hover:opacity-80 transition-opacity"
+                onClick={reset}
+              >
+                <IoArrowBackCircle size={30} color={widget.color11} />
+              </button>
+            )}
             <CardContent>
               <div className="space-y-10 flex-1 h-full justify-center flex flex-col">
                 {showMsgPanel ? (
@@ -1188,12 +1174,15 @@ export default function Widget() {
 
                     <div className="flex flex-col gap-8  ">
                       <div className="flex items-center justify-center flex-col lg:px-4 gap-8">
-                        <h1 className="text-3xl font-medium   text-center break-words w-44 mt-0.5 ">
+                        <h1
+                          className="text-3xl font-medium   text-center break-words w-44 mt-0.5 "
+                          style={greetingStyle}
+                        >
                           Hi !
                         </h1>
                         <p
                           className="w-full break-words text-center"
-                          style={{ color: widget.color10 }}
+                          style={orgNameStyle}
                         >
                           {email}
                         </p>
@@ -1230,12 +1219,17 @@ export default function Widget() {
                           />
                           <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
                         </Avatar>
-                        <h1 className="text-3xl font-medium   text-center break-words w-44 mt-0.5 ">
+                        <h1
+                          className="text-3xl font-medium   text-center break-words w-44 mt-0.5 "
+                          style={greetingStyle}
+                        >
                           Hi !
                         </h1>
-                        <p className="  w-44 break-words text-center">
-                          {/* add the href to this a tag */}
-                          <span className="text-blue-600">{email}</span>
+                        <p
+                          className=" w-full break-words text-center"
+                          style={orgNameStyle}
+                        >
+                          {email}
                         </p>
                       </div>
 
@@ -1247,6 +1241,7 @@ export default function Widget() {
                           inputStyle={otpInputStyle}
                           value={otp}
                           onChange={setOtp}
+                          inputType="tel"
                           numInputs={6}
                           renderSeparator={<span></span>}
                           renderInput={props => <input {...props} />}
@@ -1270,7 +1265,7 @@ export default function Widget() {
                     </div>
                   </>
                 ) : showNewPassword ? (
-                  <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-6 sm:px-4">
                     <div className="flex items-center justify-center flex-col lg:px-4 gap-4">
                       <Avatar className="w-16 h-16 rounded-none">
                         <AvatarImage
@@ -1280,14 +1275,16 @@ export default function Widget() {
                         />
                         <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
                       </Avatar>
-                      <p className="w-full break-words text-center">
-                        {/* add the href to this a tag */}
-                        <span className="text-blue-600">{email}</span>
+                      <p
+                        className=" w-full break-words text-center"
+                        style={orgNameStyle}
+                      >
+                        {email}
                       </p>
                     </div>
 
                     <div className="flex flex-col justify-center items-center gap-8  ">
-                      <p className="text-center">
+                      <p className="text-center" style={greetingStyle}>
                         Create a new Password for your <br />{' '}
                         <b>{widget.name} </b>account{' '}
                       </p>
@@ -1298,7 +1295,7 @@ export default function Widget() {
                           value={newPass}
                           onChange={e => setNewPass(e.target.value)}
                           style={inputStyle}
-                          className="w-full h-[2.8rem]  border-[1.4px] px-4 py-0 mb-2 focus-visible:ring-0 bg-transparent"
+                          className="w-full h-[2.8rem]  border-[1.4px] pl-4 pr-8 py-0 mb-2 focus-visible:ring-0 bg-transparent"
                           placeholder="password"
                           type={showpass ? 'text' : 'password'}
                         />
@@ -1308,18 +1305,26 @@ export default function Widget() {
                           onClick={() => setShowpass(!showpass)}
                         >
                           {showpass ? (
-                            <VscEye size={24} />
+                            <VscEye size={20} />
                           ) : (
-                            <VscEyeClosed size={24} />
+                            <VscEyeClosed size={20} />
                           )}
                         </button>
-                        <PasswordCheck pass={newPass} />
+                        <div
+                          className={`${
+                            !showChecks
+                              ? 'scale-y-0 h-0 opacity-0 overflow-hidden'
+                              : 'scale-y-100 opacity-100 h-[185px]'
+                          } transition-all ease-in-out`}
+                        >
+                          <PasswordCheck pass={newPass} />
+                        </div>
                       </div>
 
                       <Button
                         style={goButtonStyle}
-                        className="w-full h-[2.8rem] mb-4 "
-                        disabled={loading2}
+                        className="w-full h-[2.8rem] mb-4 transition-all "
+                        disabled={loading2 || disabled1}
                         onClick={handleNewPassActions}
                       >
                         {loading2 ? (
@@ -1333,7 +1338,7 @@ export default function Widget() {
                     </div>
                   </div>
                 ) : showPassword ? (
-                  <div className="flex flex-col gap-8">
+                  <div className="flex flex-col gap-8 sm:px-4">
                     <div className="flex items-center justify-center flex-col lg:px-4 gap-4">
                       <Avatar className="w-16 h-16 rounded-none">
                         <AvatarImage
@@ -1343,17 +1348,24 @@ export default function Widget() {
                         />
                         <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
                       </Avatar>
-                      <h1 className="text-3xl font-medium   text-center break-words w-44 mt-0.5 ">
+                      <h1
+                        className="text-3xl font-medium   text-center break-words w-44 mt-0.5 "
+                        style={greetingStyle}
+                      >
                         Hi !
                       </h1>
-                      <p className="  w-full break-words text-center">
-                        {/* add the href to this a tag */}
-                        <span className="text-blue-600">{email}</span>
+                      <p
+                        className=" w-full break-words text-center"
+                        style={orgNameStyle}
+                      >
+                        {email}
                       </p>
                     </div>
 
                     <div className="flex flex-col justify-center items-center gap-8 mt-6 ">
-                      <p className="text-center">Enter your Password</p>
+                      <p className="text-center" style={greetingStyle}>
+                        Enter your Password
+                      </p>
                       <div className="relative w-full">
                         <Input
                           name="pass"
@@ -1361,7 +1373,7 @@ export default function Widget() {
                           value={pass}
                           onChange={e => setPass(e.target.value)}
                           style={inputStyle}
-                          className="w-full h-[2.8rem] border-[1.4px] px-4 py-0 mb-2 focus-visible:ring-0 bg-transparent"
+                          className="w-full h-[2.8rem] border-[1.4px] pl-4 pr-8 py-0 mb-2 focus-visible:ring-0 bg-transparent"
                           placeholder="password"
                           type={showpass ? 'text' : 'password'}
                         />
@@ -1371,9 +1383,9 @@ export default function Widget() {
                           onClick={() => setShowpass(!showpass)}
                         >
                           {showpass ? (
-                            <VscEye size={24} />
+                            <VscEye size={20} />
                           ) : (
-                            <VscEyeClosed size={24} />
+                            <VscEyeClosed size={20} />
                           )}
                         </button>
                       </div>
@@ -1394,8 +1406,8 @@ export default function Widget() {
                       </Button>
                       <div>
                         <Button
-                          color={widget.color1}
-                          className="bg-transparent shadow-none w-fit h-fit p-0 hover:bg-transparent hover:text-blue-500"
+                          style={{ color: widget.input_border.color }}
+                          className="bg-transparent shadow-none w-fit  h-fit p-0 hover:bg-transparent"
                           onClick={forgotPass}
                         >
                           Forgot password

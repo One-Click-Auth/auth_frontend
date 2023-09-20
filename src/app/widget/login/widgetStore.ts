@@ -359,7 +359,7 @@ export const useOrgData = create<OrgData>(set => ({
     SSO: [],
     social: socialDefaults,
     widget: {
-      name: '',
+      name: 'Org',
       logo_url: '',
       font: '',
       greeting: '',
