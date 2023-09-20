@@ -124,6 +124,7 @@ export default function Profile() {
   }
   //to save profile image
   async function handleImageUpdate() {
+    setLoading1(true);
     if (!imageFile) {
       if (imageUrl) {
         if (isImageUrl(imageUrl)) {
@@ -136,6 +137,7 @@ export default function Profile() {
             title: 'Error!',
             description: `Please add a valid image URL`
           });
+          setLoading1(false);
           return;
         }
       } else {
@@ -144,6 +146,8 @@ export default function Profile() {
           title: 'Error!',
           description: `Please add a file or URL first`
         });
+        setLoading1(false);
+
         return;
       }
     } else {
@@ -159,6 +163,8 @@ export default function Profile() {
             title: 'Error!',
             description: error
           });
+          setLoading1(false);
+          return;
         });
       return;
     }
@@ -207,7 +213,6 @@ export default function Profile() {
   }
   //request to save image
   async function updateImage(url: string) {
-    setLoading1(true);
     try {
       const response = await fetch(
         `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
@@ -227,7 +232,7 @@ export default function Profile() {
         detail?: string;
         user_token: string;
       };
-
+      setLoading1(false);
       if (data.user_token) {
         // console.log(data, data.user_token);
         set_user_token(data.user_token);
@@ -238,8 +243,6 @@ export default function Profile() {
           description: data.detail,
           variant: 'destructive'
         });
-        setLoading1(false);
-        return;
       }
       if (response.status === 200) {
         toast({
@@ -247,7 +250,6 @@ export default function Profile() {
           title: 'Success!',
           description: 'Profile picture updated successfully'
         });
-        setLoading1(false);
         // getUserData();
         return;
       }
@@ -292,7 +294,7 @@ export default function Profile() {
                   : 'https://openauthx.s3.ap-south-1.amazonaws.com/Group+39554+(1).svg'
               }
               alt="@shadcn"
-              className="w-20 rounded-full"
+              className="w-20 h-20 overflow-hidden rounded-full"
             />
             <AvatarFallback>Profile</AvatarFallback>
           </Avatar>

@@ -42,9 +42,9 @@ export default function WidgetProfile() {
   const [loading1, setLoading1] = useState(true);
   const router = useRouter();
   const { toast } = useToast();
-  useEffect(() => {
-    console.log('USER TOKEN UPDATED BY zustand', user_token);
-  }, [user_token]);
+  // useEffect(() => {
+  //   console.log('USER TOKEN UPDATED BY zustand', user_token);
+  // }, [user_token]);
 
   useEffect(() => {
     fetchOrgDetails()
@@ -95,7 +95,7 @@ export default function WidgetProfile() {
 
     try {
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/get/user-token?code=${code}&Access_token=${token}`,
+        `https://api.trustauthx.com/user/me/get/user-token?code=${code}&Access_token=${token}&redirect_url=${redirect_url}`,
         {
           method: 'GET',
 
