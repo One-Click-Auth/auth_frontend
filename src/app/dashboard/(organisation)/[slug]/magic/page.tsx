@@ -22,7 +22,6 @@ function Page() {
   const [imageURL, setImageURL] = useState('');
 
   async function handleImageUploadToS3() {
-    // Check filename extension
     try {
       if (!imageURL || !blob) return;
 
@@ -92,9 +91,10 @@ function Page() {
       return;
     }
 
-    setBlob(new Blob([response.data], { type: 'image/jpeg' }));
-    const img = URL.createObjectURL(blob);
+    const resBlob = new Blob([response.data], { type: 'image/jpeg' });
+    const img = URL.createObjectURL(resBlob);
 
+    setBlob(resBlob);
     setImageURL(img);
     setIsSendingGenerateRequest(false);
   }
