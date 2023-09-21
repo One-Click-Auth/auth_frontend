@@ -99,10 +99,6 @@ function Page() {
     return img;
   }
 
-  // const { data } = useSWR(apiURL, handleImageGeneration);
-  //
-  // console.log({ data });
-
   return (
     <div className="flex flex-col mt-12 justify-center items-center gap-11">
       <div className="flex justify-between flex-1 px-10 py-6 border rounded-lg  gap-28 items-center">
