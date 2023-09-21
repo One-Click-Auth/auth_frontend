@@ -58,14 +58,12 @@ function Page() {
     const headers = { Authorization: `Bearer ${API_TOKEN}` };
 
     try {
-      return await axios.post(
-        apiURL,
-        { inputs },
-        {
-          headers: headers,
-          responseType: 'arraybuffer'
-        }
-      );
+      return await axios(apiURL, {
+        method: 'post',
+        data: { inputs },
+        headers: headers,
+        responseType: 'arraybuffer'
+      });
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === 503) {
         await new Promise(resolve => setTimeout(resolve, 7000)); // Introduce a delay between retries
@@ -97,7 +95,13 @@ function Page() {
     setBlob(resBlob);
     setImageURL(img);
     setIsSendingGenerateRequest(false);
+
+    return img;
   }
+
+  // const { data } = useSWR(apiURL, handleImageGeneration);
+  //
+  // console.log({ data });
 
   return (
     <div className="flex flex-col mt-12 justify-center items-center gap-11">
