@@ -416,29 +416,13 @@ export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
       greeting: data.widget.greeting,
       logoImage: data.widget.logo_url,
       logo: undefined,
-      button2Status:
-        data.widget.color1 === data.widget.color0 ||
-        data.widget.color1 === data.widget.color2
-          ? false
-          : true,
-      button3Status:
-        data.widget.color2 === data.widget.color0 ||
-        data.widget.color2 === data.widget.color1
-          ? false
-          : true,
+      button2Status: data.widget.color1 === data.widget.color0 ? false : true,
+      button3Status: data.widget.color2 === data.widget.color1 ? false : true,
       widget2Status: data.widget.color7 === data.widget.color6 ? false : true,
       // button2Status: data.widget.color1 === '#121212' ? false : true,
       // button3Status: data.widget.color1 === '#121212' ? false : true,
-      widgetBg2Status:
-        data.widget.color4 === data.widget.color3 ||
-        data.widget.color4 === data.widget.color5
-          ? false
-          : true,
-      widgetBg3Status:
-        data.widget.color5 === data.widget.color3 ||
-        data.widget.color5 === data.widget.color4
-          ? false
-          : true,
+      widgetBg2Status: data.widget.color4 === data.widget.color3 ? false : true,
+      widgetBg3Status: data.widget.color5 === data.widget.color4 ? false : true,
       color: toColor('hex', data.widget.color0),
       color1: toColor('hex', data.widget.color1),
       color2: toColor('hex', data.widget.color2),
@@ -481,16 +465,8 @@ const setInitialState = (data: OrgObject) => {
     greeting: data.widget.greeting,
     logoImage: data.widget.logo_url,
     logo: undefined,
-    button2Status:
-      data.widget.color1 === data.widget.color0 ||
-      data.widget.color1 === data.widget.color2
-        ? false
-        : true,
-    button3Status:
-      data.widget.color2 === data.widget.color0 ||
-      data.widget.color2 === data.widget.color1
-        ? false
-        : true,
+    button2Status: data.widget.color1 === data.widget.color0 ? false : true,
+    button3Status: data.widget.color2 === data.widget.color1 ? false : true,
     // button2Status: data.widget.color1 === '#121212' ? false : true,
     // button3Status: data.widget.color1 === '#121212' ? false : true,
     color: toColor('hex', data.widget.color0),
@@ -509,16 +485,8 @@ const setInitialState = (data: OrgObject) => {
     widgetBgColor: toColor('hex', data.widget.color3),
     widgetBgColor2: toColor('hex', data.widget.color4),
     widgetBgColor3: toColor('hex', data.widget.color5),
-    widgetBg2Status:
-      data.widget.color4 === data.widget.color3 ||
-      data.widget.color4 === data.widget.color5
-        ? false
-        : true,
-    widgetBg3Status:
-      data.widget.color5 === data.widget.color3 ||
-      data.widget.color5 === data.widget.color4
-        ? false
-        : true,
+    widgetBg2Status: data.widget.color4 === data.widget.color3 ? false : true,
+    widgetBg3Status: data.widget.color5 === data.widget.color4 ? false : true,
     shadowColor: toColor('hex', data.widget.color8),
     nameFontColor: toColor('hex', data.widget.color10),
     greetingFontColor: toColor('hex', data.widget.color11),
@@ -528,7 +496,7 @@ const setInitialState = (data: OrgObject) => {
     widgetBoxRadius: data.widget.widget_border.radius,
     widgetBorderWidth: data.widget.widget_border.width
   };
- 
+
   initialConsentState = {
     tncURL: data.tnc_url ?? '',
     ppURL: data.pp_url ?? ''

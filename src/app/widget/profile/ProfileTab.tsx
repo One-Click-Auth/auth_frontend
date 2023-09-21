@@ -127,19 +127,8 @@ export default function Profile() {
     setLoading1(true);
     if (!imageFile) {
       if (imageUrl) {
-        if (isImageUrl(imageUrl)) {
-          setImage(imageUrl);
-          updateImage(imageUrl);
-          return;
-        } else {
-          toast({
-            variant: 'destructive',
-            title: 'Error!',
-            description: `Please add a valid image URL`
-          });
-          setLoading1(false);
-          return;
-        }
+        updateImage(imageUrl);
+        return;
       } else {
         toast({
           variant: 'destructive',
@@ -147,7 +136,6 @@ export default function Profile() {
           description: `Please add a file or URL first`
         });
         setLoading1(false);
-
         return;
       }
     } else {

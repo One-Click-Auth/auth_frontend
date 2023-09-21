@@ -175,7 +175,7 @@ export default function WidgetProfile() {
               <AvatarImage
                 src={storeOrgData.widget.logo_url}
                 alt="@shadcn"
-                className="w-8 rounded-full"
+                className="w-8 h-8 overflow-hidden rounded-full"
               />
               <AvatarFallback>Logo</AvatarFallback>
             </Avatar>
