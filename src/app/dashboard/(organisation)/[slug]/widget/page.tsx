@@ -161,6 +161,8 @@ const WidgetSettings = () => {
 
   useEffect(() => {
     setWidgetBackgroundColor(updateWidgetBackground());
+    console.log(widgetBackgroundColor);
+    console.log(widgetBg2Status, widgetBg3Status);
   }, [
     widgetBgColor,
     widgetBgColor2,
