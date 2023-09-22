@@ -15,6 +15,7 @@ import { PasswordDialogue } from '@/app/dashboard/components/PasswordDialgue';
 import { Dialog } from '@radix-ui/react-dialog';
 import { DialogTrigger } from '@/components/ui/Dialog';
 import { useToast } from '@/components/ui/use-toast';
+import UpgradeToEnterprise from '@/app/dashboard/upgradeToEnterprise';
 
 function UpgradeAndPlansPage() {
   const router = useRouter();
@@ -201,9 +202,8 @@ function UpgradeAndPlansPage() {
               and machine learning algorithms, you can bolster your platform's
               security defenses and adapt to evolving threats effectively.
             </p>
-            <Button variant={'black'} className="w-48 ">
-              Upgrade to Enterprise
-            </Button>
+
+            <UpgradeToEnterprise />
           </CardContent>
         </Card>
 

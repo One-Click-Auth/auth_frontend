@@ -1,9 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
-
-
 import { AiGenerate } from '@/assets/Svg/Account/Account';
 import { SettingSwitch } from '../components/setting-switch';
+import UpgradeToEnterprise from '@/app/dashboard/upgradeToEnterprise';
 
 const OrganisationDashboard = () => {
   return (
@@ -115,9 +114,8 @@ const OrganisationDashboard = () => {
             and other integrated services using a single set of login
             credentials.
           </p>
-          <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
-            Upgrade to Enterprise
-          </Button>
+
+          <UpgradeToEnterprise />
         </CardContent>
       </Card>
     </div>

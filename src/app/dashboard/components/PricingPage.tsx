@@ -7,6 +7,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PreferenceDialog, PricingCard } from './pricingCard';
 import { useAuth } from '@/Providers/AuthContext';
+import UpgradeToEnterprise from '../upgradeToEnterprise';
 
 function PricingPage() {
   const [blurStudents, setBlurStudents] = useState(false);
@@ -75,8 +76,11 @@ function PricingPage() {
           <br />
           success from day one.
         </p>
-        <div className="flex gap-6">
-          <Button variant={'authx'} className="text-black p-2 bg-slate-300">
+        <div className="flex gap-6 items-center">
+          <Button
+            variant={'authx'}
+            className="text-black p-2 h-10 bg-slate-300"
+          >
             Talk with an Expert →
           </Button>
           <PreferenceDialog
@@ -150,13 +154,10 @@ function PricingPage() {
             <p>AI based Add-ons</p>
             <p>AI based Security Solution </p>
             <p>Unique Requirement Assessment </p>
+            <UpgradeToEnterprise />
           </div>
 
-          <Button className="bg-black hover:bg-black/80  w-56 h-11  mt-16  mb-3 text-white  px-8">
-            Upgrade to Enterprise
-          </Button>
-
-          <p className="italic text-sm text-muted-foreground">
+          <p className="italic text-sm text-muted-foreground pt-4">
             Talk with an expert to discuss your unique needs.
           </p>
         </div>

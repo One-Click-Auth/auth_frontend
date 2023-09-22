@@ -6,6 +6,7 @@ import {
 } from '@/assets/Svg/Account/Account';
 import { Button } from '@/components/ui/Button';
 import { SettingSwitch } from '../components/setting-switch';
+import UpgradeToEnterprise from '@/app/dashboard/upgradeToEnterprise';
 
 const OrganisationDashboard = () => {
   return (
@@ -100,9 +101,7 @@ const OrganisationDashboard = () => {
             breaches, minimizing the risk of account takeover and unauthorized
             access.
           </p>
-          <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
-            Upgrade to Enterprise
-          </Button>
+          <UpgradeToEnterprise />
         </CardContent>
       </Card>
       <Card className="shadow-none">
@@ -120,9 +119,7 @@ const OrganisationDashboard = () => {
             and machine learning algorithms, you can bolster your platform's
             security defenses and adapt to evolving threats effectively.
           </p>
-          <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
-            Upgrade to Enterprise
-          </Button>
+          <UpgradeToEnterprise />
         </CardContent>
       </Card>
     </div>

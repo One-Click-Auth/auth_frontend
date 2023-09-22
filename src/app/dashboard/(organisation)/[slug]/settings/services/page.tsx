@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AiCloudSpark } from '@/assets/Svg/Account/Account';
 import { Button } from '@/components/ui/Button';
 import { SettingSwitch } from '../components/setting-switch';
+import UpgradeToEnterprise from '@/app/dashboard/upgradeToEnterprise';
 
 const OrganisationDashboard = () => {
   return (
@@ -75,9 +76,7 @@ const OrganisationDashboard = () => {
             ensure enhanced performance, scalability, and data security across
             geographically distributed locations.
           </p>
-          <Button className="bg-black hover:bg-black/80 text-white text-sm px-8">
-            Upgrade to Enterprise
-          </Button>
+          <UpgradeToEnterprise />
         </CardContent>
       </Card>
     </div>
