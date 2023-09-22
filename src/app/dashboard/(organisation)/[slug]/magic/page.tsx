@@ -22,7 +22,6 @@ function Page() {
   const [imageURL, setImageURL] = useState('');
 
   async function handleImageUploadToS3() {
-    // Check filename extension
     try {
       if (!imageURL || !blob) return;
 
@@ -59,14 +58,12 @@ function Page() {
     const headers = { Authorization: `Bearer ${API_TOKEN}` };
 
     try {
-      return await axios.post(
-        apiURL,
-        { inputs },
-        {
-          headers: headers,
-          responseType: 'arraybuffer'
-        }
-      );
+      return await axios(apiURL, {
+        method: 'post',
+        data: { inputs },
+        headers: headers,
+        responseType: 'arraybuffer'
+      });
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === 503) {
         await new Promise(resolve => setTimeout(resolve, 7000)); // Introduce a delay between retries
@@ -92,11 +89,14 @@ function Page() {
       return;
     }
 
-    setBlob(new Blob([response.data], { type: 'image/jpeg' }));
-    const img = URL.createObjectURL(blob);
+    const resBlob = new Blob([response.data], { type: 'image/jpeg' });
+    const img = URL.createObjectURL(resBlob);
 
+    setBlob(resBlob);
     setImageURL(img);
     setIsSendingGenerateRequest(false);
+
+    return img;
   }
 
   return (
