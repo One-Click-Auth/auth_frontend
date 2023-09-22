@@ -15,29 +15,6 @@ import { updateKeys } from '@/redux/Org/keySlice';
 import Spinner from '@/components/spinner';
 import { useToast } from '@/components/ui/use-toast';
 
-// // Alert component
-// const AlertMessage = ({
-//   message,
-//   setAlert
-// }: {
-//   message: string;
-//   setAlert: React.Dispatch<boolean>;
-// }) => {
-//   return (
-//     <Alert className="fixed top-6 w-[22rem] left-[calc(50vw_-_11rem)] bg-red-400 z-[1100]">
-//       <ExclamationTriangleIcon className="w-4 h-4" />
-//       <AlertTitle>Notice!</AlertTitle>
-//       <button
-//         onClick={() => setAlert(false)}
-//         className="absolute right-2 top-2"
-//       >
-//         <LuXCircle className="w-5 h-5" />
-//       </button>
-//       <AlertDescription>{message}</AlertDescription>
-//     </Alert>
-//   );
-// };
-
 function AddOrganization() {
   const router = useRouter();
   const [orgName, setOrgName] = useState('');
@@ -63,12 +40,6 @@ function AddOrganization() {
   const [queryState, setQueryState] = useState(false);
 
   useEffect(() => {
-    if (orgCount <= 0) {
-      setOrgCount(1);
-    }
-  }, [orgCount]);
-
-  useEffect(() => {
     if (status === 'true') {
       setQueryState(true);
     } else {
@@ -76,6 +47,12 @@ function AddOrganization() {
       router.push('/dashboard/new-organization');
     }
   }, []);
+
+  useEffect(() => {
+    if (orgCount <= 0) {
+      setOrgCount(1);
+    }
+  }, [orgCount]);
 
   interface OrgData {
     status: boolean;
@@ -105,6 +82,10 @@ function AddOrganization() {
       if (response.status === 412) {
         const data = (await response.json()) as { detail: string };
         console.log(data.detail);
+        toast({
+          description: data.detail,
+          variant: 'destructive'
+        });
         router.push('/dashboard/new-organization');
         return;
       } else if (response.status === 200) {
@@ -116,13 +97,18 @@ function AddOrganization() {
         router.push('/dashboard/keys');
         return;
       }
-      toast({ description: 'Some error occured in fetching details' });
+      toast({
+        description: 'Some error occured in fetching details',
+        variant: 'destructive'
+      });
       setLoading(false);
       return;
     } catch (error) {
       console.log(error);
-      setAlertMessage('Some error occured in fetching details');
-      setAlert(true);
+      toast({
+        description: 'Some error occured in fetching details',
+        variant: 'destructive'
+      });
       setLoading(false);
     }
   };

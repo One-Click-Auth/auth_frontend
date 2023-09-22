@@ -24,7 +24,7 @@ function Page() {
 
   async function handleImageUploadToS3() {
     try {
-      if (!imageURL || !file) return;
+      if (!file) return;
 
       // Fetch Upload url
       const response = await fetch(
@@ -34,20 +34,22 @@ function Page() {
       const { url } = data as { url: string };
 
       // PUT file to s3 bucket
-      await fetch(url, {
+      const res = await fetch(url, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'image/*'
+          'Content-Type': 'image/jpeg'
         },
         body: file
-      }).catch(err => {
-        setIsUploadingToS3(false);
-        console.log(err);
       });
-
-      console.log({ url });
+      if (res?.status === 200) {
+        const imageUrl = url.split('?')[0];
+        console.log({ imageUrl });
+        return imageUrl;
+      }
     } catch (error) {
+      console.log(error);
       setIsUploadingToS3(false);
+      return;
     }
   }
 
@@ -287,7 +289,3 @@ function GradientAISvg() {
 }
 
 export default Page;
-
-// {
-//   "url": "https://openauthx.s3.ap-south-1.amazonaws.com/1445052d4acd1c59f349de4eb95fdb8c_blob%3Ahttps%3A//app.trustauthx.com/2837ed5c-890e-4bb0-a166-4ea947b3fa3a.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2UWUTT7W5HXUYIVJ%2F20230921%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20230921T155857Z&X-Amz-Expires=120&X-Amz-Signature=41a860b620a06e704ef01fc0400a1a14cb6f10c0cdc2d1e9983ed0924fdccfab&X-Amz-SignedHeaders=host&x-id=PutObject"
-// }
