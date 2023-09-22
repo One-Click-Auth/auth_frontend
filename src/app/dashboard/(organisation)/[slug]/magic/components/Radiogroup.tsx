@@ -40,7 +40,7 @@ export function RadioGroup({
       </div>
       <div className="flex items-center space-x-2">
         <RadioGroupItem
-          value="      https://api-inference.huggingface.co/models/moonlightnexus/realize
+          value="https://api-inference.huggingface.co/models/moonlightnexus/realize
 "
           id="r3"
         />
