@@ -8,6 +8,7 @@ import React, { useRef, useState } from 'react';
 import { RadioGroup } from './components/Radiogroup';
 import Spinner from '@/components/spinner';
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { v4 as uuid } from 'uuid';
 
 function Page() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -18,16 +19,16 @@ function Page() {
   const [apiURL, setApiURL] = useState(
     'https://api-inference.huggingface.co/models/moonlightnexus/RealityCreation'
   );
-  const [blob, setBlob] = useState<Blob>(new Blob());
+  const [file, setFile] = useState<File>();
   const [imageURL, setImageURL] = useState('');
 
   async function handleImageUploadToS3() {
     try {
-      if (!imageURL || !blob) return;
+      if (!imageURL || !file) return;
 
       // Fetch Upload url
       const response = await fetch(
-        `/api/preSignedUrl?fileName=${imageURL}.jpeg`
+        `/api/preSignedUrl?fileName=${file.name}`
       ).catch(err => console.log(err));
       const data = await response?.json();
       const { url } = data as { url: string };
@@ -38,7 +39,7 @@ function Page() {
         headers: {
           'Content-Type': 'image/*'
         },
-        body: blob
+        body: file
       }).catch(err => {
         setIsUploadingToS3(false);
         console.log(err);
@@ -59,7 +60,7 @@ function Page() {
 
     try {
       return await axios(apiURL, {
-        method: 'post',
+        method: 'POST',
         data: { inputs },
         headers: headers,
         responseType: 'arraybuffer'
@@ -91,8 +92,9 @@ function Page() {
 
     const resBlob = new Blob([response.data], { type: 'image/jpeg' });
     const img = URL.createObjectURL(resBlob);
-
-    setBlob(resBlob);
+    const file = new File([resBlob], `${uuid()}.jpeg`);
+    console.log(file);
+    setFile(file);
     setImageURL(img);
     setIsSendingGenerateRequest(false);
 
