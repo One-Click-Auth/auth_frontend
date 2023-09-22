@@ -681,7 +681,8 @@ export default function Widget() {
   };
 
   //first action by the user, when the user clicks on the go button after putting in the email id
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     setErrMsg('');
     setErr(false);
     setLoading2(true);
@@ -868,47 +869,6 @@ export default function Widget() {
         if (storeOrgData.fa2) {
           if (storeOrgData.strict_mfa) {
             //when org has enabled strict mfa
-            // if (userInfo.fa2 === null || userInfo.fa2 === false) {
-            //   //when user has not activated MFA yet, because the org enabled strict mfa after the user signed up
-            //   //user will have to activate the mfa first and then proceed to login if password is set
-            //   try {
-            //     const res = await fetch(
-            //       `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
-            //       {
-            //         method: 'PUT',
-            //         headers: {
-            //           'Content-Type': 'application/json'
-            //         },
-            //         body: JSON.stringify({
-            //           switch_mfa: true
-            //         })
-            //       }
-            //     );
-            //     const resData = (await res.json()) as any;
-            //     if (res.status === 203) {
-            //       setCurrentUserToken(resData.user_token);
-            //       setQr(decryptCode(resData.mfa_code));
-            //       setShowEnableMfaLink(false);
-            //       setBtnAction(ButtonAction.MfaActivationLogin);
-            //       setButtonAction('mfa-activation-login');
-            //       setShowMfaActivation(true);
-            //       return;
-            //     }
-            //   } catch (error) {
-            //     setLoading2(false);
-            //     return console.log(
-            //       'some error occured in sending the request for  mfa code',
-            //       error
-            //     );
-            //   }
-            // } else if (userInfo.fa2 === true) {
-            //   //when user has set up the mfa
-            //   //show the password input then the mfa popup and send the post request with both pass and mfa totp
-            //   setShowPassField(true);
-            //   setBtnAction(ButtonAction.ShowMfaPopup);
-            //   setButtonAction('showMfaPopup');
-            //   return;
-            // }
           } else if (!storeOrgData.strict_mfa) {
             //when org has disabled strict mfa but fa2 is there, so user may choose fa2
             if (userInfo.fa2 === true) {
@@ -1048,7 +1008,8 @@ export default function Widget() {
     LoginPasswordMfa,
     ShowMfaPopup
   }
-  const handleMfaActions = () => {
+  const handleMfaActions = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     switch (mfaBtnAction) {
       case MfaActions.MfaLogin:
         handleMFA();
@@ -1062,7 +1023,8 @@ export default function Widget() {
     }
   };
 
-  const handleNewPassActions = () => {
+  const handleNewPassActions = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     switch (newPassBtnAction) {
       case NewPassActions.NewPasswordRequest:
         newPasswordRequest();
@@ -1072,7 +1034,8 @@ export default function Widget() {
         break;
     }
   };
-  const handlePassActions = () => {
+  const handlePassActions = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     switch (passBtnAction) {
       case PassActions.LoginPassword:
         loginWithPassword();
@@ -1233,7 +1196,10 @@ export default function Widget() {
                         </p>
                       </div>
 
-                      <div className="flex flex-col justify-center items-center mt-6 gap-8  ">
+                      <form
+                        className="flex flex-col justify-center items-center mt-6 gap-8 "
+                        onSubmit={handleMfaActions}
+                      >
                         <p className="text-center ">Enter OTP to Continue</p>
 
                         <OtpInput
@@ -1251,7 +1217,7 @@ export default function Widget() {
                           style={goButtonStyle}
                           className="w-full h-[2.8rem] mb-4"
                           disabled={loading2}
-                          onClick={handleMfaActions}
+                          type="submit"
                         >
                           {loading2 ? (
                             <div>
@@ -1261,7 +1227,7 @@ export default function Widget() {
                             <span>Continue</span>
                           )}
                         </Button>
-                      </div>
+                      </form>
                     </div>
                   </>
                 ) : showNewPassword ? (
@@ -1283,7 +1249,14 @@ export default function Widget() {
                       </p>
                     </div>
 
-                    <div className="flex flex-col justify-center items-center gap-8  ">
+                    <form
+                      className="flex flex-col justify-center items-center gap-8 "
+                      onSubmit={
+                        disabled1
+                          ? e => e.preventDefault()
+                          : handleNewPassActions
+                      }
+                    >
                       <p className="text-center" style={greetingStyle}>
                         Create a new Password for your <br />{' '}
                         <b>{widget.name} </b>account{' '}
@@ -1302,6 +1275,7 @@ export default function Widget() {
 
                         <button
                           className="absolute right-3 top-3 opacity-60"
+                          type="button"
                           onClick={() => setShowpass(!showpass)}
                         >
                           {showpass ? (
@@ -1325,7 +1299,7 @@ export default function Widget() {
                         style={goButtonStyle}
                         className="w-full h-[2.8rem] mb-4 transition-all "
                         disabled={loading2 || disabled1}
-                        onClick={handleNewPassActions}
+                        type="submit"
                       >
                         {loading2 ? (
                           <div>
@@ -1335,7 +1309,7 @@ export default function Widget() {
                           <span>Continue</span>
                         )}
                       </Button>
-                    </div>
+                    </form>
                   </div>
                 ) : showPassword ? (
                   <div className="flex flex-col gap-8 sm:px-4">
@@ -1362,7 +1336,10 @@ export default function Widget() {
                       </p>
                     </div>
 
-                    <div className="flex flex-col justify-center items-center gap-8 mt-6 ">
+                    <form
+                      className="flex flex-col justify-center items-center gap-8 mt-6 "
+                      onSubmit={handlePassActions}
+                    >
                       <p className="text-center" style={greetingStyle}>
                         Enter your Password
                       </p>
@@ -1394,7 +1371,7 @@ export default function Widget() {
                         style={goButtonStyle}
                         className="w-full h-[2.8rem] "
                         disabled={loading2}
-                        onClick={handlePassActions}
+                        type="submit"
                       >
                         {loading2 ? (
                           <div>
@@ -1408,12 +1385,12 @@ export default function Widget() {
                         <Button
                           style={{ color: widget.input_border.color }}
                           className="bg-transparent shadow-none w-fit  h-fit p-0 hover:bg-transparent"
-                          onClick={forgotPass}
+                          onSubmit={forgotPass}
                         >
                           Forgot password
                         </Button>
                       </div>
-                    </div>
+                    </form>
                     {/* <button className="relative top-0">Reset</button> */}
                   </div>
                 ) : (
@@ -1441,7 +1418,10 @@ export default function Widget() {
                       </small>
                     </div>
                     <div className="flex flex-col gap-8">
-                      <div className="flex flex-col lg:px-4 gap-10 mt-6">
+                      <form
+                        className="flex flex-col lg:px-4 gap-10 mt-6"
+                        onSubmit={handleSubmit}
+                      >
                         <div className="flex flex-col">
                           <Input
                             name="email"
@@ -1458,7 +1438,7 @@ export default function Widget() {
                           style={goButtonStyle}
                           className="w-full h-[2.8rem]  mb-4 "
                           disabled={loading2}
-                          onClick={handleSubmit}
+                          type="submit"
                         >
                           {loading2 ? (
                             <div>
@@ -1468,7 +1448,7 @@ export default function Widget() {
                             <span>Continue</span>
                           )}
                         </Button>
-                      </div>
+                      </form>
                       {show && (
                         <>
                           <div className="relative w-full py-2">

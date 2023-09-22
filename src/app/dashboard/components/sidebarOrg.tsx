@@ -123,15 +123,6 @@ export const SidebarOrg = () => {
       )}
 
       <div className=" mt-[50px] sm:sticky sm:top-8 sm:mt-1 w-full overflow-y-auto no-scrollbar overscroll-none flex flex-col items-center max-h-[95vh] pb-4 ">
-        {/* <Avatar className="mx-auto py-2 h-[6.25rem]">
-          <AvatarImage
-            width={open ? 60 : 40}
-            src={FlitchcoinSVG}
-            alt={`${currentOrg?.name ?? 'Organisation'} logo`}
-          />
-          <AvatarFallback>{currentOrg?.name}</AvatarFallback>
-        </Avatar> */}
-
         {isLoading ? (
           <Skeleton className="rounded-full w-[60px] h-[60px] mx-auto my-2" />
         ) : (

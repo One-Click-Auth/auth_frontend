@@ -114,15 +114,16 @@ export function WidgetPreview() {
             disabled
           /> */}
           <Input
-            name="newpass"
-            id="newPass"
+            name="email"
+            id="email"
             style={{
               borderRadius: Number(inputBoxRadius),
               borderColor: inputBorderColor.hex,
               background: 'transparent'
             }}
-            className="w-44  placeholder:text-sm border-[1.4px] px-4 h-[2rem] py-0 focus-visible:ring-0 bg-transparent disabled:bg-primary"
+            className="w-44  placeholder:text-[0.75rem] border-[1.4px] px-4 h-[2rem] py-0 focus-visible:ring-0 bg-transparent disabled:bg-primary"
             placeholder="Email"
+            readOnly
           />
         </div>
         <Button
@@ -135,8 +136,7 @@ export function WidgetPreview() {
           }}
           className={cn('w-44 h-8', !show && 'mb-3')}
         >
-          <span className="ml-6">Go !!</span>
-          <ChevronRightIcon className="ml-3" />
+          <span className=" text-[0.7rem]">Continue</span>
         </Button>
         {show && (
           <>
