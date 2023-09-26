@@ -68,6 +68,7 @@ export interface Data {
   social: Social; // Update this type to match the actual structure of the "social" property
   widget: Widget;
   callback_url: string;
+  decor_img: string | null;
 }
 
 export interface OrgData {
@@ -395,7 +396,8 @@ export const useOrgData = create<OrgData>(set => ({
       pp: null,
       redirect_url: ''
     },
-    callback_url: ''
+    callback_url: '',
+    decor_img: null
   },
   setOrgData: (orgToken, data) =>
     set(() => ({
