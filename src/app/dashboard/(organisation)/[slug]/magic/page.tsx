@@ -1,16 +1,24 @@
 'use client';
-
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Switch } from '@/components/ui/Switch';
 import Image from 'next/image';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { RadioGroup } from './components/Radiogroup';
 import Spinner from '@/components/spinner';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
+import { useAuth } from '@/Providers/AuthContext';
+import { useParams } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { ConfirmDialogue } from './components/confirmDialogue';
+import { Dialog } from '@radix-ui/react-dialog';
+import { DialogTrigger } from '@/components/ui/Dialog';
 
 function Page() {
+  const { slug: ORG_ID } = useParams();
+  const { token } = useAuth();
+  const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isSendingGenerateRequest, setIsSendingGenerateRequest] =
@@ -22,9 +30,99 @@ function Page() {
   const [file, setFile] = useState<File>();
   const [imageURL, setImageURL] = useState('');
 
+  const [disabled1, setDisabled1] = useState(true);
+
+  const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
+
+  useEffect(() => {
+    if (file) {
+      setDisabled1(false);
+    } else {
+      setDisabled1(true);
+    }
+  }, [file]);
+  const destructiveToast = () => {
+    toast({
+      variant: 'destructive',
+      title: 'Uh oh! Something went wrong.',
+      description: 'There was a problem with your request.'
+    });
+  };
+
+  async function removeImage() {
+    setLoading2(true);
+    try {
+      const res = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
+        method: 'PUT',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          decor_img: null
+        })
+      });
+
+      if (res.status === 200) {
+        toast({
+          title: 'Success!',
+          description: 'Image removed successfully',
+          variant: 'success'
+        });
+        setLoading2(false);
+        return;
+      } else {
+        setLoading2(false);
+        destructiveToast();
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading2(false);
+      destructiveToast();
+      return;
+    }
+  }
+
+  async function addAiImage() {
+    setLoading1(true);
+    try {
+      const url = await handleImageUploadToS3();
+      const res = await fetch(`https://api.trustauthx.com/org/${ORG_ID}`, {
+        method: 'PUT',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          decor_img: url
+        })
+      });
+
+      if (res.status === 200) {
+        toast({
+          title: 'Success!',
+          description: 'Image successfully added',
+          variant: 'success'
+        });
+        setLoading1(false);
+        return;
+      } else {
+        setLoading1(false);
+        destructiveToast();
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading1(false);
+      destructiveToast();
+      return;
+    }
+  }
   async function handleImageUploadToS3() {
     try {
-      if (!file) return;
+      if (!file) throw new Error();
 
       // Fetch Upload url
       const response = await fetch(
@@ -45,11 +143,12 @@ function Page() {
         const imageUrl = url.split('?')[0];
         console.log({ imageUrl });
         return imageUrl;
+      } else {
+        throw new Error();
       }
     } catch (error) {
       console.log(error);
-      setIsUploadingToS3(false);
-      return;
+      throw new Error();
     }
   }
 
@@ -105,7 +204,7 @@ function Page() {
 
   return (
     <div className="flex flex-col mt-12 justify-center items-center gap-11">
-      <div className="flex justify-between flex-1 px-10 py-6 border rounded-lg  gap-28 items-center">
+      {/* <div className="flex justify-between flex-1 px-10 py-6 border rounded-lg  gap-28 items-center">
         <div>
           <div className=" text-black text-2xl font-medium">Use AI Images</div>
           <div className=" max-w-[750px]  text-zinc-500 text-base font-normal">
@@ -116,7 +215,7 @@ function Page() {
         </div>
 
         <Switch />
-      </div>
+      </div> */}
 
       <div className="flex-col flex justify-between  flex-1 px-10 py-6 border rounded-lg   items-center">
         <div className="flex flex-col gap-3">
@@ -134,7 +233,7 @@ function Page() {
 
           <div className=" flex flex-col mt-14 gap-11">
             <form
-              className="flex  items-center  gap-4"
+              className="flex flex-col sm:flex-row items-center  gap-4"
               onSubmit={e => {
                 e.preventDefault();
                 handleImageGeneration();
@@ -157,33 +256,50 @@ function Page() {
 
               <Input
                 className="p-3 px-10  w-full !h-[45px]"
-                placeholder="pile of white rubik cubes in a red room, wes anderson style
-"
+                placeholder="pile of white rubik cubes in a red room, wes anderson style"
                 ref={inputRef}
               />
             </form>
 
             <div className="flex  lg:flex-row flex-col gap-4">
-              <div className="flex flex-col gap-4">
-                <div
+              <div className="flex sm:flex-col gap-4">
+                {/* <div
                   className="  flex border border-black rounded-lg
                w-[200px] !h-[45px]  items-center justify-center text-lg  "
                 >
                   Output
-                </div>
-
-                <Button
-                  variant="authx"
-                  className="  flex
-               w-[200px] !h-[45px]  items-center gap-3 text-lg  "
-                  onClick={handleImageUploadToS3}
-                >
-                  {isUploadingToS3 ? (
-                    <Spinner color="white" size={30} />
-                  ) : (
-                    'Save'
-                  )}
-                </Button>
+                </div> */}
+                <Dialog>
+                  <DialogTrigger
+                    disabled={disabled1}
+                    className={` ${
+                      disabled1
+                        ? 'cursor-default bg-opacity-50'
+                        : 'cursor-pointer hover:text-white hover:bg-black'
+                    } 
+                  py-2 mx-auto text-sm px-8 bg-accent  text-black shadow  min-w-fit w-48 rounded-md  h-fit`}
+                  >
+                    Save
+                  </DialogTrigger>
+                  <ConfirmDialogue
+                    remove={false}
+                    loading={loading1}
+                    request={addAiImage}
+                  />
+                </Dialog>
+                <Dialog>
+                  <DialogTrigger
+                    className={`cursor-pointer hover:text-white hover:bg-red-600
+                  py-2 mx-auto text-sm px-8 bg-red-400  text-black shadow  min-w-fit w-48 rounded-md  h-fit`}
+                  >
+                    Remove
+                  </DialogTrigger>
+                  <ConfirmDialogue
+                    remove={true}
+                    loading={loading2}
+                    request={removeImage}
+                  />
+                </Dialog>
               </div>
 
               <div>

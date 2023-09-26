@@ -58,6 +58,7 @@ export interface Organization {
   widget: Widget;
   callback_url: string;
   past_month_api_calls: PastMonthApiCalls;
+  decor_img: string | null;
 }
 export interface PastMonthApiCalls {
   [key: string]: number;
@@ -222,7 +223,8 @@ export const defaultOrganization: Organization = {
   iam: defaultIam,
   widget: defaultWidget,
   callback_url: '',
-  past_month_api_calls: {}
+  past_month_api_calls: {},
+  decor_img: null
 };
 
 // export const defaultOrgDataState: OrgDataState = {

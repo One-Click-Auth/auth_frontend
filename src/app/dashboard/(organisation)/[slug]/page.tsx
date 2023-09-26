@@ -77,7 +77,11 @@ export default function Page() {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="text-2xl font-bold">{orgData.act_cnt}</div>
-                <p className="text-xs text-disabled">Last month's API calls</p>
+                <p className="text-sm text-disabled">Last month's API calls</p>
+                <p className="text-sm text-disabled">
+                  Incurred cost: {(Number(orgData.act_cnt) * 0.0025).toFixed(2)}{' '}
+                  $
+                </p>
               </CardContent>
             </Card>
             <Card className="shadow-none">
@@ -94,7 +98,7 @@ export default function Page() {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="text-2xl font-bold">{orgData.active_user}</div>
-                <p className="text-xs text-disabled">Total associated users</p>
+                <p className="text-sm text-disabled">Total associated users</p>
               </CardContent>
             </Card>
             <Card className="shadow-none">
@@ -111,7 +115,11 @@ export default function Page() {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="text-2xl font-bold">{orgData.email_cnt}</div>
-                <p className="text-xs text-disabled">Total Emails Sent</p>
+                <p className="text-sm text-disabled">Total Emails Sent</p>
+                <p className="text-sm text-disabled">
+                  Incurred cost:{' '}
+                  {(Number(orgData.email_cnt) * 0.008).toFixed(2)} $
+                </p>
               </CardContent>
             </Card>
           </div>
