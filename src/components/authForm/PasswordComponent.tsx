@@ -12,7 +12,7 @@ const passwordSchema = yup
   .required();
 
 type PasswordSubmitType = {
-  handlePasswordSubmit: (data: { password: string;}) => void;
+  handlePasswordSubmit: (data: { password: string }) => void;
 };
 
 export const PasswordComponent = ({
@@ -27,14 +27,12 @@ export const PasswordComponent = ({
   });
   return (
     <div>
-      <form
-        onSubmit={handleSubmit(handlePasswordSubmit)}
-      >
+      <form onSubmit={handleSubmit(handlePasswordSubmit)}>
         <div>
           <label
             htmlFor="password"
             className={`form-label absolute translate-x-6 translate-y-[-12px] bg-white px-2 ${
-              errors.password && "text-red-600"
+              errors.password && 'text-red-600'
             }`}
           >
             Password
@@ -44,7 +42,7 @@ export const PasswordComponent = ({
             id="password"
             type="password"
             className={`form-control w-full px-8 py-3 border rounded-lg ${
-              errors.password ? "border-red-600" : "border-slate-500"
+              errors.password ? 'border-red-600' : 'border-slate-500'
             }`}
             placeholder="Enter password"
           />

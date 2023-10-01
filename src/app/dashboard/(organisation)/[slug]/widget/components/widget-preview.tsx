@@ -1,7 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/Button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import {
   AppleIcon,

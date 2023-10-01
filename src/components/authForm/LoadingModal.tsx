@@ -1,4 +1,4 @@
-import Modal from "../Modal";
+import Modal from '../Modal';
 
 export default function LoadingModal({ show }: { show: boolean }) {
   return (

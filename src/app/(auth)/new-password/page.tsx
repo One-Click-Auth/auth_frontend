@@ -49,7 +49,7 @@ const NewPassword: React.FC = () => {
   // Alert component
 
   useEffect(() => {
-    if(param !== null && param !== email) {
+    if (param !== null && param !== email) {
       setEmail(param);
     }
   }, [param]);

@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import authService from "./authService";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import authService from './authService';
 
 interface UserLoginDatatype {
   username: string;
@@ -8,12 +8,12 @@ interface UserLoginDatatype {
 }
 
 export interface IInitialState {
-  selectedType: string | null,
-  userToken: null,
-  user: null,
-  loginString: string | null,
-  verifyString: null | unknown,
-  userExistStatus: null | boolean
+  selectedType: string | null;
+  userToken: null;
+  user: null;
+  loginString: string | null;
+  verifyString: null | unknown;
+  userExistStatus: null | boolean;
 }
 
 const initialState: IInitialState = {
@@ -22,12 +22,12 @@ const initialState: IInitialState = {
   user: null,
   loginString: null,
   verifyString: null,
-  userExistStatus: null,
+  userExistStatus: null
 };
 
 // signup user
 export const signupUser = createAsyncThunk(
-  "auth/signup",
+  'auth/signup',
   async (data, thunkAPI) => {
     try {
       return authService.signupUser(data);
@@ -45,7 +45,7 @@ export const signupUser = createAsyncThunk(
 
 // otp verify
 export const verifyEmail = createAsyncThunk(
-  "auth/verify_email",
+  'auth/verify_email',
   async (data, thunkAPI) => {
     try {
       return authService.verifyEmail(data);
@@ -62,7 +62,7 @@ export const verifyEmail = createAsyncThunk(
 );
 
 export const defaultType = createAsyncThunk(
-  "auth/type",
+  'auth/type',
   async (type, thunkAPI) => {
     try {
       return authService.defaultType(type);
@@ -79,7 +79,7 @@ export const defaultType = createAsyncThunk(
 );
 
 export const loginUser = createAsyncThunk(
-  "auth/login",
+  'auth/login',
   async (data, thunkAPI) => {
     try {
       return authService.loginUser(data);
@@ -96,7 +96,7 @@ export const loginUser = createAsyncThunk(
 );
 
 export const loginToken = createAsyncThunk(
-  "auth/loginToken",
+  'auth/loginToken',
   async (data: UserLoginDatatype, thunkAPI) => {
     try {
       return authService.loginToken(data);
@@ -113,7 +113,7 @@ export const loginToken = createAsyncThunk(
 );
 
 export const logOutUser = createAsyncThunk(
-  "auth/logout",
+  'auth/logout',
   async (data, thunkAPI) => {
     try {
       return authService.logOutUser();
@@ -130,7 +130,7 @@ export const logOutUser = createAsyncThunk(
 );
 
 export const signinUser = createAsyncThunk(
-  "auth/sign-up",
+  'auth/sign-up',
   async (data, thunkAPI) => {
     try {
       return authService.signinUser(data);
@@ -146,19 +146,19 @@ export const signinUser = createAsyncThunk(
   }
 );
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
-    reset: (state) => {
+    reset: state => {
       state.selectedType = null;
       state.userToken = null;
       state.user = null;
       state.userExistStatus = null;
-    },
+    }
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(verifyEmail.pending, (state) => {
+      .addCase(verifyEmail.pending, state => {
         state.verifyString = null;
       })
       .addCase(verifyEmail.fulfilled, (state, action) => {
@@ -167,19 +167,19 @@ export const authSlice = createSlice({
       .addCase(verifyEmail.rejected, (state, action) => {
         state.verifyString = action.payload;
       })
-      .addCase(signupUser.pending, (state) => {
+      .addCase(signupUser.pending, state => {
         state.loginString = null;
       })
       .addCase(signupUser.fulfilled, (state, action) => {
         if (action.payload.status === 208) {
-          state.loginString = "false";
+          state.loginString = 'false';
           state.userExistStatus = true;
         } else {
           state.userExistStatus = false;
           state.loginString = action.payload.data;
         }
       })
-      .addCase(signupUser.rejected, (state) => {
+      .addCase(signupUser.rejected, state => {
         state.loginString = null;
       })
       .addCase(defaultType.fulfilled, (state, action) => {
@@ -195,7 +195,7 @@ export const authSlice = createSlice({
         state.selectedType = null;
       })
       .addCase(logOutUser.fulfilled, (state, action) => {
-        state.selectedType = "accept";
+        state.selectedType = 'accept';
         state.userToken = null;
         state.user = null;
         state.userExistStatus = null;
@@ -203,16 +203,16 @@ export const authSlice = createSlice({
       .addCase(logOutUser.rejected, (state, action) => {
         state.selectedType = null;
       })
-      .addCase(loginToken.pending, (state) => {
+      .addCase(loginToken.pending, state => {
         state.userToken = null;
       })
       .addCase(loginToken.fulfilled, (state, action) => {
         state.userToken = action.payload;
       })
-      .addCase(loginToken.rejected, (state) => {
+      .addCase(loginToken.rejected, state => {
         state.userToken = null;
       });
-  },
+  }
 });
 
 export const { reset } = authSlice.actions;

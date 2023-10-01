@@ -154,7 +154,7 @@ export function WidgetFooter({ reset }: FooterProps) {
         const splitName = logo?.name.split('.');
         const fileExtension = splitName?.slice(-1);
         const contentType =
-        fileExtension[0] === 'svg' ? 'image/svg+xml' : 'image/*';
+          fileExtension[0] === 'svg' ? 'image/svg+xml' : 'image/*';
 
         // Fetch Upload url
         const response = await fetch(
@@ -166,7 +166,7 @@ export function WidgetFooter({ reset }: FooterProps) {
         // PUT file to s3 bucket
         const res = await fetch(url, {
           method: 'PUT',
-          headers: { 
+          headers: {
             'Content-Type': contentType
           },
           body: logo

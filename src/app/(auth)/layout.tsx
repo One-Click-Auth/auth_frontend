@@ -1,15 +1,11 @@
-import {FC, ReactNode} from "react"
+import { FC, ReactNode } from 'react';
 
 interface ChildrenProp {
-  children: ReactNode
+  children: ReactNode;
 }
 
-const AuthLayout: FC<ChildrenProp> = ({children}) => {
-  return(
-    <>
-      {children}
-    </>
-  )
-}
+const AuthLayout: FC<ChildrenProp> = ({ children }) => {
+  return <>{children}</>;
+};
 
 export default AuthLayout;
