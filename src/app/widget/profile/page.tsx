@@ -13,7 +13,7 @@ import {
 } from '../login/widgetStore';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { redirect, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import { useToast } from '@/components/ui/use-toast';
 import SkeletonProfile from './profileSkeleton';

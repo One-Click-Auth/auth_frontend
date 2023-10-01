@@ -9,10 +9,10 @@ import GitHubProvider from 'next-auth/providers/github';
 async function refreshTokens(token: string) {
   try {
     const url = API_DOMAIN + '/token';
-    const {data:refreshedTokens} = await axios.get(url, {
+    const { data: refreshedTokens } = await axios.get(url, {
       headers: {
         token: token
-      },
+      }
     });
 
     return {
@@ -99,17 +99,21 @@ export const authOptions: NextAuthOptions = {
               'Content-Type': 'application/x-www-form-urlencoded',
               Accept: 'application/x-www-form-urlencoded'
             },
-            params:{scp:0}
+            params: { scp: 0 }
           })
           .catch(e => {
             console.error(e);
             return { data: null };
           });
-        const tokens = await refreshTokens(data.access_token)
+        const tokens = await refreshTokens(data.access_token);
         const {
           userData: { profile, ...restUser }
-        } = await fetchUserInfo(tokens.access_token) as any;
-        return { user: { ...profile, ...restUser }, ...tokens,token_set:new Date()};
+        } = (await fetchUserInfo(tokens.access_token)) as any;
+        return {
+          user: { ...profile, ...restUser },
+          ...tokens,
+          token_set: new Date()
+        };
       }
     })
   ],
@@ -123,26 +127,26 @@ export const authOptions: NextAuthOptions = {
     // @ts-ignore
     async jwt(jwtData) {
       const { token, trigger } = jwtData;
-      const returnData = jwtData.user?.user ? jwtData.user : token
+      const returnData = jwtData.user?.user ? jwtData.user : token;
       // @ts-ignore
-      const tokenDate = new Date(returnData.token_set)
-      const currentData = new Date()
+      const tokenDate = new Date(returnData.token_set);
+      const currentData = new Date();
       const timeDifference = Math.abs(currentData - tokenDate);
       const timeDifferenceMinutes = timeDifference / (1000 * 60);
-      console.log({timeDifferenceMinutes})
-      if (trigger === 'update' || timeDifferenceMinutes > 14) {        
-        const tokens = await refreshTokens(returnData.refresh_token)
-        console.log('SESSION REFRESHED')
-        console.log('SESSION ',returnData.refresh_token)
-        console.log('SESSION REFRESHED',tokens.refresh_token)
-        returnData.refresh_token = tokens.refresh_token
-        returnData.access_token = tokens.access_token
-        returnData.token_set = new Date()
+      console.log({ timeDifferenceMinutes });
+      if (trigger === 'update' || timeDifferenceMinutes > 14) {
+        const tokens = await refreshTokens(returnData.refresh_token);
+        console.log('SESSION REFRESHED');
+        console.log('SESSION ', returnData.refresh_token);
+        console.log('SESSION REFRESHED', tokens.refresh_token);
+        returnData.refresh_token = tokens.refresh_token;
+        returnData.access_token = tokens.access_token;
+        returnData.token_set = new Date();
       }
       // @ts-ignore
       return returnData;
     },
-    
+
     // @ts-ignore
     async session(session, token) {
       session.user = token?.user ?? session.user;

@@ -1,45 +1,40 @@
-
-
 .materialTextfield {
-    position: relative;  
-  }
-  
-  .label {
-    position: absolute;
-    font-size: 1rem;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: white;
-    color: rgb(0, 0, 0);
-    padding: 0 0.3rem;
-    margin: 0 0.5rem;
-    transition: .1s ease-out;
-    transform-origin: left top;
-    pointer-events: none;
-  }
-  .input {
-    
-    width: 100%;
-    font-size: 1rem;
-    outline: none;
-    border: 1px solid rgb(103, 103, 103);
-    border-radius: 5px;  
-    padding: 0.7rem 1.5rem;
-    color: rgb(19, 19, 19);
-    transition: 0.1s ease-out;
-  }
-  .input:focus {
-    border-color: #006bb8;
-    
+  position: relative;
+}
 
-  }
-  .input:focus + label {
-    color: #006bb8;
-    top: 0;
-    transform: translateY(-50%) scale(.9);
-  }
-  .input:not(:placeholder-shown) + .label {
-    top: 0;
-    transform: translateY(-50%) scale(.9);
-  }
+.label {
+  position: absolute;
+  font-size: 1rem;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  color: rgb(0, 0, 0);
+  padding: 0 0.3rem;
+  margin: 0 0.5rem;
+  transition: 0.1s ease-out;
+  transform-origin: left top;
+  pointer-events: none;
+}
+.input {
+  width: 100%;
+  font-size: 1rem;
+  outline: none;
+  border: 1px solid rgb(103, 103, 103);
+  border-radius: 5px;
+  padding: 0.7rem 1.5rem;
+  color: rgb(19, 19, 19);
+  transition: 0.1s ease-out;
+}
+.input:focus {
+  border-color: #006bb8;
+}
+.input:focus + label {
+  color: #006bb8;
+  top: 0;
+  transform: translateY(-50%) scale(0.9);
+}
+.input:not(:placeholder-shown) + .label {
+  top: 0;
+  transform: translateY(-50%) scale(0.9);
+}

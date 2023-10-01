@@ -7,13 +7,13 @@ import { useWidgetStore } from '../widgetStore';
 
 export function LogoUpload() {
   const { logo, setLogo, logoImage } = useWidgetStore();
-  
+
   const handleLogoInput = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.target.files) {
       setLogo(event.target.files[0]);
     }
-  }; 
+  };
 
   return (
     <div className="flex border gap-2 rounded-lg py-1.5 px-2">

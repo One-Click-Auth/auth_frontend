@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image from 'next/image';
 
 export default function LayoutBanner({
   bannerText,
-  src,
+  src
 }: {
   bannerText: string;
   src: string;

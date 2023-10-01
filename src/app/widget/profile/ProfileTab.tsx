@@ -13,7 +13,6 @@ import { Label } from '@/components/ui/Label';
 
 import { Separator } from '@/components/ui/separator';
 import {
-  UserProfileData,
   useUserProfileData,
   useProfileStore,
   useToken
@@ -24,7 +23,6 @@ import { useSearchParams } from 'next/navigation';
 import { IoCloudUpload } from 'react-icons/io5';
 import { useToast } from '@/components/ui/use-toast';
 import Spinner from '@/components/spinner';
-import { isImageUrl } from './utils';
 
 //Profile Component
 export default function Profile() {

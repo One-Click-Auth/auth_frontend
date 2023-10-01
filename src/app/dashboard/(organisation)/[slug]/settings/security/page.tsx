@@ -4,7 +4,6 @@ import {
   MagnifierZoom,
   AiNetwork
 } from '@/assets/Svg/Account/Account';
-import { Button } from '@/components/ui/Button';
 import { SettingSwitch } from '../components/setting-switch';
 import UpgradeToEnterprise from '@/app/dashboard/upgradeToEnterprise';
 

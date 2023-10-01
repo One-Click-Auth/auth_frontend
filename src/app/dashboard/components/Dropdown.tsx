@@ -6,10 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {
-  LogOutSvg,
-  ProfileItemSvg
-} from '@/assets/Svg/Account/DropDown';
+import { LogOutSvg, ProfileItemSvg } from '@/assets/Svg/Account/DropDown';
 import { useAuth } from '@/Providers/AuthContext';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';

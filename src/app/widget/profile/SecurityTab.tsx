@@ -12,7 +12,6 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Separator } from '@/components/ui/separator';
 import {
-  UserProfileData,
   useUserProfileData,
   useOrgData,
   useSecurityStore,

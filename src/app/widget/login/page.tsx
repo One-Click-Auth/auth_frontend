@@ -1,27 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 'use client';
-import OtpInput from 'react-otp-input';
 import { testPass, passMsg, testOTP, convertToApproxTime } from './utils';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { OrgData, useOrgData, useUserData } from './widgetStore'; //import zustand store to store and update org data
-import github from './github-mark.svg';
-import microsoft from './microsoft.svg';
-import google from './google.svg';
-import discord from './discord.svg';
 import Spinner from '@/components/spinner';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { MdEmail } from 'react-icons/md';
-import { VscEye, VscEyeClosed } from 'react-icons/vsc';
-import { PasswordCheck } from './components/PasswodCheck';
 import { useToast } from '@/components/ui/use-toast';
 import { IoArrowBackCircle } from 'react-icons/io5';
+import MessagePanel from './components/MessagePanel';
+import MfaPopup from './components/MfaPopup';
+import NewPassword from './components/NewPassword';
+import Password from './components/Password';
+import EmailComponent from './components/Email';
+
+declare global {
+  interface Window {
+    grecaptcha: any;
+  }
+}
 export default function Widget() {
   //store function to set the org data in the store. It takes two arguments org token and org data.
   const setOrgData = useOrgData(state => state.setOrgData);
@@ -64,41 +64,62 @@ export default function Widget() {
   //state variable to store password
   const [pass, setPass] = useState('');
   const [newPass, setNewPass] = useState('');
-  const [showpass, setShowpass] = useState(false);
 
   //state variable to store user_token temporarily
   const [currentUserToken, setCurrentUserToken] = useState('');
-  //state variable to store mfa code
 
   //state variable to chnage the button actions
   const [mfaBtnAction, setMfaBtnAction] = useState<MfaActions>();
   const [newPassBtnAction, setNewPassBtnAction] = useState<NewPassActions>();
   const [passBtnAction, setPassBtnAction] = useState<PassActions>();
-  const [disabled1, setDisabled1] = useState(true);
-  const [showChecks, setShowChecks] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (newPass.length > 0) {
-      setShowChecks(true);
-    } else {
-      setShowChecks(false);
-    }
-    if (!testPass(newPass)) {
-      setDisabled1(false);
-    } else {
-      setDisabled1(true);
-    }
-  }, [newPass]);
 
   //search the url for the param org_id to fetch details for that org
   const searchParams = useSearchParams();
   const org_id = searchParams.get('org_id');
+  const { toast } = useToast();
 
   //fetch the org details as soon as page loads
   useEffect(() => {
     fetchOrgDetails();
   }, []);
-  const { toast } = useToast();
+
+  const loadScriptByURL = (id: string, url: string, callback: any) => {
+    const isScriptExist = document.getElementById(id);
+
+    if (!isScriptExist) {
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = url;
+      script.id = id;
+      script.onload = function () {
+        if (callback) callback();
+      };
+      document.body.appendChild(script);
+    }
+
+    if (isScriptExist && callback) callback();
+  };
+
+  const getCaptchaToken = () => {
+    return new Promise((resolve, reject) => {
+      window.grecaptcha.ready(() => {
+        window.grecaptcha
+          .execute(process.env.NEXT_PUBLIC_CS_CAPTCHA_SECRET, {
+            action: 'submit'
+          })
+          .then((token: string) => {
+            resolve(token);
+          })
+          .catch((error: Error) => {
+            reject(error);
+          });
+      });
+    });
+  };
+  async function showToken() {
+    const token = await getCaptchaToken();
+    console.log(token);
+  }
 
   //function to create a newpassword while logging in
   const newPasswordRequest = async () => {
@@ -347,7 +368,12 @@ export default function Widget() {
       });
       return;
     }
+
     try {
+      let rcToken = '';
+      if (storeOrgData.bot_det) {
+        rcToken = (await getCaptchaToken()) as string;
+      }
       const response = await fetch(
         `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
         {
@@ -358,7 +384,8 @@ export default function Widget() {
           body: JSON.stringify({
             email: email,
             password: pass,
-            mfa_totp: otp ? otp : 0
+            mfa_totp: otp ? otp : 0,
+            rc_token: rcToken
           })
         }
       );
@@ -366,9 +393,18 @@ export default function Widget() {
       const data = (await response.json()) as any;
       setLoading2(false);
 
-      const { user_token, callback_uri, msg } = data;
-      console.log(response);
-      console.log(currentUserToken);
+      const { user_token, callback_uri, redirect_url, msg } = data;
+
+      if (response.status === 201) {
+        setMessage('Kindly check your email for the Login Link');
+        setShowMsgPanel(true);
+        setShowMsg(true);
+        return;
+      }
+      if (response.status === 423) {
+        router.push(redirect_url);
+        return;
+      }
       if (response.status === 200) {
         setCurrentUserToken(user_token);
         router.push(callback_uri);
@@ -424,6 +460,10 @@ export default function Widget() {
     }
 
     try {
+      let rcToken = '';
+      if (storeOrgData.bot_det) {
+        rcToken = (await getCaptchaToken()) as string;
+      }
       const response = await fetch(
         `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
         {
@@ -434,7 +474,8 @@ export default function Widget() {
           body: JSON.stringify({
             email: email,
             password: pass,
-            mfa_totp: otp ? otp : 0
+            mfa_totp: otp ? otp : 0,
+            rc_token: rcToken
           })
         }
       );
@@ -442,9 +483,19 @@ export default function Widget() {
       const data = (await response.json()) as any;
       setLoading2(false);
 
-      const { user_token, callback_uri, msg } = data;
+      const { user_token, callback_uri, redirect_url, msg } = data;
       console.log(response);
       console.log(currentUserToken);
+      if (response.status === 201) {
+        setMessage('Kindly check your email for the Login Link');
+        setShowMsgPanel(true);
+        setShowMsg(true);
+        return;
+      }
+      if (response.status === 423) {
+        router.push(redirect_url);
+        return;
+      }
       if (response.status === 200) {
         setCurrentUserToken(user_token);
         router.push(callback_uri);
@@ -500,69 +551,6 @@ export default function Widget() {
     }
   };
 
-  //function for passwordless login without mfa
-  const passwordlessLogin = async () => {
-    setLoading2(true);
-
-    try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: email,
-            mfa_totp: 0
-          })
-        }
-      );
-      // console.log(response);
-      const data = (await response.json()) as any;
-      setLoading2(false);
-
-      const { user_token, msg } = data;
-      console.log('login with password running...');
-
-      setCurrentUserToken(user_token);
-      console.log(currentUserToken);
-      if (response.status === 201) {
-        setMessage(msg);
-        setShowMsgPanel(true);
-        return;
-      } else if (
-        response.status === 401 ||
-        response.status === 405 ||
-        response.status === 402
-      ) {
-        toast({
-          variant: 'destructive',
-          description: msg
-        });
-        return;
-      } else if (response.status === 409) {
-        const timeRegex = /(\d+):(\d+):(\d+\.\d+)/;
-        const matches = data.detail?.match(timeRegex);
-        const time = convertToApproxTime(matches[0]);
-        toast({
-          variant: 'destructive',
-          description: `maximum tries reached! Try again after ${
-            time || 'some time'
-          }`
-        });
-        return;
-      }
-    } catch (error) {
-      setLoading2(false);
-      const errMsg = (error as Error).message;
-      toast({
-        description: `${errMsg}`,
-        variant: 'destructive'
-      });
-      return;
-    }
-  };
   //function for passwordless login with mfa
   const passwordlessLoginMfa = async () => {
     setLoading2(true);
@@ -667,6 +655,15 @@ export default function Widget() {
         setOrgData(org_token, data);
         //set loading to false and display the widget, styled according to the org data for which can be found in the data.widget
         setLoading1(false);
+        if (data.bot_det) {
+          loadScriptByURL(
+            'recaptcha-key',
+            `https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_CS_CAPTCHA_SECRET}`,
+            () => {
+              console.log('Script loaded!');
+            }
+          );
+        }
       }
     } catch (error) {
       setLoading1(false);
@@ -953,12 +950,6 @@ export default function Widget() {
       setLoading2(false);
     }
   };
-  //functions for social login
-  const socialLogin = (social: string) => {
-    const url = `https://api.trustauthx.com/single/social/signup?provider=${social}&OrgToken=${storeOrg_token}`;
-    // reset();
-    window.location.href = url; //next router was creating a problem in routing back that's why window object is being used
-  };
 
   const forgotPass = () => {
     setNewPassBtnAction(NewPassActions.NewPasswordRequest);
@@ -1082,43 +1073,6 @@ export default function Widget() {
     borderColor: ` ${widget.input_border.color}`,
     borderRadius: `${widget.input_border.radius}px`
   };
-  const placeholder = `placeholder:text-[${widget.input_border.color}]`;
-  const otpInputStyle = {
-    borderRadius: '0.75rem',
-    border: '1.3px solid',
-    borderColor: ` ${widget.input_border.color}`,
-    // border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500
-    background: 'transparent',
-    height: '2.5rem',
-    width: '2.5rem'
-  };
-  const labelStyle = {
-    color: ` ${widget.input_border.color}`
-  };
-
-  // return (
-  //   <>
-  //     {loading1 ? (
-  //       <div className="w-[100vw] h-[100vh] flex justify-center items-center bg-slate-300">
-  //         <Spinner color="#1058de" opacity={0.6} size={100} />
-  //       </div>
-  //     ) : (
-  //       <div
-  //         style={bgStyle}
-  //         className="w-[100vw] h-[100vh] min-h-fit flex items-center justify-center">
-  //           {storeOrgData.decor_img?
-  //       <div className=' h-full w-full flex flex-col sm:flex-row items-center'>
-  //        <div className={`flex items-center justify-center w-full sm:w-2/3 my-4`}>
-  //    <Card/></div>
-  //        <div  className='flex justify-center h-fullitems-center h-[100vh] w-full sm:w-1/3'><Image  width={600} height={600} src={storeOrgData.decor_img} alt='Image' /></div>
-  //        </div>:<div>
-  //         <Card/>
-  //       </div> }
-
-  //       </div>
-  //     )}
-  //   </>
-  // );
 
   return (
     <>
@@ -1132,13 +1086,13 @@ export default function Widget() {
           className="w-[100vw] h-[100vh] min-h-fit flex items-center justify-center"
         >
           <div
-            className={`h-full w-full flex ${
-              storeOrgData.decor_img ? 'flex-col sm:flex-row' : ''
+            className={` h-full w-full flex ${
+              storeOrgData.decor_img ? 'flex-col 2md:flex-row' : ''
             } items-center`}
           >
             <div
               className={`flex items-center justify-center w-full ${
-                storeOrgData.decor_img ? 'sm:w-2/3' : ''
+                storeOrgData.decor_img ? '2md:w-2/3 ' : ''
               } my-4`}
             >
               <Card
@@ -1156,426 +1110,52 @@ export default function Widget() {
                 <CardContent>
                   <div className="space-y-10 flex-1 h-full justify-center flex flex-col">
                     {showMsgPanel ? (
-                      <div>
-                        <div className="w-full relative  flex mb-4 items-center justify-center">
-                          <Avatar className="w-16 h-16 rounded-none">
-                            <AvatarImage
-                              src={widget.logo_url}
-                              width={80}
-                              alt="Organisation Logo"
-                            />
-                            <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
-                          </Avatar>
-                        </div>
-
-                        <div className="flex flex-col gap-8  ">
-                          <div className="flex items-center justify-center flex-col lg:px-4 gap-8">
-                            <h1
-                              className="text-3xl font-medium   text-center break-words w-44 mt-0.5 "
-                              style={greetingStyle}
-                            >
-                              Hi !
-                            </h1>
-                            <p
-                              className="w-full break-words text-center"
-                              style={orgNameStyle}
-                            >
-                              {email}
-                            </p>
-                            <span className="relative">
-                              {/* <FaPaperPlane style={{color:`${widget.input_border.color}`}} size={20} className='relative  -right-6'/> */}
-                              <MdEmail
-                                style={{
-                                  color: ` ${widget.input_border.color}`
-                                }}
-                                size={50}
-                              />
-                            </span>
-                          </div>
-
-                          <div className="h-[1px] w-full bg-muted-foreground my-6" />
-
-                          <div className="flex flex-col items-center gap-8 ">
-                            <p
-                              className="relative text-center text-lg w-full py-2"
-                              style={{ color: widget.color11 }}
-                            >
-                              {message}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+                      <MessagePanel email={email} message={message} />
                     ) : showMfaPopup ? (
-                      <>
-                        <div className="flex flex-col gap-8  ">
-                          <div className="flex items-center justify-center flex-col lg:px-4 gap-6">
-                            <Avatar className="w-16 h-16 rounded-none">
-                              <AvatarImage
-                                src={widget.logo_url}
-                                width={80}
-                                alt="Organisation Logo"
-                              />
-                              <AvatarFallback delayMs={1000}>
-                                LOGO
-                              </AvatarFallback>
-                            </Avatar>
-                            <h1
-                              className="text-3xl font-medium   text-center break-words w-44 mt-0.5 "
-                              style={greetingStyle}
-                            >
-                              Hi !
-                            </h1>
-                            <p
-                              className=" w-full break-words text-center"
-                              style={orgNameStyle}
-                            >
-                              {email}
-                            </p>
-                          </div>
-
-                          <form
-                            className="flex flex-col justify-center items-center mt-6 gap-8 "
-                            onSubmit={handleMfaActions}
-                          >
-                            <p className="text-center ">
-                              Enter OTP to Continue
-                            </p>
-
-                            <OtpInput
-                              containerStyle="grid justify-center gap-1 sm:gap-[0.32rem] w-full"
-                              inputStyle={otpInputStyle}
-                              value={otp}
-                              onChange={setOtp}
-                              inputType="tel"
-                              numInputs={6}
-                              renderSeparator={<span></span>}
-                              renderInput={props => <input {...props} />}
-                            />
-
-                            <Button
-                              style={goButtonStyle}
-                              className="w-full h-[2.8rem] mb-4"
-                              disabled={loading2}
-                              type="submit"
-                            >
-                              {loading2 ? (
-                                <div>
-                                  <Spinner size={20} color={widget.color9} />
-                                </div>
-                              ) : (
-                                <span>Continue</span>
-                              )}
-                            </Button>
-                          </form>
-                        </div>
-                      </>
+                      <MfaPopup
+                        otp={otp}
+                        setOtp={setOtp}
+                        email={email}
+                        handleMfaActions={handleMfaActions}
+                        loading={loading2}
+                      />
                     ) : showNewPassword ? (
-                      <div className="flex flex-col gap-6 sm:px-4">
-                        <div className="flex items-center justify-center flex-col lg:px-4 gap-4">
-                          <Avatar className="w-16 h-16 rounded-none">
-                            <AvatarImage
-                              src={widget.logo_url}
-                              width={80}
-                              alt="Organisation Logo"
-                            />
-                            <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
-                          </Avatar>
-                          <p
-                            className=" w-full break-words text-center"
-                            style={orgNameStyle}
-                          >
-                            {email}
-                          </p>
-                        </div>
-
-                        <form
-                          className="flex flex-col justify-center items-center gap-8 "
-                          onSubmit={
-                            disabled1
-                              ? e => e.preventDefault()
-                              : handleNewPassActions
-                          }
-                        >
-                          <p className="text-center" style={greetingStyle}>
-                            Create a new Password for your <br />{' '}
-                            <b>{widget.name} </b>account{' '}
-                          </p>
-                          <div className="relative w-full">
-                            <Input
-                              name="newpass"
-                              id="newPass"
-                              value={newPass}
-                              onChange={e => setNewPass(e.target.value)}
-                              style={inputStyle}
-                              className="w-full h-[2.8rem]  border-[1.4px] pl-4 pr-8 py-0 mb-2 focus-visible:ring-0 bg-transparent"
-                              placeholder="password"
-                              type={showpass ? 'text' : 'password'}
-                            />
-
-                            <button
-                              className="absolute right-3 top-3 opacity-60"
-                              type="button"
-                              onClick={() => setShowpass(!showpass)}
-                            >
-                              {showpass ? (
-                                <VscEye size={20} />
-                              ) : (
-                                <VscEyeClosed size={20} />
-                              )}
-                            </button>
-                            <div
-                              className={`${
-                                !showChecks
-                                  ? 'scale-y-0 h-0 opacity-0 overflow-hidden'
-                                  : 'scale-y-100 opacity-100 h-[185px]'
-                              } transition-all ease-in-out`}
-                            >
-                              <PasswordCheck pass={newPass} />
-                            </div>
-                          </div>
-
-                          <Button
-                            style={goButtonStyle}
-                            className="w-full h-[2.8rem] mb-4 transition-all "
-                            disabled={loading2 || disabled1}
-                            type="submit"
-                          >
-                            {loading2 ? (
-                              <div>
-                                <Spinner size={20} color={widget.color9} />
-                              </div>
-                            ) : (
-                              <span>Continue</span>
-                            )}
-                          </Button>
-                        </form>
-                      </div>
+                      <NewPassword
+                        email={email}
+                        loading={loading2}
+                        newPass={newPass}
+                        setNewPass={setNewPass}
+                        handleNewPassActions={handleNewPassActions}
+                      />
                     ) : showPassword ? (
-                      <div className="flex flex-col gap-8 sm:px-4">
-                        <div className="flex items-center justify-center flex-col lg:px-4 gap-4">
-                          <Avatar className="w-16 h-16 rounded-none">
-                            <AvatarImage
-                              src={widget.logo_url}
-                              width={80}
-                              alt="Organisation Logo"
-                            />
-                            <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
-                          </Avatar>
-                          <h1
-                            className="text-3xl font-medium   text-center break-words w-44 mt-0.5 "
-                            style={greetingStyle}
-                          >
-                            Hi !
-                          </h1>
-                          <p
-                            className=" w-full break-words text-center"
-                            style={orgNameStyle}
-                          >
-                            {email}
-                          </p>
-                        </div>
-
-                        <form
-                          className="flex flex-col justify-center items-center gap-8 mt-6 "
-                          onSubmit={handlePassActions}
-                        >
-                          <p className="text-center" style={greetingStyle}>
-                            Enter your Password
-                          </p>
-                          <div className="relative w-full">
-                            <Input
-                              name="pass"
-                              id="pass"
-                              value={pass}
-                              onChange={e => setPass(e.target.value)}
-                              style={inputStyle}
-                              className="w-full h-[2.8rem] border-[1.4px] pl-4 pr-8 py-0 mb-2 focus-visible:ring-0 bg-transparent"
-                              placeholder="password"
-                              type={showpass ? 'text' : 'password'}
-                            />
-
-                            <button
-                              className="absolute right-3 top-3 opacity-60"
-                              onClick={() => setShowpass(!showpass)}
-                            >
-                              {showpass ? (
-                                <VscEye size={20} />
-                              ) : (
-                                <VscEyeClosed size={20} />
-                              )}
-                            </button>
-                          </div>
-
-                          <Button
-                            style={goButtonStyle}
-                            className="w-full h-[2.8rem] "
-                            disabled={loading2}
-                            type="submit"
-                          >
-                            {loading2 ? (
-                              <div>
-                                <Spinner size={20} color={widget.color9} />
-                              </div>
-                            ) : (
-                              <span>Continue</span>
-                            )}
-                          </Button>
-                          <div>
-                            <Button
-                              style={{ color: widget.input_border.color }}
-                              className="bg-transparent shadow-none w-fit  h-fit p-0 hover:bg-transparent"
-                              onClick={forgotPass}
-                              type="button"
-                            >
-                              Forgot password
-                            </Button>
-                          </div>
-                        </form>
-                        {/* <button className="relative top-0">Reset</button> */}
-                      </div>
+                      <Password
+                        email={email}
+                        loading={loading2}
+                        pass={pass}
+                        setPass={setPass}
+                        handlePassActions={handlePassActions}
+                        forgotPass={forgotPass}
+                      />
                     ) : (
-                      <>
-                        <div className="flex flex-col justify-center gap-2 items-center">
-                          <Avatar className="w-16 h-16 rounded-none">
-                            <AvatarImage
-                              src={widget.logo_url}
-                              width={80}
-                              alt="Organisation Logo"
-                            />
-                            <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
-                          </Avatar>
-                          <h1
-                            className="text-3xl font-medium text-center break-words w-44"
-                            style={orgNameStyle}
-                          >
-                            {widget.name}
-                          </h1>
-                          <small
-                            style={greetingStyle}
-                            className="w-full text-[14px] break-words text-center"
-                          >
-                            {widget.greeting}
-                          </small>
-                        </div>
-                        <div className="flex flex-col gap-8">
-                          <form
-                            className="flex flex-col lg:px-4 gap-10 mt-6"
-                            onSubmit={handleSubmit}
-                          >
-                            <div className="flex flex-col">
-                              <Input
-                                name="email"
-                                placeholder="Email"
-                                id="email"
-                                type="email"
-                                style={inputStyle}
-                                className={`w-full h-[2.8rem] border-[1.4px] px-4 py-0 focus-visible:ring-0 bg-transparent`}
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                              />
-                            </div>
-                            <Button
-                              style={goButtonStyle}
-                              className="w-full h-[2.8rem]  mb-4 "
-                              disabled={loading2}
-                              type="submit"
-                            >
-                              {loading2 ? (
-                                <div>
-                                  <Spinner size={20} color={widget.color9} />
-                                </div>
-                              ) : (
-                                <span>Continue</span>
-                              )}
-                            </Button>
-                          </form>
-                          {show && (
-                            <>
-                              <div className="relative w-full py-2">
-                                <div className="absolute w-full lg:px-4 inset-0 flex items-center">
-                                  <span className="w-full border-black border-t"></span>
-                                  <span className="px-2">or</span>
-                                  <span className="w-full border-black border-t"></span>
-                                </div>
-                              </div>
-                              <div className="flex flex-wrap items-center justify-evenly gap-y-4 w-full">
-                                {socialValues.includes('github') && (
-                                  <button onClick={() => socialLogin('github')}>
-                                    <div
-                                      className={`h-fit w-fit rounded-full `}
-                                    >
-                                      <Image
-                                        src={github}
-                                        alt="github"
-                                        width={30}
-                                        className="cursor-pointer"
-                                      />
-                                    </div>
-                                  </button>
-                                )}
-
-                                {socialValues.includes('microsoft') && (
-                                  <button
-                                    onClick={() => socialLogin('microsoft')}
-                                  >
-                                    {' '}
-                                    <div className={`h-fit w-fit`}>
-                                      <Image
-                                        src={microsoft}
-                                        alt="microsoft"
-                                        width={26}
-                                        className="cursor-pointer "
-                                      />
-                                    </div>
-                                  </button>
-                                )}
-
-                                {socialValues.includes('google') && (
-                                  <button onClick={() => socialLogin('google')}>
-                                    {' '}
-                                    <div className={`h-fit w-fit rounded-full`}>
-                                      <Image
-                                        src={google}
-                                        alt="google"
-                                        width={28}
-                                        className="cursor-pointer"
-                                      />
-                                    </div>
-                                  </button>
-                                )}
-
-                                {socialValues.includes('discord') && (
-                                  <button
-                                    onClick={() => socialLogin('discord')}
-                                  >
-                                    {' '}
-                                    <div className={`h-fit w-fit`}>
-                                      <Image
-                                        src={discord}
-                                        alt="discord"
-                                        width={34}
-                                        className="cursor-pointer"
-                                      />
-                                    </div>
-                                  </button>
-                                )}
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      </>
+                      <EmailComponent
+                        email={email}
+                        setEmail={setEmail}
+                        loading={loading2}
+                        handleSubmit={handleSubmit}
+                      />
                     )}
                   </div>
                 </CardContent>
               </Card>
             </div>
             {storeOrgData.decor_img && (
-              <div className="flex justify-center h-fullitems-center h-[100vh] w-full sm:w-1/3">
+              <div className="flex justify-center items-center w-full h-full mt-6 2md:w-auto 2md:mt-0">
                 <Image
-                  width={600}
-                  height={600}
+                  className="h-full w-full 2md:w-auto"
                   src={storeOrgData.decor_img}
                   alt="Image"
+                  width={1000}
+                  height={1000}
                 />
               </div>
             )}
