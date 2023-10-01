@@ -29,7 +29,7 @@ export default async function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-29H7RKEJFW"
+          src="https://www.googletagmanager.com/gtag/js?id=G-BBZJRC7ER3"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -38,7 +38,7 @@ export default async function RootLayout({
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-29H7RKEJFW');
+          gtag('config', 'G-BBZJRC7ER3');
         `}
         </Script>
       </head>
