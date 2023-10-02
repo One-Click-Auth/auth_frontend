@@ -85,7 +85,10 @@ export default function Widget() {
 
   const loadScriptByURL = (id: string, url: string, callback: any) => {
     const isScriptExist = document.getElementById(id);
-
+    console.log(
+      'Client captcha secret',
+      process.env.NEXT_PUBLIC_CS_CAPTCHA_SECRET
+    );
     if (!isScriptExist) {
       const script = document.createElement('script');
       script.type = 'text/javascript';
@@ -101,10 +104,6 @@ export default function Widget() {
   };
 
   const getCaptchaToken = () => {
-    console.log(
-      'Client captcha secret',
-      process.env.NEXT_PUBLIC_CS_CAPTCHA_SECRET
-    );
     return new Promise((resolve, reject) => {
       window.grecaptcha.ready(() => {
         window.grecaptcha
