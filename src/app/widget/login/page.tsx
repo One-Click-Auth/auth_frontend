@@ -101,6 +101,10 @@ export default function Widget() {
   };
 
   const getCaptchaToken = () => {
+    console.log(
+      'Client captcha secret',
+      process.env.NEXT_PUBLIC_CS_CAPTCHA_SECRET
+    );
     return new Promise((resolve, reject) => {
       window.grecaptcha.ready(() => {
         window.grecaptcha
@@ -116,10 +120,6 @@ export default function Widget() {
       });
     });
   };
-  async function showToken() {
-    const token = await getCaptchaToken();
-    console.log(token);
-  }
 
   //function to create a newpassword while logging in
   const newPasswordRequest = async () => {
