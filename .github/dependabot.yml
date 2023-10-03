@@ -5,9 +5,10 @@
 
 version: 2
 updates:
-  - package-ecosystem: "bundler" # See documentation for possible values
-    # Raise pull requests to update vendored dependencies that are checked in to the repository
-    vendor: true
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "weekly"
+    commit-message:
+      # Prefix all commit messages with "npm: "
+      prefix: "npm"
