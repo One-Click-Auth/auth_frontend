@@ -30,11 +30,11 @@ function AccountNav() {
 
   return (
     <div className="flex  items-center justify-end min-w-max sticky top-0 mr-4">
-      <div className="flex items-center gap-8 ">
+      <div className="flex items-center justify-center gap-6 ">
         <Link
           href={'https://docs.trustauthx.com'}
           target="_blank"
-          className="bg-accent text-black shadow hover:text-white hover:bg-black px-6 py-1 rounded-sm h-fit  "
+          className="bg-accent text-black hover:text-white hover:bg-black px-4 py-1 rounded-md"
         >
           Docs
         </Link>
