@@ -21,7 +21,7 @@ const WebhookForm = () => {
     const orgId = data?.org_id;
     if (inputUrl === '') return;
     if (orgId) {
-      const url = `https://api.trustauthx.com/test/callback`;
+      const url = "https://api.trustauthx.com/test/callback";
       const headers = {
         accept: 'application/json',
         Authorization: `Bearer ${token}`,

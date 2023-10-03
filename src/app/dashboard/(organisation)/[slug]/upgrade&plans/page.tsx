@@ -78,7 +78,7 @@ function UpgradeAndPlansPage() {
   async function cancelSub() {
     setLoading2(true);
     try {
-      const response = await fetch(`https://api.trustauthx.com/subscriptions`, {
+      const response = await fetch("https://api.trustauthx.com/subscriptions", {
         method: 'DELETE',
         headers: {
           accept: 'application/json',
@@ -106,7 +106,7 @@ function UpgradeAndPlansPage() {
           title: 'Subscription Cancelled successfully'
           // description: 'Subscription Cancelled successfully'
         });
-        router.push(`/dashboard`);
+        router.push("/dashboard");
         setLoading2(false);
 
         return;

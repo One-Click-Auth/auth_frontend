@@ -110,7 +110,7 @@ export const OrgTable = () => {
               <TableCell className="py-[1.2rem] mr-2">
                 <Button
                   disabled={!org.state}
-                  className={`px-10 py-2 bg-[#4338CA] text-white rounded-sm hover:bg-black hover:text-white`}
+                  className={"px-10 py-2 bg-[#4338CA] text-white rounded-sm hover:bg-black hover:text-white"}
                   onClick={() => router.push(`/dashboard/${org.org_id}`)}
                 >
                   Manage
@@ -119,7 +119,7 @@ export const OrgTable = () => {
               <TableCell className="flex flex-row items-center">
                 <Avatar className="my-2">
                   <AvatarImage
-                    src={org.widget.logo_url || `https://github.com/shadcn.png`}
+                    src={org.widget.logo_url || "https://github.com/shadcn.png"}
                     alt="@shadcn"
                   />
                   <AvatarFallback>Logo</AvatarFallback>

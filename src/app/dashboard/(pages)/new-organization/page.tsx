@@ -64,7 +64,7 @@ const NewOrgRequest = () => {
         </p>
         <div className="hover:text-white">
           <PreferenceDialog
-            triggerText={`+ Create a New Organization`}
+            triggerText={"+ Create a New Organization"}
             disableButton={false}
             handlePayment={handlePayment}
             loading={loading}

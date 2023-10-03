@@ -145,7 +145,7 @@ export const SidebarOrg = () => {
             ''
           )}
         </h3>
-        <div className={`main-menu flex flex-col w-full`}>
+        <div className={"main-menu flex flex-col w-full"}>
           <h4 className="text-[0.75rem] opacity-50 ml-8 pl-8">
             {open ? (
               isLoading ? (
@@ -308,7 +308,7 @@ export const SidebarOrg = () => {
             </Link>
           </div>
         </div>
-        <div className={`General flex flex-col w-full`}>
+        <div className={"General flex flex-col w-full"}>
           <h4 className="text-[0.75rem] opacity-50 ml-8 pl-8">
             {open ? 'General' : ''}
           </h4>
