@@ -142,7 +142,7 @@ export function SettingSwitch({
                       {' '}
                       <p>{`This charges ${price}`}</p>{' '}
                       <b className="text-red-300">Note:</b>
-                      {` Once enabled, you will not be able to disable this for 14 days.`}
+                      {" Once enabled, you will not be able to disable this for 14 days."}
                     </>
                   ) : (
                     ''
@@ -160,7 +160,7 @@ export function SettingSwitch({
             className="bg-accent hover:bg-black hover:text-white"
             onClick={() => mutation.mutate({ [id]: !queryData?.[id] })}
           >
-            {queryData?.[id] ? `Disable` : `Enable`}
+            {queryData?.[id] ? "Disable" : "Enable"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

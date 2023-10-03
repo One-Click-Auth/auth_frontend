@@ -51,7 +51,7 @@ export default function Profile() {
       toast({
         variant: 'destructive',
         title: 'Error!',
-        description: `please put a username first`
+        description: "please put a username first"
       });
       return;
     }
@@ -103,7 +103,7 @@ export default function Profile() {
         toast({
           variant: 'destructive',
           title: 'Error!',
-          description: `Some error occured with the request`
+          description: "Some error occured with the request"
         });
         setLoading2(false);
         return;
@@ -131,7 +131,7 @@ export default function Profile() {
         toast({
           variant: 'destructive',
           title: 'Error!',
-          description: `Please add a file or URL first`
+          description: "Please add a file or URL first"
         });
         setLoading1(false);
         return;

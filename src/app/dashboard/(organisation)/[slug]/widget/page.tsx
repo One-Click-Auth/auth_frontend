@@ -327,7 +327,7 @@ const WidgetSettings = () => {
                 background: widgetCardColor,
                 boxShadow: `0 10px 15px -3px ${widgetShadowColor}, 0 4px 6px -4px ${widgetShadowColor}`
               }}
-              className={`p-10  m-4`}
+              className={"p-10  m-4"}
             >
               <WidgetPreview />
             </CardContent>

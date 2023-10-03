@@ -35,7 +35,7 @@ export function ColourInput({
           <PopoverTrigger asChild>
             <button
               style={{ backgroundColor: color.hex }}
-              className={`w-[3.625rem] h-[2.125rem] border rounded-lg`}
+              className={"w-[3.625rem] h-[2.125rem] border rounded-lg"}
             ></button>
           </PopoverTrigger>
           <PopoverContent

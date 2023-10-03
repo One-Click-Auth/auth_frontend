@@ -93,7 +93,7 @@ export default function EmailComponent({
               id="email"
               type="email"
               style={inputStyle}
-              className={`w-full h-[2.8rem] border-[1.4px] px-4 py-0 focus-visible:ring-0 bg-transparent`}
+              className={"w-full h-[2.8rem] border-[1.4px] px-4 py-0 focus-visible:ring-0 bg-transparent"}
               value={email}
               onChange={e => setEmail(e.target.value)}
             />
@@ -125,7 +125,7 @@ export default function EmailComponent({
             <div className="flex flex-wrap items-center justify-evenly mt-6 gap-y-4 w-full">
               {socialValues.includes('github') && (
                 <button onClick={() => socialLogin('github')}>
-                  <div className={`h-fit w-fit rounded-full `}>
+                  <div className={"h-fit w-fit rounded-full "}>
                     <Image
                       src={github}
                       alt="github"
@@ -139,7 +139,7 @@ export default function EmailComponent({
               {socialValues.includes('microsoft') && (
                 <button onClick={() => socialLogin('microsoft')}>
                   {' '}
-                  <div className={`h-fit w-fit`}>
+                  <div className={"h-fit w-fit"}>
                     <Image
                       src={microsoft}
                       alt="microsoft"
@@ -153,7 +153,7 @@ export default function EmailComponent({
               {socialValues.includes('google') && (
                 <button onClick={() => socialLogin('google')}>
                   {' '}
-                  <div className={`h-fit w-fit rounded-full`}>
+                  <div className={"h-fit w-fit rounded-full"}>
                     <Image
                       src={google}
                       alt="google"
@@ -167,7 +167,7 @@ export default function EmailComponent({
               {socialValues.includes('discord') && (
                 <button onClick={() => socialLogin('discord')}>
                   {' '}
-                  <div className={`h-fit w-fit`}>
+                  <div className={"h-fit w-fit"}>
                     <Image
                       src={discord}
                       alt="discord"

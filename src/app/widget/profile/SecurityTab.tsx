@@ -329,7 +329,7 @@ export default function Security() {
   const otpInputStyle = {
     borderRadius: '0.5rem',
     border: '1.3px solid',
-    borderColor: `black`,
+    borderColor: "black",
     background: 'transparent',
     height: '2.2rem',
     width: '2.2rem'

@@ -44,7 +44,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
     if (client_id.length === 0 || client_secret.length === 0) {
       toast({
         title: 'Client details required',
-        description: `Please put the client Id and client Secret`,
+        description: "Please put the client Id and client Secret",
         variant: 'destructive'
       });
       return;
