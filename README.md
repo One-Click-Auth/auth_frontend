@@ -1,6 +1,6 @@
 <h1 style="display: flex; align-items: center; gap: 1rem"> <img width="42" alt="AuthX Logo" src="./src/assets/logo.svg"> AuthX </h1>
 
-## Prerequisites -
+## Prerequisites
 
 Make sure you have the following installed in your system:
 
