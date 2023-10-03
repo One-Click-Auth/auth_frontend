@@ -26,7 +26,7 @@ jobs:
           S3_REGION: ${{ secrets._S3_REGION }}
           SECRET_ACCESS_KEY: ${{ secrets._SECRET_ACCESS_KEY }}
         run: |
-          echo ${{ secrets.DOCKER_SECRET }} | docker login -u moonlightnexus --password-stdin
+          # echo ${{ secrets.DOCKER_SECRET }} | docker login -u moonlightnexus --password-stdin
 
           # Build the Docker image with build arguments
           docker build \
