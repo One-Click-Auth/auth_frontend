@@ -261,6 +261,8 @@ function Page() {
             </form>
 
             <div className="flex  lg:flex-row flex-col gap-4">
+              <span>Or</span>
+              <Button>Upload from computer</Button>
               <div className="flex sm:flex-col gap-4">
                 {/* <div
                   className="  flex border border-black rounded-lg
