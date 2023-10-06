@@ -1,8 +1,10 @@
 'use client';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+
 import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, ChangeEvent } from 'react';
 import { RadioGroup } from './components/Radiogroup';
 import Spinner from '@/components/spinner';
 import axios, { AxiosError, AxiosResponse } from 'axios';
@@ -13,6 +15,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { ConfirmDialogue } from './components/confirmDialogue';
 import { Dialog } from '@radix-ui/react-dialog';
 import { DialogTrigger } from '@/components/ui/Dialog';
+import { IoCloudUpload } from 'react-icons/io5';
 
 function Page() {
   const { slug: ORG_ID } = useParams();
@@ -122,7 +125,7 @@ function Page() {
   async function handleImageUploadToS3() {
     try {
       if (!file) throw new Error();
-
+      console.log({ name: file.name, type: file.type });
       // Fetch Upload url
       const response = await fetch(
         `/api/preSignedUrl?fileName=${file.name}`
@@ -134,7 +137,7 @@ function Page() {
       const res = await fetch(url, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'image/jpeg'
+          'Content-Type': file.type ? file.type : 'image/jpeg'
         },
         body: file
       });
@@ -200,6 +203,13 @@ function Page() {
 
     return img;
   }
+  const handleImageInput = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+      setImageURL(URL.createObjectURL(event.target.files[0]));
+    }
+  };
 
   return (
     <div className="flex flex-col mt-12 justify-center items-center gap-11">
@@ -259,6 +269,20 @@ function Page() {
                 ref={inputRef}
               />
             </form>
+            <Label
+              htmlFor="picture"
+              className="text-md font-semibold sm:mx-4 flex flex-col items-center justify-center text-slate-400 "
+            >
+              {' '}
+              Or
+              <IoCloudUpload className="w-16 h-16 text-slate-400 cursor-pointer hover:text-slate-600 mt-6" />
+              <Input
+                id="picture"
+                type="file"
+                onChange={handleImageInput}
+                className="sm:max-w-[220px] hidden"
+              />
+            </Label>
 
             <div className="flex  lg:flex-row flex-col gap-4">
               <div className="flex sm:flex-col gap-4">
@@ -268,6 +292,7 @@ function Page() {
                 >
                   Output
                 </div> */}
+
                 <Dialog>
                   <DialogTrigger
                     disabled={disabled1}
@@ -307,7 +332,7 @@ function Page() {
                   alt="magic-ai"
                   width={500}
                   height={400}
-                  style={{ width: 'auto', height: 'auto' }}
+                  className="w-auto   sm:w-[700px] h-auto"
                 />
               </div>
             </div>

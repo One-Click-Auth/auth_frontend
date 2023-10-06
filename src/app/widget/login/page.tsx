@@ -85,10 +85,6 @@ export default function Widget() {
 
   const loadScriptByURL = (id: string, url: string, callback: any) => {
     const isScriptExist = document.getElementById(id);
-    console.log(
-      'Client captcha secret',
-      process.env.NEXT_PUBLIC_CS_CAPTCHA_SECRET
-    );
     if (!isScriptExist) {
       const script = document.createElement('script');
       script.type = 'text/javascript';
@@ -483,8 +479,6 @@ export default function Widget() {
       setLoading2(false);
 
       const { user_token, callback_uri, redirect_url, msg } = data;
-      console.log(response);
-      console.log(currentUserToken);
       if (response.status === 201) {
         setMessage('Kindly check your email for the Login Link');
         setShowMsgPanel(true);
@@ -498,7 +492,6 @@ export default function Widget() {
       if (response.status === 200) {
         setCurrentUserToken(user_token);
         router.push(callback_uri);
-        console.log(msg);
         return;
       } else if (response.status === 405 || response.status === 401) {
         setCurrentUserToken(user_token);
@@ -583,7 +576,6 @@ export default function Widget() {
       // console.log('login with password running...');
 
       setCurrentUserToken(user_token);
-      console.log(currentUserToken);
       if (response.status === 201) {
         setMessage('Kindly check your email for the passwordless login link');
         setShowMsgPanel(true);
@@ -952,6 +944,7 @@ export default function Widget() {
 
   const forgotPass = () => {
     setNewPassBtnAction(NewPassActions.NewPasswordRequest);
+    setNewPass('');
     setShowPassword(false);
     setShowMfaPopup(false);
     setShowMsgPanel(false);
@@ -1038,21 +1031,8 @@ export default function Widget() {
     }
   };
 
-  const socialValues = Object.keys(storeOrgData.social);
-  const show = socialValues.length > 0;
-
   const widget = storeOrgData.widget;
-  const goButtonStyle = {
-    color: widget.color9,
-    background: `linear-gradient(to right, ${widget.color0} 0%,${widget.color1} 50%,${widget.color2} 100% )`,
-    border: `${widget.button.width}px solid`,
-    borderRadius: `${widget.button.radius}px`,
-    borderColor: widget.button.bc
-  };
-  const lineStyle = {
-    borderColor: widget.color12,
-    color: widget.color12
-  };
+
   const cardStyle = {
     background: `linear-gradient(to bottom, ${widget.color6},${widget.color7})`,
     boxShadow: `0 10px 15px -3px ${widget.color8}, 0 4px 6px -4px ${widget.color8}`,
@@ -1061,16 +1041,6 @@ export default function Widget() {
   };
   const bgStyle = {
     background: `linear-gradient(to bottom right,  ${widget.color3} 0%, ${widget.color4} 50%,${widget.color5} 100%)`
-  };
-  const orgNameStyle = {
-    color: `${widget.color10}`
-  };
-  const greetingStyle = {
-    color: `${widget.color11}`
-  };
-  const inputStyle = {
-    borderColor: ` ${widget.input_border.color}`,
-    borderRadius: `${widget.input_border.radius}px`
   };
 
   return (
