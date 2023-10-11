@@ -1065,19 +1065,19 @@ export default function Widget() {
               } my-4`}
             >
               <Card
-                className="h-fit  w-[390px] max-w-[90vw] max-h-[90vh] pt-14 pb-10 px-4 relative"
+                className="h-fit  w-[423px] max-w-[90vw] max-h-[90vh] py-10 relative box-border px-[10%] sm:px-[67px] transition-all"
                 style={cardStyle}
               >
                 {showBack && (
                   <button
-                    className="absolute top-4 opacity-50 hover:opacity-80 transition-opacity"
+                    className="absolute top-4 left-2 opacity-50 hover:opacity-80 transition-opacity"
                     onClick={reset}
                   >
                     <IoArrowBackCircle size={30} color={widget.color11} />
                   </button>
                 )}
-                <CardContent>
-                  <div className="space-y-10 flex-1 h-full justify-center flex flex-col">
+                <CardContent className="p-0">
+                  <div className="flex-1 h-full justify-center flex flex-col p-0">
                     {showMsgPanel ? (
                       <MessagePanel email={email} message={message} />
                     ) : showMfaPopup ? (

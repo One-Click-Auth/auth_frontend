@@ -7,6 +7,7 @@ import { VscEye, VscEyeClosed } from 'react-icons/vsc';
 
 import Spinner from '@/components/spinner';
 import { useOrgData } from '../widgetStore'; //import zustand store to store and update org data
+import WidgetButton from './WidgetButton';
 
 type PasswordProps = {
   email: string;
@@ -48,8 +49,8 @@ export default function Password({
     borderRadius: `${widget.input_border.radius}px`
   };
   return (
-    <div className="flex flex-col gap-8 sm:px-4">
-      <div className="flex items-center justify-center flex-col lg:px-4 gap-4">
+    <div className="flex flex-col">
+      <div className="flex items-center justify-center flex-col gap-4">
         <Avatar className="w-16 h-16 rounded-none">
           <AvatarImage
             src={widget.logo_url}
@@ -59,21 +60,21 @@ export default function Password({
           <AvatarFallback delayMs={1000}>LOGO</AvatarFallback>
         </Avatar>
         <h1
-          className="text-3xl font-medium   text-center break-words w-44 mt-0.5 "
+          className="text-3xl font-medium   text-center break-words"
           style={greetingStyle}
         >
           Hi !
         </h1>
-        <p className=" w-full break-words text-center" style={orgNameStyle}>
+        <p className=" w-full break-words text-center " style={orgNameStyle}>
           {email}
         </p>
       </div>
 
       <form
-        className="flex flex-col justify-center items-center gap-8 mt-6 "
+        className="flex flex-col justify-center items-center gap-12 mt-10"
         onSubmit={handlePassActions}
       >
-        <p className="text-center" style={greetingStyle}>
+        <p className="text-center text-[18.4px]" style={greetingStyle}>
           Enter your Password
         </p>
         <div className="relative w-full">
@@ -83,7 +84,7 @@ export default function Password({
             value={pass}
             onChange={e => setPass(e.target.value)}
             style={inputStyle}
-            className="w-full h-[2.8rem] border-[1.4px] pl-4 pr-8 py-0 mb-2 focus-visible:ring-0 bg-transparent"
+            className="w-full h-[2.8rem] border-[1.4px] pl-4 pr-8 py-0 focus-visible:ring-2 focus-visible:ring-slate-300 bg-transparent"
             placeholder="password"
             type={showPass ? 'text' : 'password'}
           />
@@ -97,20 +98,8 @@ export default function Password({
           </button>
         </div>
 
-        <Button
-          style={goButtonStyle}
-          className="w-full h-[2.8rem] "
-          disabled={loading}
-          type="submit"
-        >
-          {loading ? (
-            <div>
-              <Spinner size={20} color={widget.color9} />
-            </div>
-          ) : (
-            <span>Continue</span>
-          )}
-        </Button>
+        <WidgetButton loading={loading} />
+
         <div>
           <Button
             style={{ color: widget.input_border.color }}

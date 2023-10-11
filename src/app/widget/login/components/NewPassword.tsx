@@ -9,6 +9,7 @@ import { VscEye, VscEyeClosed } from 'react-icons/vsc';
 import Spinner from '@/components/spinner';
 import { useOrgData } from '../widgetStore'; //import zustand store to store and update org data
 import { testPass } from '../utils';
+import WidgetButton from './WidgetButton';
 type NewPasswordProps = {
   email: string;
   loading: boolean;
@@ -63,8 +64,8 @@ export default function NewPassword({
   };
 
   return (
-    <div className="flex flex-col gap-6 sm:px-4">
-      <div className="flex items-center justify-center flex-col lg:px-4 gap-4">
+    <div className="flex flex-col">
+      <div className="flex items-center justify-center flex-col gap-4">
         <Avatar className="w-16 h-16 rounded-none">
           <AvatarImage
             src={widget.logo_url}
@@ -79,10 +80,10 @@ export default function NewPassword({
       </div>
 
       <form
-        className="flex flex-col justify-center items-center gap-8 "
+        className="flex flex-col justify-center items-center gap-12 mt-10"
         onSubmit={disabled ? e => e.preventDefault() : handleNewPassActions}
       >
-        <p className="text-center" style={greetingStyle}>
+        <p className="text-center text-[18.4px]" style={greetingStyle}>
           Create a new Password for your <br /> <b>{widget.name} </b>account{' '}
         </p>
         <div className="relative w-full">
@@ -92,7 +93,7 @@ export default function NewPassword({
             value={newPass}
             onChange={e => setNewPass(e.target.value)}
             style={inputStyle}
-            className="w-full h-[2.8rem]  border-[1.4px] pl-4 pr-8 py-0 mb-2 focus-visible:ring-0 bg-transparent"
+            className="w-full h-[2.8rem]  border-[1.4px] pl-4 pr-8 py-0 focus-visible:ring-2 focus-visible:ring-slate-300 bg-transparent"
             placeholder="password"
             type={showPass ? 'text' : 'password'}
           />
@@ -114,21 +115,7 @@ export default function NewPassword({
             <PasswordCheck pass={newPass} />
           </div>
         </div>
-
-        <Button
-          style={goButtonStyle}
-          className="w-full h-[2.8rem] mb-4 transition-all "
-          disabled={loading || disabled}
-          type="submit"
-        >
-          {loading ? (
-            <div>
-              <Spinner size={20} color={widget.color9} />
-            </div>
-          ) : (
-            <span>Continue</span>
-          )}
-        </Button>
+        <WidgetButton loading={loading} disabled={disabled} />
       </form>
     </div>
   );
