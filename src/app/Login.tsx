@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/Button';
 import { Icons } from '@/components/icons';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
+import { IoArrowBackOutline } from 'react-icons/io5';
 
 type FormValues = {
   username?: string;
@@ -91,11 +92,19 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
     <div className="min-h-screen flex flex-col sm:flex-row justify-center">
       <div className="container sm:basis-3/5 flex flex-col min-h-screen">
         <div className="self-start mt-7">
-          <Link href="/">
-            <Image width={34} height={34} src={LOGO} alt="AuthX logo" />
+          <Link
+            href="https://www.trustauthx.com"
+            className="flex flex-row items-center justify-center gap-2 group"
+          >
+            <IoArrowBackOutline
+              size={20}
+              className="group-hover:-translate-x-1 transition-transform"
+            />
+            <span>Back to Landing page</span>
+            <Image width={30} height={30} src={LOGO} alt="AuthX logo" />
           </Link>
         </div>
-        <div className="flex my-12 items-center justify-center grow sm:mr-12">
+        <div className="flex mt-36 mb-12 sm:mt-20 sm:mb-12 items-center justify-center grow sm:mr-12">
           <div className="-mt-32 w-fit max-w-lg">
             <Image
               className="mx-auto mb-8"
