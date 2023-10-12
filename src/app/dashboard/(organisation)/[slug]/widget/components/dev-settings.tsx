@@ -11,7 +11,9 @@ import {
   MicrosoftIcon,
   TiktokIcon2,
   TwitterIcon,
-  WhatsappIcon
+  WhatsappIcon,
+  DiscordIcon,
+  FigmaIcon
 } from '@/assets/Svg/Account/Account';
 import { cn } from '@/lib/utils';
 import {
@@ -45,6 +47,12 @@ export function DevSettings() {
   } = useWidgetStore();
 
   const socialsList: SocialList = {
+    google: {
+      name: 'Google',
+      icon: <GoogleIcon className="w-5" />,
+      disabled: false,
+      active: social.google ? true : false
+    },
     github: {
       name: 'Github',
       icon: <GithubIcon className="w-6" />,
@@ -57,11 +65,17 @@ export function DevSettings() {
       disabled: false,
       active: social.microsoft ? true : false
     },
-    google: {
-      name: 'Google',
-      icon: <GoogleIcon className="w-5" />,
+    figma: {
+      name: 'Figma',
+      icon: <FigmaIcon className="w-6" />,
       disabled: false,
-      active: social.google ? true : false
+      active: social.figma ? true : false
+    },
+    discord: {
+      name: 'Discord',
+      icon: <DiscordIcon className="w-6" />,
+      disabled: false,
+      active: social.discord ? true : false
     },
     apple: {
       name: 'Apple',

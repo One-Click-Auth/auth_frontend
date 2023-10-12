@@ -11,7 +11,9 @@ import {
   MicrosoftIcon,
   TiktokIcon2,
   TwitterIcon,
-  WhatsappIcon
+  WhatsappIcon,
+  DiscordIcon,
+  FigmaIcon
 } from '@/assets/Svg/Account/Account';
 import { cn } from '@/lib/utils';
 import { useWidgetStore } from '../widgetStore';
@@ -147,9 +149,12 @@ export function WidgetPreview() {
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-evenly gap-y-4 w-full">
+              {social.google && <GoogleIcon className="h-6 basis-1/4" />}
               {social.github && <GithubIcon className="h-6 basis-1/4" />}
               {social.microsoft && <MicrosoftIcon className="h-6 basis-1/4" />}
-              {social.google && <GoogleIcon className="h-6 basis-1/4" />}
+              {social.figma && <FigmaIcon className="h-6 basis-1/4" />}
+              {social.discord && <DiscordIcon className="h-6 basis-1/4" />}
+
               {social.apple && <AppleIcon className="h-6 basis-1/4" />}
               {social.whatsapp && <WhatsappIcon className="h-6 basis-1/4" />}
               {social.tiktok && <TiktokIcon2 className="h-7 basis-1/4" />}
