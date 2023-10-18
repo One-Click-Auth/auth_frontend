@@ -27,4 +27,3 @@ AuthX API: [https://api.trustauthx.com/docs](https://api.trustauthx.com/docs)
   <img src="https://contrib.rocks/image?repo=One-Click-Auth/auth_frontend" />
 </a>
 
-Made with [contrib.rocks](https://contrib.rocks).
