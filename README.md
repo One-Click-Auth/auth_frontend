@@ -21,8 +21,10 @@ AuthX API: [https://api.trustauthx.com/docs](https://api.trustauthx.com/docs)
 - Components: [shadcn](https://ui.shadcn.com/)
 - CSS Tech: [TailwindCSS](https://tailwindcss.com/)
 
-## Live links
+## Our Contributors
 
+<a href="https://github.com/One-Click-Auth/auth_frontend/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=One-Click-Auth/auth_frontend" />
+</a>
 
-- Dev Branch -- [https://internal.trustauthx.com/](https://internal.trustauthx.com/)
-- Main Branch -- [https://app.trustauthx.com/](https://app.trustauthx.com/)
+Made with [contrib.rocks](https://contrib.rocks).
