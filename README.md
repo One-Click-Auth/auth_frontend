@@ -1,6 +1,6 @@
 <h1 style="display: flex; align-items: center; gap: 1rem">AuthX </h1>
 
-## Prerequisites
+## Prerequisites 
 
 Make sure you have the following installed in your system:
 
