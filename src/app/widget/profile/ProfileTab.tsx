@@ -51,26 +51,28 @@ export default function Profile() {
       toast({
         variant: 'destructive',
         title: 'Error!',
-        description: "please put a username first"
+        description: 'please put a username first'
       });
       return;
     }
     setLoading2(true);
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          usr: {
             Upd: {
               full_name: username
             }
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: user_token
+          }
+        })
+      });
       const data = (await response.json()) as {
         detail?: string;
         user_token: string;
@@ -103,7 +105,7 @@ export default function Profile() {
         toast({
           variant: 'destructive',
           title: 'Error!',
-          description: "Some error occured with the request"
+          description: 'Some error occured with the request'
         });
         setLoading2(false);
         return;
@@ -131,7 +133,7 @@ export default function Profile() {
         toast({
           variant: 'destructive',
           title: 'Error!',
-          description: "Please add a file or URL first"
+          description: 'Please add a file or URL first'
         });
         setLoading1(false);
         return;
@@ -200,20 +202,22 @@ export default function Profile() {
   //request to save image
   async function updateImage(url: string) {
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          usr: {
             Upd: {
               img: url
             }
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: user_token
+          }
+        })
+      });
       const data = (await response.json()) as {
         detail?: string;
         user_token: string;
