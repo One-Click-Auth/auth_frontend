@@ -131,19 +131,21 @@ export default function Widget() {
     }
 
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          usr: {
             forget_password: true,
             new_password: newPass
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: currentUserToken
+          }
+        })
+      });
 
       const data = (await response.json()) as {
         detail?: string;
@@ -190,18 +192,20 @@ export default function Widget() {
       return;
     }
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          usr: {
             new_user_password: newPass
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: currentUserToken
+          }
+        })
+      });
 
       const data = (await response.json()) as any;
       setLoading2(false);
@@ -296,18 +300,20 @@ export default function Widget() {
       return;
     }
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          form_data: {
             totp: otp
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: currentUserToken
+          }
+        })
+      });
       const data = (await response.json()) as any;
       if (response.status === 202 || response.status === 203) {
         setLoading2(false);
@@ -369,21 +375,23 @@ export default function Widget() {
       if (storeOrgData.bot_det) {
         rcToken = (await getCaptchaToken()) as string;
       }
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          form_data: {
             email: email,
             password: pass,
             mfa_totp: otp ? otp : 0,
             rc_token: rcToken
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: currentUserToken
+          }
+        })
+      });
       // console.log(response);
       const data = (await response.json()) as any;
       setLoading2(false);
@@ -459,21 +467,23 @@ export default function Widget() {
       if (storeOrgData.bot_det) {
         rcToken = (await getCaptchaToken()) as string;
       }
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          form_data: {
             email: email,
             password: pass,
             mfa_totp: otp ? otp : 0,
             rc_token: rcToken
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: currentUserToken
+          }
+        })
+      });
       // console.log(response);
       const data = (await response.json()) as any;
       setLoading2(false);
@@ -555,19 +565,21 @@ export default function Widget() {
       return;
     }
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${currentUserToken}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          form_data: {
             email: email,
             mfa_totp: otp ? otp : 0
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: currentUserToken
+          }
+        })
+      });
       // console.log(response);
       const data = (await response.json()) as any;
       setLoading2(false);
@@ -1052,7 +1064,7 @@ export default function Widget() {
       ) : (
         <div
           style={bgStyle}
-          className="w-[100vw] h-[100vh] min-h-fit flex items-center justify-center"
+          className="w-[100vw] h-[100vh] overflow-y-scroll min-h-fit flex items-center justify-center"
         >
           <div
             className={` h-full w-full flex ${
@@ -1060,12 +1072,12 @@ export default function Widget() {
             } items-center`}
           >
             <div
-              className={`flex items-center justify-center w-full ${
+              className={`flex items-center justify-center w-full py-10 ${
                 storeOrgData.decor_img ? '2md:w-2/3 ' : ''
               } my-4`}
             >
               <Card
-                className="h-fit  w-[423px] max-w-[90vw] max-h-[90vh] py-10 relative box-border px-[10%] sm:px-[67px] transition-all"
+                className="min-h-fit  w-[423px] max-w-[90vw] py-10 relative box-border px-[10%] sm:px-[67px] transition-all"
                 style={cardStyle}
               >
                 {showBack && (

@@ -81,18 +81,20 @@ export default function Security() {
   async function mfaRequest() {
     setLoading2(true);
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          usr: {
             switch_mfa: true
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: user_token
+          }
+        })
+      });
 
       const data = (await response.json()) as {
         detail?: string;
@@ -136,19 +138,21 @@ export default function Security() {
   }
   async function handleMfa(action: boolean, totp: string) {
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          usr: {
             totp: totp,
             switch_mfa: action
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: user_token
+          }
+        })
+      });
       const data = (await response.json()) as any;
       if (data.detail) {
         toast({
@@ -225,18 +229,20 @@ export default function Security() {
   async function forgotMfa() {
     setLoading3(true);
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          usr: {
             forget_totp: true
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: user_token
+          }
+        })
+      });
       const data = (await response.json()) as any;
       setLoading3(false);
 
@@ -274,18 +280,20 @@ export default function Security() {
   async function newPasswordRequest() {
     setLoading1(true);
     try {
-      const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?UserToken=${user_token}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          usr: {
             new_user_password: pass
-          })
-        }
-      );
+          },
+          UserTokenBody: {
+            UserToken: user_token
+          }
+        })
+      });
       const data = (await response.json()) as {
         detail?: string;
         user_token: string;
@@ -329,7 +337,7 @@ export default function Security() {
   const otpInputStyle = {
     borderRadius: '0.5rem',
     border: '1.3px solid',
-    borderColor: "black",
+    borderColor: 'black',
     background: 'transparent',
     height: '2.2rem',
     width: '2.2rem'
