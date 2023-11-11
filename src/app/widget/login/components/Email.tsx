@@ -15,6 +15,7 @@ import {
   MdOutlineKeyboardArrowDown as KeyDown,
   MdOutlineKeyboardArrowUp as KeyUp
 } from 'react-icons/md';
+import SocialButton from './SocialButton';
 type EmailCompProps = {
   email: string;
   setEmail: (NewPass: string) => void;
@@ -31,9 +32,21 @@ export default function EmailComponent({
   const storeOrgData = useOrgData(state => state.data);
   const storeOrg_token = useOrgData(state => state.org_token);
   const [showMore, setShowMore] = useState(false);
-  const socialLogin = (social: string) => {
-    const url = `https://api.trustauthx.com/single/social/signup?provider=${social}&OrgToken=${storeOrg_token}`;
-    // reset();
+
+  const socialLogin = async (
+    social: string,
+    setLoading: (loading: boolean) => void
+  ) => {
+    const response = await fetch(
+      `https://api.trustauthx.com/single/social/signup?provider=${social}`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          OrgToken: storeOrg_token
+        })
+      }
+    );
+    const { url } = (await response.json()) as { url: string };
     window.location.href = url; //next router was creating a problem in routing back that's why window object is being used
   };
 
@@ -144,18 +157,12 @@ export default function EmailComponent({
             >
               {firstFour.map((social, key) => {
                 return (
-                  <button
-                    onClick={() => socialLogin(social)}
+                  <SocialButton
+                    image={socialProviders[social]}
+                    social={social}
+                    socialLogin={socialLogin}
                     key={key}
-                    className=" flex items-center justify-center transition-colors bg-slate-300 hover:bg-slate-400 h-12 w-12 p-1 rounded-md ring-1 ring-white "
-                  >
-                    <Image
-                      src={socialProviders[social]}
-                      alt={social}
-                      width={28}
-                      className="m-0"
-                    />
-                  </button>
+                  />
                 );
               })}
             </div>
@@ -172,18 +179,12 @@ export default function EmailComponent({
             >
               {rest.map((social, key) => {
                 return (
-                  <button
-                    onClick={() => socialLogin(social)}
+                  <SocialButton
+                    image={socialProviders[social]}
+                    social={social}
+                    socialLogin={socialLogin}
                     key={key}
-                    className=" flex items-center justify-center transition-colors bg-slate-300 hover:bg-slate-400 h-12 w-12 p-1 rounded-md ring-1 ring-white "
-                  >
-                    <Image
-                      src={socialProviders[social]}
-                      alt={social}
-                      width={28}
-                      className="m-0"
-                    />
-                  </button>
+                  />
                 );
               })}
             </div>
