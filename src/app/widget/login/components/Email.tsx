@@ -41,12 +41,17 @@ export default function EmailComponent({
       `https://api.trustauthx.com/single/social/signup?provider=${social}`,
       {
         method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
           OrgToken: storeOrg_token
         })
       }
     );
     const { url } = (await response.json()) as { url: string };
+    console.log(url);
     window.location.href = url; //next router was creating a problem in routing back that's why window object is being used
   };
 
