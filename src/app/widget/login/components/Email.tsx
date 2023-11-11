@@ -32,12 +32,21 @@ export default function EmailComponent({
   const storeOrgData = useOrgData(state => state.data);
   const storeOrg_token = useOrgData(state => state.org_token);
   const [showMore, setShowMore] = useState(false);
-  const socialLogin = (
+
+  const socialLogin = async (
     social: string,
     setLoading: (loading: boolean) => void
   ) => {
-    const url = `https://api.trustauthx.com/single/social/signup?provider=${social}&OrgToken=${storeOrg_token}`;
-    // reset();
+    const response = await fetch(
+      `https://api.trustauthx.com/single/social/signup?provider=${social}`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          OrgToken: storeOrg_token
+        })
+      }
+    );
+    const { url } = (await response.json()) as { url: string };
     window.location.href = url; //next router was creating a problem in routing back that's why window object is being used
   };
 
