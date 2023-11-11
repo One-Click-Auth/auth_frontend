@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Modal from '@/components/Modal';
 import OtpInput from 'react-otp-input';
 import { API_DOMAIN, LOGIN_GRAPHIC, LOGO } from '@/constants';
@@ -31,11 +31,15 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
   // const searchParams = useSearchParams();
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [refId, setRefId] = useState('string');
   const { toast } = useToast();
   const router = useRouter();
 
   useEffect(() => {
     const token = searchParams['tnx'];
+    setRefId(searchParams['ref']);
+    // console.log(ref_id)
+
     if (token)
       signIn('credentials', {
         githubToken: token,
@@ -117,7 +121,7 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
               Login to your AuthX account
             </h1>
             <div>
-              <GithubLogin />
+              <GithubLogin ref_id={refId} />
               <div className="relative mb-8">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
@@ -173,7 +177,7 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
   );
 };
 
-function GithubLogin() {
+function GithubLogin({ ref_id }: { ref_id: string }) {
   const [loading, setLoading] = useState(false);
   const initiateLogin = () => {
     setLoading(true);
@@ -183,19 +187,22 @@ function GithubLogin() {
     //   }
     // })
   };
+  console.log(ref_id);
+  const url = `${API_DOMAIN}/signup/github/${ref_id}`;
   return (
-    <form method="get" action={`${API_DOMAIN}/signup/github`}>
-      <Button
-        onClick={initiateLogin}
-        className="w-full h-12 mb-6 text-md border-slate-500 hover:bg-black hover:text-white"
-        variant="outline"
-        type="submit"
-      >
+    <Button
+      asChild
+      onClick={initiateLogin}
+      className="w-full h-12 mb-6 text-md border-slate-500 hover:bg-black hover:text-white"
+      variant="outline"
+      type="submit"
+    >
+      <Link href={url}>
         <Icons.gitHub className="mr-2 h-4 w-4" />
         Login with Github
-      </Button>
-      <LoadingModal show={loading} />
-    </form>
+      </Link>
+    </Button>
+    // <LoadingModal show={loading} />
   );
 }
 export default Login;
