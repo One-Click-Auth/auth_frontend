@@ -30,7 +30,7 @@ type RequestObjectType = {
 type RegisterUser = {
   username: string;
   password: string;
-  'referral-id': string | null | undefined;
+  ref: string | null | undefined;
   agreeTerms: boolean | undefined;
 };
 
@@ -48,7 +48,7 @@ const registerSchema = yup
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d_.@$!%#?&]{8,1000}$/,
         'Password must be at least 8 characters long, contain at least one letter and one digit, and can include special characters.'
       ),
-    'referral-id': yup.string().nullable(),
+    ref: yup.string().nullable(),
     agreeTerms: yup
       .boolean()
       .oneOf([true], 'Please accept our Terms of Service and Privacy policy')
@@ -88,6 +88,7 @@ export default function Signup() {
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [requestObject, setRequestObject] = useState<RequestObjectType>();
+  const [refId, setRefId] = useState<string>('string');
   const {
     register,
     handleSubmit,
@@ -100,6 +101,12 @@ export default function Signup() {
     //OTP should be 8 digits long and all the digits should not be zero
     return /^(?!.*00000000)\d{8}$/.test(otp);
   };
+  useEffect(() => {
+    const ref_id = window.localStorage.getItem('ref_id');
+    setRefId(ref_id ?? 'string');
+    console.log(ref_id);
+  }, []);
+
   // OTP action
   useEffect(() => {
     if (otp.length === 8) {
@@ -220,7 +227,7 @@ export default function Signup() {
       full_name: 'Test User',
       is_pool: true,
       link: true,
-      ref: 'string',
+      ref: refId,
       types: 'string'
     };
 
@@ -295,7 +302,9 @@ export default function Signup() {
               Referral ID (Optional)
             </label>
             <input
-              {...register('referral-id')}
+              {...register('ref')}
+              value={refId}
+              disabled
               id="referral-id"
               type="text"
               className="form-control w-full px-8 py-3 border border-slate-500 rounded-lg"

@@ -10,11 +10,13 @@ import { UserResponse } from '@/types';
 type EmailSubmitType = {
   handleEmailSubmit: (data: { username: string }) => void;
   setFa2: React.Dispatch<React.SetStateAction<boolean>>;
+  ref_id: string;
 };
 
 export const EmailComponent = ({
   handleEmailSubmit,
-  setFa2
+  setFa2,
+  ref_id
 }: EmailSubmitType) => {
   // email validation
   const asyncEmailValidation = async (email: string) => {
