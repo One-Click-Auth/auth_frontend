@@ -37,8 +37,10 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
 
   useEffect(() => {
     const token = searchParams['tnx'];
-    setRefId(searchParams['ref']);
+    const ref_id = searchParams['ref'];
+    setRefId(ref_id);
     // console.log(ref_id)
+    window.localStorage.setItem('ref_id', ref_id);
 
     if (token)
       signIn('credentials', {
@@ -134,6 +136,7 @@ const Login = ({ searchParams }: { searchParams: Record<string, string> }) => {
               </div>
               {!values.username ? (
                 <EmailComponent
+                  ref_id={refId}
                   handleEmailSubmit={handleEmailSubmit}
                   setFa2={setFa2}
                 />
