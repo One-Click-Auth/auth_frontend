@@ -50,6 +50,14 @@ export type OrgObject = {
     color11: string;
     redirect_url?: string;
   };
+  email_provider: {
+    smtp: {
+      password: string | undefined;
+      username: string | undefined;
+      smtp_server: string | undefined;
+      smtp_port?: string | undefined;
+    };
+  };
   callback_url?: string;
   social: Social;
   tnc_url?: string;
@@ -448,7 +456,11 @@ export const updateStoreWithFetch = async (token: string, ORG_ID: string) => {
       ppURL: data.pp_url ?? '',
       hostURL: data.host ?? '',
       callbackURL: data.callback_url ?? '',
-      redirectURL: data.widget.redirect_url ?? ''
+      redirectURL: data.widget.redirect_url ?? '',
+      userOrEmail: data.email_provider?.smtp.username ?? '',
+      password: data.email_provider?.smtp.password ?? '',
+      smtpPort: data.email_provider?.smtp.smtp_port ?? '',
+      smtpProvider: data.email_provider?.smtp.smtp_server ?? ''
     }));
 
     setInitialState(data);
