@@ -42,6 +42,10 @@ export function WidgetFooter({ reset }: FooterProps) {
     callbackURL,
     social,
     redirectURL,
+    smtpProvider,
+    smtpPort,
+    userOrEmail,
+    password,
     logoImage,
     color,
     color1,
@@ -99,14 +103,30 @@ export function WidgetFooter({ reset }: FooterProps) {
       color9: color9.hex,
       color10: nameFontColor.hex,
       color11: greetingFontColor.hex
+    },
+    email_provider: {
+      smtp: {
+        smtp_server: smtpProvider,
+        smtp_port: smtpPort,
+        username: userOrEmail,
+        password: password
+      }
     }
   };
-
+  // smtpProvider,
+  // smtpPort,
+  // userOrEmail,
+  // password,
   if (callbackURL) widgetObj.callback_url = callbackURL;
   if (redirectURL) widgetObj.widget.redirect_url = redirectURL;
   if (tncURL) widgetObj.tnc_url = tncURL;
   if (ppURL) widgetObj.pp_url = ppURL;
+  // if(smtpProvider) widgetObj.email_provider.smtp.smtp_server = smtpProvider;
+  // if(smtpPort) widgetObj.email_provider.smtp.smtp_port = smtpPort;
+  // if(userOrEmail) widgetObj.email_provider.smtp.username = userOrEmail;
+  // if(password) widgetObj.email_provider.smtp.password = password;
 
+  // if (smtpPort)
   const destructiveToast = () => {
     toast({
       variant: 'destructive',

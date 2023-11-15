@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useWidgetStore } from '../widgetStore';
 import { WidgetInput } from './widget-input';
 
@@ -12,6 +13,7 @@ export function EmailSettings() {
     setUserOrEmail,
     setPassword
   } = useWidgetStore();
+
   return (
     <div className="flex flex-col space-y-10">
       <WidgetInput
