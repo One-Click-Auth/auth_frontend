@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import {
   DialogContent,
@@ -11,10 +12,13 @@ import { Button } from '@/components/ui/Button';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
 import { useParams } from 'next/navigation';
 import Spinner from '@/components/spinner';
 import { updateStoreWithFetch, useWidgetStore } from '../widgetStore';
-
+import Link from 'next/link';
+import { MdFileCopy } from 'react-icons/md';
+import { Badge } from '@/components/ui/Badge';
 function SocialSignInPopup({ socialName }: { socialName: string }) {
   const { toast } = useToast();
   const { slug: ORG_ID } = useParams();
@@ -25,6 +29,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
 
   const [client_id, setClient_id] = useState('');
   const [client_secret, setClient_secret] = useState('');
+  const [copied, setCopied] = useState(false);
   const { social } = useWidgetStore();
   const socialType = socialName.toLocaleLowerCase();
 
@@ -44,7 +49,7 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
     if (client_id.length === 0 || client_secret.length === 0) {
       toast({
         title: 'Client details required',
-        description: "Please put the client Id and client Secret",
+        description: 'Please put the client Id and client Secret',
         variant: 'destructive'
       });
       return;
@@ -156,6 +161,15 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
       destructiveToast();
     }
   }
+  const handleClipBoardCopy = () => {
+    navigator.clipboard.writeText(
+      'https://api.trustauthx.com/api/single/social/callback'
+    );
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 4000);
+  };
 
   return (
     <DialogContent
@@ -164,7 +178,20 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
       )}
     >
       <div className=" flex-col h-min-[200px] gap-2 flex-1 md:border-r-2 md:flex no-scrollbar overflow-auto    md:pr-12 ">
-        <ConfigText />
+        <h1 className="font-bold text-2xl">README: Google OAuth Config.</h1>
+        <p className="my-5">
+          It provides a guidance to configure your own Google’s OAuth 2.0
+          authentication system for more customized experience and avoiding any
+          rate limit levied by google via generic TrustAuthx application.
+        </p>
+        <Button variant={'authx'}>
+          <Link
+            target="_blank"
+            href={`https://docs.trustauthx.com/Social-Signup/Registering-your-own-OAuth-application/${socialName}`}
+          >
+            How to Configure {socialName} OAuth
+          </Link>
+        </Button>
       </div>
 
       <div className=" flex flex-col subtle-scrollbar justify-between    flex-1   md:ml-12 ">
@@ -189,10 +216,27 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
             <p className="text-muted-foreground mb-1 text-left">
               **Callback URI
             </p>
-            <Input
-              className="p-5 "
-              placeholder="https://api.trustauthx.com/api/single/social/callback"
-            />
+            <div className="relative flex flex-row items-center w-full">
+              <Input
+                className="p-5 text-muted-foreground pr-10 w-full"
+                readOnly
+                value="https://api.trustauthx.com/api/single/social/callback"
+              />
+              <Badge
+                variant="secondary"
+                className={`absolute right-0 bottom-14 transition-opacity ${
+                  copied ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                Copied!
+              </Badge>
+              <button
+                className="relative right-6 py-5 hover:text-accent"
+                onClick={handleClipBoardCopy}
+              >
+                <MdFileCopy />
+              </button>
+            </div>
           </div>
           <div>
             <p className="text-muted-foreground mb-1 text-left">**Client ID</p>
@@ -286,139 +330,6 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
         </div>
       </div>
     </DialogContent>
-  );
-}
-
-function ConfigText() {
-  return (
-    <div className="[&>p]:py-[2px]">
-      <h1 className="font-bold text-2xl">README: Google OAuth Config.</h1>
-      <p className="mt-5 mb-5">
-        It provides a guidance to configure your own Google’s OAuth 2.0
-        authentication system for more customized experience and avoiding any
-        rate limit levied by google via generic TrustAuthx application.
-      </p>
-      <p>Set up a project in the Google API Console</p>
-      <ul className="list-disc px-7 py-1 ">
-        <li>
-          Visit the Google API Console and sign in with your Google account.
-        </li>
-        <li>
-          Click the Select a project button on the top menu bar, and click the
-          New
-        </li>
-        <li>
-          Project button to create a project. In your newly created project,
-          click the APIs & Services to enter the APIs & Services menu.
-        </li>
-      </ul>
-      <p>Configure your consent screen</p>
-      <p>Configure and register your application</p>
-      <ul className="list-disc px-7 py-1 ">
-        <li>
-          On the left APIs & Services menu, click the OAuth consent screen
-          button.{' '}
-        </li>
-        <li>
-          Choose the User Type you want, and click the Create button. (Note: If
-          you select External as your User Type, you will need to add test users
-          later.)
-        </li>
-      </ul>
-      <p>Now you will be on the Edit app registration page.</p>
-      <p>Edit app registration</p>
-      <p>Config OAuth consent screen</p>
-      <ul className="list-disc px-7 py-1 ">
-        <li>
-          Follow the instructions to fill out the OAuth consent screen form.
-        </li>
-        <li>Click SAVE AND CONTINUE to continue.</li>
-      </ul>
-      <p>Config scopes</p>
-      <ul className="list-disc px-7 py-1 ">
-        <li>
-          Click ADD OR REMOVE SCOPES and select ../auth/userinfo.email,
-          ../auth/userinfo.profile and openid in the popup drawer, and click
-          UPDATE to finish. It is recommended that you consider adding all the
-          scopes you may use, otherwise some scopes you added in the
-          configuration may not work.
-        </li>
-        <li>Fill out the form as you need.</li>
-        <li>Click SAVE AND CONTINUE to continue.</li>
-
-        <p>Add test users (External user type only)</p>
-
-        <ul className="list-disc px-7 py-1 ">
-          <li>
-            Click ADD USERS and add test users to allow these users to access
-            your application while testing.
-          </li>
-          <li>Click SAVE AND CONTINUE to continue.</li>
-        </ul>
-
-        <p>
-          Now you should have the Google OAuth 2.0 consent screen configured.
-        </p>
-
-        <p>Obtain OAuth 2.0 credentials</p>
-
-        <ul className="list-disc px-7 py-1 ">
-          <li>
-            On the left APIs & Services menu, click the Credentials button.
-          </li>
-          <li>
-            On the Credentials page, click the + CREATE CREDENTIALS button on
-            the top menu bar, and select OAuth client ID.
-          </li>
-          <li>
-            On the Create OAuth client ID page, select Web application as the
-            application type.
-          </li>
-          <li>Fill out the basic information for your application.</li>
-          <li>
-            Click + Add URI to add an authorized domain to the Authorized
-            JavaScript origins section. This is the domain that your logto
-            authorization page will be served from. In our case, this will be $
-            your_logto_origin. e.g.https://logto.dev.
-          </li>
-          <li>
-            Click + Add URI in the Authorized redirect URIs section to set up
-            the Authorized redirect URIs, which redirect the user to the
-            application after logging in. In our case, this will be $
-            your_logto_endpoint/callback/connector_id. e.g.
-            https://logto.dev/callback/connector_id. The connector_id can be
-            found on the top bar of the Logto Admin Console connector details
-            page.
-          </li>
-          <li>
-            Click Create to finish and then you will get the Client ID and
-            Client Secret.
-          </li>
-        </ul>
-
-        <p>Configure your connector</p>
-
-        <p>
-          Fill out the clientId and clientSecret field with Client ID and Client
-          Secret you've got from OAuth app detail pages mentioned in the
-          previous section.
-        </p>
-
-        <p>
-          scope is a space-delimited list of scopes. If not provided, scope
-          defaults to be openid profile email.
-        </p>
-
-        <p>Config types</p>
-        <p>NameTypeclientIdstringclientSecretstringscopestring</p>
-
-        <p>References</p>
-
-        <ul className="list-disc px-7 py-1 ">
-          Google Identity: Setting up OAuth 2.0
-        </ul>
-      </ul>
-    </div>
   );
 }
 

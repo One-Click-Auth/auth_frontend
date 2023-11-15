@@ -14,9 +14,6 @@ export function EmailSettings() {
     setPassword
   } = useWidgetStore();
 
-  useEffect(() => {
-    console.log(smtpProvider, smtpPort, userOrEmail, password);
-  }, [smtpProvider, smtpPort, userOrEmail, password]);
   return (
     <div className="flex flex-col space-y-10">
       <WidgetInput
