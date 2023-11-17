@@ -14,9 +14,6 @@ type FooterProps = {
   reset: () => void;
 };
 
-// const ORG_ID =
-//   '73bbc4bf458a4f66acab0a8cfefa47d13aa33402120d11ee88069dc8f7663e88';
-
 // TODO: Update server state on clicking save
 // Object to update server state / push
 // Logo string defaults to ""
@@ -71,7 +68,7 @@ export function WidgetFooter({ reset }: FooterProps) {
   const widgetObj: OrgObject = {
     name: displayName,
     host: hostURL,
-    social: social,
+    // social: social,
     widget: {
       name: displayName,
       logo_url: s3ImageUrl,
@@ -103,28 +100,13 @@ export function WidgetFooter({ reset }: FooterProps) {
       color9: color9.hex,
       color10: nameFontColor.hex,
       color11: greetingFontColor.hex
-    },
-    email_provider: {
-      smtp: {
-        smtp_server: smtpProvider,
-        smtp_port: smtpPort,
-        username: userOrEmail,
-        password: password
-      }
     }
   };
-  // smtpProvider,
-  // smtpPort,
-  // userOrEmail,
-  // password,
+
   if (callbackURL) widgetObj.callback_url = callbackURL;
   if (redirectURL) widgetObj.widget.redirect_url = redirectURL;
   if (tncURL) widgetObj.tnc_url = tncURL;
   if (ppURL) widgetObj.pp_url = ppURL;
-  // if(smtpProvider) widgetObj.email_provider.smtp.smtp_server = smtpProvider;
-  // if(smtpPort) widgetObj.email_provider.smtp.smtp_port = smtpPort;
-  // if(userOrEmail) widgetObj.email_provider.smtp.username = userOrEmail;
-  // if(password) widgetObj.email_provider.smtp.password = password;
 
   // if (smtpPort)
   const destructiveToast = () => {

@@ -36,7 +36,6 @@ function SocialSignInPopup({ socialName }: { socialName: string }) {
   const active = social[socialType] ? true : false;
   // const generic = !active ? false : (social[socialType]?.CLIENT_ID);
   const generic = !active ? false : !social[socialType].CLIENT_ID;
-  console.log(generic);
   const destructiveToast = () => {
     toast({
       variant: 'destructive',
