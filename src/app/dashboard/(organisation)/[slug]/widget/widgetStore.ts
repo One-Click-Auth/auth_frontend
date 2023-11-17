@@ -50,16 +50,16 @@ export type OrgObject = {
     color11: string;
     redirect_url?: string;
   };
-  email_provider: {
+  email_provider?: {
     smtp: {
-      password: string | undefined;
-      username: string | undefined;
-      smtp_server: string | undefined;
+      password?: string | undefined;
+      username?: string | undefined;
+      smtp_server?: string | undefined;
       smtp_port?: string | undefined;
     };
   };
   callback_url?: string;
-  social: Social;
+  social?: Social;
   tnc_url?: string;
   pp_url?: string;
 };
