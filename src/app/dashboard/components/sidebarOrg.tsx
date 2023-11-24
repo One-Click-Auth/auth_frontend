@@ -145,7 +145,7 @@ export const SidebarOrg = () => {
             ''
           )}
         </h3>
-        <div className={"main-menu flex flex-col w-full"}>
+        <div className={'main-menu flex flex-col w-full'}>
           <h4 className="text-[0.75rem] opacity-50 ml-8 pl-8">
             {open ? (
               isLoading ? (
@@ -284,17 +284,7 @@ export const SidebarOrg = () => {
               </span>
               {open ? <span>Manage API keys</span> : ''}
             </Link>
-            {/* <Link
-              href={'#'}
-              className={`hover:bg-white hover:bg-opacity-40 ${
-                open ? 'ml-8 pl-8 w-3/4 py-2 ' : 'p-2'
-              } mb-4 rounded-md flex items-center space-x-2`}
-            >
-              <span>
-                <TeamAndMembersSVG />
-              </span>
-              {open ? <span>Team & Members</span> : ''}
-            </Link> */}
+
             <Link
               href={`/dashboard/${slug}/upgrade&plans`}
               className={`hover:bg-white hover:bg-opacity-40 ${
@@ -308,7 +298,7 @@ export const SidebarOrg = () => {
             </Link>
           </div>
         </div>
-        <div className={"General flex flex-col w-full"}>
+        <div className={'General flex flex-col w-full'}>
           <h4 className="text-[0.75rem] opacity-50 ml-8 pl-8">
             {open ? 'General' : ''}
           </h4>
@@ -318,7 +308,7 @@ export const SidebarOrg = () => {
             }`}
           >
             <Link
-              href={'#'}
+              href={'https://tally.so/r/wMNB8p'}
               className={`hover:bg-white hover:bg-opacity-40 ${
                 open ? 'ml-8 pl-8 w-3/4 py-2' : 'p-2'
               } mb-4 rounded-md flex items-center space-x-2`}
