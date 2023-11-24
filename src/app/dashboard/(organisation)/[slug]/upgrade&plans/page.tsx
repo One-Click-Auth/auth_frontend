@@ -78,7 +78,7 @@ function UpgradeAndPlansPage() {
   async function cancelSub() {
     setLoading2(true);
     try {
-      const response = await fetch("https://api.trustauthx.com/subscriptions", {
+      const response = await fetch('https://api.trustauthx.com/subscriptions', {
         method: 'DELETE',
         headers: {
           accept: 'application/json',
@@ -106,7 +106,7 @@ function UpgradeAndPlansPage() {
           title: 'Subscription Cancelled successfully'
           // description: 'Subscription Cancelled successfully'
         });
-        router.push("/dashboard");
+        router.push('/dashboard');
         setLoading2(false);
 
         return;
@@ -168,11 +168,10 @@ function UpgradeAndPlansPage() {
           </CardHeader>
           <CardContent className="flex flex-col md:flex-row  px-10 gap-8">
             <p className="leading-tight text-slate-500 font-normal">
-              Implement an AI-based security system within your Authx-powered
-              platform to enhance threat detection, response, and overall
-              cybersecurity capabilities. By leveraging artificial intelligence
-              and machine learning algorithms, you can bolster your platform's
-              security defenses and adapt to evolving threats effectively.
+              Manage your payment methods and view your invoices. You can add,
+              remove, or update your payment methods. Additionally, you can view
+              your past invoices, download them, or request them to be sent to
+              your email.
             </p>
             <Button variant={'authx'} className="w-48" onClick={managePlan}>
               {loading1 ? (
@@ -196,11 +195,9 @@ function UpgradeAndPlansPage() {
           </CardHeader>
           <CardContent className="flex flex-col md:flex-row  px-10 gap-8">
             <p className="leading-tight text-slate-500 font-normal">
-              Implement an AI-based security system within your Authx-powered
-              platform to enhance threat detection, response, and overall
-              cybersecurity capabilities. By leveraging artificial intelligence
-              and machine learning algorithms, you can bolster your platform's
-              security defenses and adapt to evolving threats effectively.
+              Upgrade your current plan to the Enterprise plan. The Enterprise
+              plan offers advanced features and capabilities that can help boost
+              your organization&apos;s productivity and efficiency.
             </p>
 
             <UpgradeToEnterprise />
@@ -215,11 +212,9 @@ function UpgradeAndPlansPage() {
           </CardHeader>
           <CardContent className="flex flex-col md:flex-row  px-10 gap-8">
             <p className="leading-tight text-slate-500 font-normal">
-              Implement suspicious IP throttling within your Authx-powered
-              platform to mitigate the risks posed by suspicious or malicious IP
-              addresses. By detecting and limiting the activities of such IPs,
-              you can protect your platform from various types of attacks and
-              ensure a secure environment for legitimate users.
+              If you choose to cancel your subscription, you will no longer be
+              billed, and on the terms of cancellation we will pause your
+              organization and all activities will be suspended.
             </p>
 
             <Dialog>
