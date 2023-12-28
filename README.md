@@ -2,7 +2,7 @@
 
 ## Prerequisites 
 
-Make sure you have the following installed in your system:
+Make sure you have the following installed in your system :
 
 - [Node.js](https://nodejs.dev/en/)
 - [Git](https://git-scm.com/)
