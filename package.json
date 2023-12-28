@@ -41,7 +41,7 @@
     "@types/crypto-js": "^4.1.1",
     "@types/node": "20.3.1",
     "@types/react": "18.2.14",
-    "@types/react-dom": "18.2.6",
+    "@types/react-dom": "18.2.18",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "class-variance-authority": "^0.6.0",
