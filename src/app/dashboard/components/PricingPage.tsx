@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PreferenceDialog, PricingCard } from './pricingCard';
 import { useAuth } from '@/Providers/AuthContext';
 import UpgradeToEnterprise from '../upgradeToEnterprise';
+import Link from 'next/link';
 
 function PricingPage() {
   const [blurStudents, setBlurStudents] = useState(false);
@@ -80,8 +81,9 @@ function PricingPage() {
           <Button
             variant={'authx'}
             className="text-black p-2 h-10 bg-slate-300"
+            asChild
           >
-            Talk with an Expert →
+            <Link href="https://tally.so/r/n99VoY">Talk with an Expert →</Link>
           </Button>
           <PreferenceDialog
             disableButton={false}
