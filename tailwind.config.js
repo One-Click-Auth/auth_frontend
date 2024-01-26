@@ -10,21 +10,20 @@ module.exports = {
     './src/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {
-    screens:{
-       
-       'sm':	'640px',
-       'md':'768px',
-       '2md':'1000px',
-      'lg':'1024px',
-      'xl':'1280px',
-      '2xl':'1536px'
+    screens: {
+      sm: '640px',
+      md: '768px',
+      '2md': '1000px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px'
     },
     container: {
       center: true,
       padding: '2rem',
       screens: {
         '2xl': '1400px',
-        'laptop': '1000px'
+        laptop: '1000px'
       }
     },
     extend: {
@@ -56,7 +55,8 @@ module.exports = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
-        }
+        },
+        login: '#6842FF'
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif', ...fontFamily.sans],
