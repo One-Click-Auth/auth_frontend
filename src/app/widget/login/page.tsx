@@ -21,6 +21,7 @@ import MfaPopup from './components/MfaPopup';
 import NewPassword from './components/NewPassword';
 import Password from './components/Password';
 import EmailComponent from './components/Email';
+import { EmailWidget } from './components/EmailWidget';
 
 declare global {
   interface Window {
@@ -1131,7 +1132,7 @@ export default function Widget() {
                         forgotPass={forgotPass}
                       />
                     ) : (
-                      <EmailComponent
+                      <EmailWidget
                         email={email}
                         setEmail={setEmail}
                         loading={loading2}
