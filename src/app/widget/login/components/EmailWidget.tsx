@@ -14,6 +14,9 @@ import githubIcon from '../github-mark.svg';
 import googleIcon from '../google.svg';
 import { useOrgData } from '../widgetStore';
 import Image from 'next/image';
+import { ToastProps } from '@/components/ui/toast';
+import { useToast } from '@/components/ui/use-toast';
+import { $TsFixMe } from '@/types';
 
 interface EmailWidgetProps {
   email: string;
@@ -22,30 +25,47 @@ interface EmailWidgetProps {
   handleSubmit: (e: { preventDefault: () => void }) => Promise<void>;
 }
 
-const socialLogin = async (
+const initiateSocialLogin = async (
   social: string,
   orgToken: string,
-  setLoading?: (loading: boolean) => void
+  toast?: (props: ToastProps) => void
 ): Promise<void> => {
   try {
-    setLoading?.(true);
     const url = await getSocialLoginUrl({ provider: social, orgToken });
     window.location.href = url;
-  } catch (error) {
-    console.error('Social login failed:', error);
-    // Handle error as needed
-  } finally {
-    setLoading?.(false);
+  } catch (error: $TsFixMe) {
+    const message = `Social Login Failed: ${
+      error?.message ?? 'Something Went Wrong'
+    }`;
+    toast?.({
+      variant: 'destructive',
+      title: message
+    });
   }
 };
 
-// TODO:
+function SocialLogin({
+  onClick,
+  ...props
+}: React.HTMLAttributes<HTMLButtonElement>) {
+  return (
+    <Button
+      className="w-full gap-2 text-left items-center justify-start hover:bg-secondary font-normal text-xs leading-4"
+      variant="outline"
+      onClick={onClick}
+      {...props}
+    />
+  );
+}
+
+// INFO: email-login and social-login flow is not tested
 export function EmailWidget({
   handleSubmit,
   email,
   setEmail,
   loading
 }: EmailWidgetProps) {
+  const { toast } = useToast();
   const orangizationData = useOrgData(state => state.data);
   const organizationToken = useOrgData(state => state.org_token);
 
@@ -69,12 +89,10 @@ export function EmailWidget({
           </p>
         </div>
         <div className="space-y-4">
-          {/* TODO: change socialbutton to accept string content as child */}
-          {/* TODO: implement social logins */}
-          <Button
-            className="w-full gap-2 text-left items-center justify-start hover:bg-secondary font-normal text-xs leading-4"
-            variant="outline"
-            onClick={() => socialLogin('github', organizationToken)}
+          <SocialLogin
+            onClick={() =>
+              initiateSocialLogin('github', organizationToken, toast)
+            }
           >
             <Image
               src={githubIcon}
@@ -82,11 +100,11 @@ export function EmailWidget({
               alt="Github Icon For Social Login"
             />
             <span>Continue with GitHub</span>
-          </Button>
-          <Button
-            className="w-full gap-2 text-left items-center justify-start hover:bg-secondary font-normal text-xs leading-4"
-            variant="outline"
-            onClick={() => socialLogin('google', organizationToken)}
+          </SocialLogin>
+          <SocialLogin
+            onClick={() =>
+              initiateSocialLogin('google', organizationToken, toast)
+            }
           >
             <Image
               src={googleIcon}
@@ -94,7 +112,7 @@ export function EmailWidget({
               alt="Google Icon For Social Login"
             />
             <span>Continue with Google</span>
-          </Button>
+          </SocialLogin>
         </div>
         <div className="grid grid-cols-[1fr_0.5fr_1fr] place-items-center">
           <Separator />
@@ -117,7 +135,6 @@ export function EmailWidget({
             onChange={e => setEmail(e.target.value)}
             required
           />
-          {/* TODO: use widget button or change widget button styles */}
           <Button
             className="w-full bg-login hover:bg-login/90 text-white font-semibold text-[10px] leading-tight"
             disabled={loading}
@@ -126,13 +143,15 @@ export function EmailWidget({
           </Button>
         </form>
       </CardContent>
+      {/* Not handling pp and tnc because no response type available, `unknown` cannot be used.
+      Ref: https://github.com/One-Click-Auth/auth_frontend/pull/265#issuecomment-1912395385
+      */}
       <CardFooter className="p-0 pb-4">
         <p className="text-[10px] text-[#000000A6] leading-4">
           By proceeding, I acknowledge and agree to abide by the terms outlined
           in the&nbsp;
-          <strong className="text-login">
-            Privacy Policy and Terms &amp; Conditions.
-          </strong>
+          <strong className="text-login">Privacy Policy</strong>and{' '}
+          <strong className="text-login">Terms &amp; Conditions.</strong>
         </p>
       </CardFooter>
     </Card>
