@@ -8,6 +8,17 @@ export const decryptCode = (mfa: string): string => {
   const decoded = bytes.toString(CryptoJS.enc.Utf8);
   return decoded;
 };
+export const encrypt = (pass: string) => {
+  //   console.log(pass)
+  // try {
+  //   const encrypted = CryptoJS.AES.encrypt(pass, process.env.NEXT_PUBLIC_AES_KEY ? process.env.NEXT_PUBLIC_AES_KEY : '');
+  //   return encrypted
+  // } catch (error) {
+  //   console.error('Encryption failed:', error);
+  //   return;
+  // }
+  return pass;
+};
 //to test input password string
 export const testPass = (password: string): boolean => {
   // /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,1000}$/
