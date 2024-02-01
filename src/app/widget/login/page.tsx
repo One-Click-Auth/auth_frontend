@@ -700,9 +700,15 @@ export default function Widget() {
     try {
       //get the user response which has a user token and public details
       const response = await fetch(
-        `https://api.trustauthx.com/user/me/auth?usr=${email}&OrgToken=${storeOrg_token}`,
+        `https://api.trustauthx.com/user/me/auth/v2?usr=${email}`,
         {
-          method: 'GET'
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            OrgToken: storeOrg_token
+          })
         }
       );
       // console.log(response)

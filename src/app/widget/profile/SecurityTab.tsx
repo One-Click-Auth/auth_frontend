@@ -287,7 +287,7 @@ export default function Security() {
         },
         body: JSON.stringify({
           usr: {
-            new_user_password: pass
+            forget_password: pass
           },
           UserTokenBody: {
             UserToken: user_token
