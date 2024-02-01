@@ -178,7 +178,7 @@ export default function WidgetProfile() {
       token = (await getToken()) ?? user_token;
     }
     return router.push(
-      `https://api.trustauthx.com/user/me/widget/settings?code=${code}&UserToken=${token}&redirect_url=${redirect_url}`
+      `https://api.trustauthx.com/user/me/widget/settings/?code=${code}&UserToken=${token}&redirect_url=${redirect_url}`
     );
   }
 
