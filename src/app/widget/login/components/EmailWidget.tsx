@@ -8,15 +8,21 @@ import {
   CardFooter,
   CardHeader
 } from '@/components/ui/card';
-import { Separator } from '@/components/ui/seperator';
 import { getSocialLoginUrl } from '@/lib/utils';
-import githubIcon from '../github-mark.svg';
-import googleIcon from '../google.svg';
 import { useOrgData } from '../widgetStore';
-import Image from 'next/image';
 import { ToastProps } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
+import {
+  SocialLoginCollection,
+  SocialLoginLabel,
+  SocialLoginValue
+} from '@/types/social-logins';
+import { Icons } from './icons';
+import { SocialLogin } from './SocialLogin';
+import { allSocialLogins } from './data';
 import { $TsFixMe } from '@/types';
+import { LoginMethodSeparator } from './LoginMethodSeparator';
+import Link from 'next/link';
 
 interface EmailWidgetProps {
   email: string;
@@ -44,21 +50,7 @@ const initiateSocialLogin = async (
   }
 };
 
-function SocialLogin({
-  onClick,
-  ...props
-}: React.HTMLAttributes<HTMLButtonElement>) {
-  return (
-    <Button
-      className="w-full gap-2 text-left items-center justify-start hover:bg-secondary font-normal text-xs leading-4"
-      variant="outline"
-      onClick={onClick}
-      {...props}
-    />
-  );
-}
-
-// INFO: email-login and social-login flow is not tested
+// TODO: test email-login and social-login flow
 export function EmailWidget({
   handleSubmit,
   email,
@@ -71,6 +63,12 @@ export function EmailWidget({
 
   const organizationLogoURL = orangizationData.widget.logo_url;
   const organizationName = orangizationData.widget.name;
+
+  //INFO: using filter because of lack of config typesaftey and data
+  const allowedSocialLogins = Object.keys(orangizationData.social)
+    .map(e => allSocialLogins[e as SocialLoginValue])
+    .filter(e => e);
+  const isLoginWithEmailEnabled = orangizationData.email_val;
 
   return (
     <Card className="border-none shadow-none">
@@ -89,59 +87,49 @@ export function EmailWidget({
           </p>
         </div>
         <div className="space-y-4">
-          <SocialLogin
-            onClick={() =>
-              initiateSocialLogin('github', organizationToken, toast)
-            }
-          >
-            <Image
-              src={githubIcon}
-              className="h-5 w-5 rounded-full"
-              alt="Github Icon For Social Login"
-            />
-            <span>Continue with GitHub</span>
-          </SocialLogin>
-          <SocialLogin
-            onClick={() =>
-              initiateSocialLogin('google', organizationToken, toast)
-            }
-          >
-            <Image
-              src={googleIcon}
-              className="h-5 w-5 rounded-full"
-              alt="Google Icon For Social Login"
-            />
-            <span>Continue with Google</span>
-          </SocialLogin>
+          {allowedSocialLogins.map(item => {
+            const Icon = Icons[item.icon];
+            return (
+              <SocialLogin
+                key={item.value}
+                onClick={() =>
+                  initiateSocialLogin(item.value, organizationToken, toast)
+                }
+              >
+                <Icon className="h-5 w-5" />
+                <span>Continue with {item.label}</span>
+              </SocialLogin>
+            );
+          })}
         </div>
-        <div className="grid grid-cols-[1fr_0.5fr_1fr] place-items-center">
-          <Separator />
-          <span>or</span>
-          <Separator />
-        </div>
-        <form className="space-y-2" onSubmit={handleSubmit}>
-          <label
-            htmlFor="email"
-            className="block text-xs leading-5 font-medium text-gray-700"
-          >
-            Email address
-          </label>
-          <Input
-            id="email"
-            type="email"
-            name="email"
-            className="w-full"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-          />
-          <Button
-            className="w-full bg-login hover:bg-login/90 text-white font-semibold text-[10px] leading-tight"
-            disabled={loading}
-          >
-            CONTINUE
-          </Button>
-        </form>
+        {isLoginWithEmailEnabled && (
+          <>
+            <LoginMethodSeparator />
+            <form className="space-y-2" onSubmit={handleSubmit}>
+              <label
+                htmlFor="email"
+                className="block text-xs leading-5 font-medium text-gray-700"
+              >
+                Email address
+              </label>
+              <Input
+                id="email"
+                type="email"
+                name="email"
+                className="w-full"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+              <Button
+                className="w-full bg-login hover:bg-login/90 text-white font-semibold text-[10px] leading-tight"
+                disabled={loading}
+              >
+                CONTINUE
+              </Button>
+            </form>
+          </>
+        )}
       </CardContent>
       {/* Not handling pp and tnc because no response type available, `unknown` cannot be used.
       Ref: https://github.com/One-Click-Auth/auth_frontend/pull/265#issuecomment-1912395385
@@ -150,8 +138,17 @@ export function EmailWidget({
         <p className="text-[10px] text-[#000000A6] leading-4">
           By proceeding, I acknowledge and agree to abide by the terms outlined
           in the&nbsp;
-          <strong className="text-login">Privacy Policy</strong>and{' '}
-          <strong className="text-login">Terms &amp; Conditions.</strong>
+          <Link href="#">
+            <strong className="text-login hover:text-login/85">
+              Privacy Policy
+            </strong>
+          </Link>
+          &nbsp;and{' '}
+          <Link href="#">
+            <strong className="text-login hover:text-login/85">
+              Terms &amp; Conditions.
+            </strong>
+          </Link>
         </p>
       </CardFooter>
     </Card>

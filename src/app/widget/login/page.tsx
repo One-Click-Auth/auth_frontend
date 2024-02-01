@@ -22,6 +22,7 @@ import NewPassword from './components/NewPassword';
 import Password from './components/Password';
 import EmailComponent from './components/Email';
 import { EmailWidget } from './components/EmailWidget';
+import Link from 'next/link';
 
 declare global {
   interface Window {
@@ -1086,7 +1087,7 @@ export default function Widget() {
             } items-center`}
           >
             <div
-              className={`flex items-center justify-center w-full py-10 ${
+              className={`flex flex-col items-center justify-center w-full py-10 ${
                 storeOrgData.decor_img ? '2md:w-2/3 ' : ''
               } my-4`}
             >
@@ -1142,6 +1143,22 @@ export default function Widget() {
                   </div>
                 </CardContent>
               </Card>
+              <div className="mt-6 flex items-center justify-between text-xs text-gray-600 w-[480px] max-w-[90vw]">
+                <Link href="#" className="hover:text-gray-500">
+                  © 2024 {widget.name}
+                </Link>
+                <div className="flex gap-2">
+                  <Link href="#" className="hover:text-gray-500">
+                    Support
+                  </Link>
+                  <Link href="#" className="hover:text-gray-500">
+                    Privacy
+                  </Link>
+                  <Link href="#" className="hover:text-gray-500">
+                    Terms
+                  </Link>
+                </div>
+              </div>
             </div>
             {storeOrgData.decor_img && (
               <div className="flex justify-center items-center w-full h-full mt-6 2md:w-auto 2md:mt-0">
