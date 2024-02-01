@@ -23,6 +23,7 @@ import { getAccessToken } from './utils';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useRouter } from 'next/navigation';
+import { get } from 'http';
 
 export default function WidgetProfile() {
   const searchParams = useSearchParams();
@@ -146,9 +147,38 @@ export default function WidgetProfile() {
       throw new Error(errMsg);
     }
   }
-  function returnToOrg() {
+  async function getToken() {
+    const url = 'https://api.trustauthx.com/short/token';
+    const data = {
+      token: user_token
+    };
+
+    const options: RequestInit = {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const responseData = (await response.json()) as string;
+      return responseData;
+    } catch (error) {
+      console.error('Error:', error);
+      return;
+    }
+  }
+  //ASRT
+  async function returnToOrg() {
+    let token = user_token;
+    if (!token.startsWith('ASRT')) {
+      token = (await getToken()) ?? user_token;
+    }
     return router.push(
-      `https://api.trustauthx.com/user/me/widget/settings?code=${code}&UserToken=${user_token}&redirect_url=${redirect_url}`
+      `https://api.trustauthx.com/user/me/widget/settings?code=${code}&UserToken=${token}&redirect_url=${redirect_url}`
     );
   }
 
