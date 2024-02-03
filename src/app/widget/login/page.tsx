@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use client';
-import { testPass, passMsg, testOTP, convertToApproxTime } from './utils';
+import {
+  testPass,
+  passMsg,
+  testOTP,
+  convertToApproxTime,
+  encrypt
+} from './utils';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { redirect, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { OrgData, useOrgData, useUserData } from './widgetStore'; //import zustand store to store and update org data
 import Spinner from '@/components/spinner';
@@ -131,6 +136,7 @@ export default function Widget() {
     }
 
     try {
+      const encryptedPass = encrypt(newPass);
       const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
         method: 'PUT',
         headers: {
@@ -139,7 +145,7 @@ export default function Widget() {
         body: JSON.stringify({
           usr: {
             forget_password: true,
-            new_password: newPass
+            new_password: encryptedPass
           },
           UserTokenBody: {
             UserToken: currentUserToken
@@ -191,6 +197,7 @@ export default function Widget() {
       });
       return;
     }
+    const encryptedPass = encrypt(newPass);
     try {
       const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
         method: 'PUT',
@@ -199,7 +206,7 @@ export default function Widget() {
         },
         body: JSON.stringify({
           usr: {
-            new_user_password: newPass
+            new_user_password: encryptedPass
           },
           UserTokenBody: {
             UserToken: currentUserToken
@@ -369,7 +376,7 @@ export default function Widget() {
       });
       return;
     }
-
+    const encryptedPass = encrypt(pass);
     try {
       let rcToken = '';
       if (storeOrgData.bot_det) {
@@ -383,7 +390,7 @@ export default function Widget() {
         body: JSON.stringify({
           form_data: {
             email: email,
-            password: pass,
+            password: encryptedPass,
             mfa_totp: otp ? otp : 0,
             rc_token: rcToken
           },
@@ -461,7 +468,7 @@ export default function Widget() {
       setLoading2(false);
       return;
     }
-
+    const encryptedPass = encrypt(pass);
     try {
       let rcToken = '';
       if (storeOrgData.bot_det) {
@@ -475,7 +482,7 @@ export default function Widget() {
         body: JSON.stringify({
           form_data: {
             email: email,
-            password: pass,
+            password: encryptedPass,
             mfa_totp: otp ? otp : 0,
             rc_token: rcToken
           },

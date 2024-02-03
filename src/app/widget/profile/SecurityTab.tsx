@@ -27,6 +27,7 @@ import {
   testPass,
   testOTP,
   decryptCode,
+  encrypt,
   convertToApproxTime
 } from '../login/utils';
 import Spinner from '@/components/spinner';
@@ -279,6 +280,7 @@ export default function Security() {
 
   async function newPasswordRequest() {
     setLoading1(true);
+    const encryptedPass = encrypt(pass);
     try {
       const response = await fetch(`https://api.trustauthx.com/user/me/auth`, {
         method: 'PUT',
@@ -287,7 +289,8 @@ export default function Security() {
         },
         body: JSON.stringify({
           usr: {
-            forget_password: pass
+            forget_password: true,
+            new_password: encryptedPass
           },
           UserTokenBody: {
             UserToken: user_token

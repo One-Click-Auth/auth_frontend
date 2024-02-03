@@ -23,7 +23,6 @@ import { getAccessToken } from './utils';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useRouter } from 'next/navigation';
-import { get } from 'http';
 
 export default function WidgetProfile() {
   const searchParams = useSearchParams();
