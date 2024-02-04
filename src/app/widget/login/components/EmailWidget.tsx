@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Card,
   CardContent,
@@ -23,6 +22,7 @@ import { allSocialLogins } from './data';
 import { $TsFixMe } from '@/types';
 import { LoginMethodSeparator } from './LoginMethodSeparator';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface EmailWidgetProps {
   email: string;
@@ -69,14 +69,16 @@ export function EmailWidget({
     .map(e => allSocialLogins[e as SocialLoginValue])
     .filter(e => e);
   const isLoginWithEmailEnabled = orangizationData.email_val;
-
   return (
-    <Card className="border-none shadow-none">
+    <Card className="border-none shadow-none bg-transparent">
       <CardHeader className="p-0 pb-4">
-        <Avatar className="w-11 h-11">
-          <AvatarImage src={organizationLogoURL} />
-          <AvatarFallback>{organizationName}</AvatarFallback>
-        </Avatar>
+        <Image
+          src={organizationLogoURL}
+          alt={'logo'}
+          height={40}
+          width={40}
+          className="w-auto h-11 object-left object-contain"
+        />
       </CardHeader>
       <CardContent className="space-y-6 p-0 pb-4">
         <div className="text-left">
