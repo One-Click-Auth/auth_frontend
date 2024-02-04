@@ -22,3 +22,5 @@ export type OrgKeys = {
 };
 
 export type PartialOrg = Partial<Organization>;
+
+export type $TsFixMe = any;
