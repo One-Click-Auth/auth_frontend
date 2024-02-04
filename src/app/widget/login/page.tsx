@@ -1132,8 +1132,15 @@ export default function Widget() {
                         handlePassActions={handlePassActions}
                         forgotPass={forgotPass}
                       />
-                    ) : (
+                    ) : widget.style ? (
                       <EmailWidget
+                        email={email}
+                        setEmail={setEmail}
+                        loading={loading2}
+                        handleSubmit={handleSubmit}
+                      />
+                    ) : (
+                      <EmailComponent
                         email={email}
                         setEmail={setEmail}
                         loading={loading2}

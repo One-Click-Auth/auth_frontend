@@ -4,6 +4,7 @@ interface Widget {
   name: string;
   logo_url: string;
   font: string;
+  style: 0 | 1;
   greeting: string;
   input_border: {
     radius: number;
@@ -363,6 +364,7 @@ export const useOrgData = create<OrgData>(set => ({
       name: 'Org',
       logo_url: '',
       font: '',
+      style: 0,
       greeting: '',
       input_border: {
         radius: 0,
